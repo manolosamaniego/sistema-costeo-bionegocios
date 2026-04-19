@@ -1,0 +1,14 @@
+{
+  "licenseId": "CLIENTE-BASE-1.0.0",
+  "clientId": "cliente-base",
+  "clientName": "Cliente Base",
+  "editionProfile": "operativa",
+  "currentVersion": "1.0.0",
+  "updateChannel": "clientes/cliente-base/estable",
+  "supportLevel": "comercial",
+  "supportUntil": "2027-12-31",
+  "updatesUntil": "2027-12-31",
+  "allowBranding": false,
+  "allowAdminAccess": false,
+  "notes": "Licencia base para entregas operativas por cliente."
+}

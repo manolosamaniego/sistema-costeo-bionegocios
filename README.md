@@ -57,6 +57,18 @@ npm run release:prepare
 powershell -ExecutionPolicy Bypass -File .\scripts\preparar-entrega-cliente.ps1 -ClientId aliados -BrandingFile .\clientes\aliados\branding.1.0.0.json
 ```
 
+### Generar licencia de cliente
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\generar-licencia-cliente.ps1 -ClientId aliados -ClientName "Fundacion Aliados" -Version 1.0.0 -SupportUntil 2027-04-19
+```
+
+### Publicar manifiesto de actualización
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\publicar-manifiesto-actualizacion.ps1 -Mode cliente -ClientId aliados -ClientName "Fundacion Aliados" -Version 1.0.0 -SupportUntil 2027-04-19
+```
+
 ### Verificar laptop de soporte
 
 ```powershell
@@ -105,6 +117,16 @@ Usa:
 Nota:
 Ese código es provisional. En la siguiente etapa conviene moverlo a una política por cliente o licencia.
 
+## Licencia y canal activo
+
+- La app puede compilarse con licencia de matriz o licencia por cliente.
+- Cada cliente puede tener su propio archivo `licencia.<version>.json`.
+- Cada canal puede publicar su propio `manifest.json` para controlar actualizaciones.
+- La entrega operativa de cliente usa:
+  - branding del cliente
+  - licencia del cliente
+  - edición operativa bloqueada
+
 ## Flujo recomendado de soporte
 
 Cuando un cliente reporte una falla, solicitar:
@@ -143,3 +165,5 @@ Revisa:
 - [Mecanismo de actualización](C:\Users\Usuario\Documents\Proyectos\App de Costos\sistema-costeo-bionegocios\docs\MECANISMO-DE-ACTUALIZACION.md)
 - [Actualizar cliente](C:\Users\Usuario\Documents\Proyectos\App de Costos\sistema-costeo-bionegocios\docs\ACTUALIZAR-CLIENTE.md)
 - [Diagnóstico y soporte remoto](C:\Users\Usuario\Documents\Proyectos\App de Costos\sistema-costeo-bionegocios\docs\DIAGNOSTICO-Y-SOPORTE-REMOTO.md)
+- [Licencias y canales](C:\Users\Usuario\Documents\Proyectos\App de Costos\sistema-costeo-bionegocios\docs\LICENCIAS-Y-CANALES.md)
+- [Política de soporte por versión](C:\Users\Usuario\Documents\Proyectos\App de Costos\sistema-costeo-bionegocios\docs\POLITICA-DE-SOPORTE-POR-VERSION.md)

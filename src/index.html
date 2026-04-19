@@ -1329,6 +1329,7 @@
   </div>
 
   <script src="edition-config.js"></script>
+  <script src="license-config.js"></script>
   <script>
     const APP_PRODUCT = {
       code: 'SRC-BIO-COSTEO',
@@ -1351,6 +1352,21 @@
       allowAdminBranding: true,
       allowBrandImportExport: true,
       allowHiddenAdminAccess: true
+    };
+    const LICENSE_CONFIG = window.APP_LICENSE_CONFIG || {
+      mode: 'matriz',
+      licenseId: 'MATRIZ-INTERNA-1.0.0',
+      clientId: 'smartreality-matriz',
+      clientName: 'Smart Reality S.A.S.',
+      editionProfile: 'matriz',
+      currentVersion: APP_PRODUCT.version,
+      updateChannel: 'matriz/estable',
+      supportLevel: 'interno',
+      supportUntil: '2099-12-31',
+      updatesUntil: '2099-12-31',
+      allowBranding: true,
+      allowAdminAccess: true,
+      notes: ''
     };
 
     const DEFAULT_BRANDING = {
@@ -1682,6 +1698,18 @@
           version: APP_PRODUCT.version,
           editionProfile: EDITION_CONFIG.profile,
           dataSchema: APP_PRODUCT.dataSchema
+        },
+        license: {
+          mode: LICENSE_CONFIG.mode || '',
+          licenseId: LICENSE_CONFIG.licenseId || '',
+          clientId: LICENSE_CONFIG.clientId || '',
+          clientName: LICENSE_CONFIG.clientName || '',
+          editionProfile: LICENSE_CONFIG.editionProfile || '',
+          currentVersion: LICENSE_CONFIG.currentVersion || '',
+          updateChannel: LICENSE_CONFIG.updateChannel || '',
+          supportLevel: LICENSE_CONFIG.supportLevel || '',
+          supportUntil: LICENSE_CONFIG.supportUntil || '',
+          updatesUntil: LICENSE_CONFIG.updatesUntil || ''
         },
         counters: {
           direct: state.direct.length,

@@ -3,6 +3,7 @@ param(
   [string]$ClientId,
   [Parameter(Mandatory = $true)]
   [string]$BrandingFile,
+  [string]$LicenseFile = "",
   [string]$Version = ""
 )
 
@@ -43,6 +44,8 @@ $releaseRoot = Join-Path $repoRoot "releases\$resolvedVersion\$clientSlug"
 $packageDir = Join-Path $releaseRoot "paquete"
 $notesPath = Join-Path $releaseRoot "NOTA-DE-ENTREGA.md"
 $clientDir = Join-Path $repoRoot "clientes\$clientSlug"
+$defaultLicensePath = Join-Path $clientDir "licencia.$resolvedVersion.json"
+$resolvedLicensePath = ""
 $nsisSource = Join-Path $repoRoot "src-tauri\target\release\bundle\nsis"
 $msiSource = Join-Path $repoRoot "src-tauri\target\release\bundle\msi"
 $nsisPattern = "*_${resolvedVersion}_x64-setup.exe"
@@ -71,6 +74,16 @@ if ($brandingPath -ne (Join-Path $clientDir "branding.$resolvedVersion.json")) {
 }
 Copy-Item -LiteralPath $brandingPath -Destination (Join-Path $packageDir "branding.$clientSlug.$resolvedVersion.json") -Force
 
+if ($LicenseFile) {
+  $resolvedLicensePath = (Resolve-Path -LiteralPath $LicenseFile -ErrorAction Stop).Path
+} elseif (Test-Path $defaultLicensePath) {
+  $resolvedLicensePath = $defaultLicensePath
+} else {
+  throw "No se encontró licencia para el cliente. Usa -LicenseFile o crea $defaultLicensePath"
+}
+
+Copy-Item -LiteralPath $resolvedLicensePath -Destination (Join-Path $packageDir "licencia.$clientSlug.$resolvedVersion.json") -Force
+
 $msiBuilt = $false
 $msiNote = "No generado."
 
@@ -83,6 +96,16 @@ try {
   }
 
   Invoke-Native npm run edition:operativa
+  Invoke-Native -FilePath powershell -Arguments @(
+    '-ExecutionPolicy',
+    'Bypass',
+    '-File',
+    '.\scripts\activar-licencia-cliente.ps1',
+    '-Mode',
+    'cliente',
+    '-LicenseFile',
+    $resolvedLicensePath
+  )
   Invoke-Native npm install
   Invoke-Native npx tauri build --bundles nsis
 
@@ -96,6 +119,14 @@ try {
     Write-Host "Advertencia: el MSI no se pudo generar. Se continuará con NSIS." -ForegroundColor Yellow
   }
 } finally {
+  Invoke-Native -FilePath powershell -Arguments @(
+    '-ExecutionPolicy',
+    'Bypass',
+    '-File',
+    '.\scripts\activar-licencia-cliente.ps1',
+    '-Mode',
+    'matriz'
+  )
   Invoke-Native npm run edition:matriz
 }
 
@@ -123,6 +154,7 @@ $(Get-Date -Format "yyyy-MM-dd HH:mm")
 - instalador `.exe`
 - instalador `.msi`: $msiNote
 - branding del cliente
+- licencia del cliente
 - edición operativa bloqueada para uso comercial
 
 ## Validación sugerida
@@ -130,9 +162,10 @@ $(Get-Date -Format "yyyy-MM-dd HH:mm")
 1. instalar la app
 2. abrir la app
 3. cargar la marca del cliente si aplica
-4. guardar un costeo de prueba
-5. recuperar el mismo costeo
-6. imprimir el informe
+4. validar que la edición operativa no muestre personalización institucional
+5. guardar un costeo de prueba
+6. recuperar el mismo costeo
+7. imprimir el informe
 
 ## Observación
 

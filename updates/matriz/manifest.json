@@ -1,0 +1,10 @@
+{
+  "productCode": "SRC-BIO-COSTEO",
+  "channel": "matriz/estable",
+  "editionProfile": "matriz",
+  "currentVersion": "1.0.0",
+  "minimumSupportedVersion": "1.0.0",
+  "publishedAt": "2026-04-19T00:00:00-05:00",
+  "supportUntil": "2099-12-31",
+  "notes": "Canal base de la matriz interna para desarrollo, soporte y liberación."
+}
