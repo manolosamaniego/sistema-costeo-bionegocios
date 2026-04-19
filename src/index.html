@@ -1063,6 +1063,8 @@
         <button class="secondary" id="btnLoad" type="button">Cargar archivo</button>
         <button class="secondary admin-only admin-inline" id="btnBrandExport" type="button">Exportar marca</button>
         <button class="secondary admin-only admin-inline" id="btnBrandLoad" type="button">Cargar marca</button>
+        <button class="secondary admin-only admin-inline" id="btnDiagExport" type="button">Exportar diagnóstico</button>
+        <button class="secondary admin-only admin-inline" id="btnDiagClear" type="button">Limpiar diagnóstico</button>
         <button class="ghost" id="btnReset" type="button">Reiniciar</button>
         <button id="btnPrint" type="button">Imprimir / PDF</button>
         <input id="fileLoader" type="file" accept=".json" style="display:none">
@@ -1404,6 +1406,9 @@
     function setAdminMode(enabled) {
       try { localStorage.setItem(ADMIN_MODE_STORAGE_KEY, enabled ? 'true' : 'false'); } catch {}
       applyAdminMode();
+      logDiagnostic('info', enabled ? 'admin_mode_enabled' : 'admin_mode_disabled', {
+        editionProfile: EDITION_CONFIG.profile
+      });
     }
     function applyAdminMode() {
       const enabled = isMatrixEdition() && EDITION_CONFIG.allowAdminBranding && isAdminModeEnabled();
@@ -1419,19 +1424,37 @@
     }
     function requestAdminAccess() {
       if (!isMatrixEdition() || !EDITION_CONFIG.allowAdminBranding || !EDITION_CONFIG.allowHiddenAdminAccess) {
+        logDiagnostic('warning', 'admin_access_blocked', {
+          reason: 'edition_without_admin_branding',
+          editionProfile: EDITION_CONFIG.profile
+        });
         alert('Esta edición operativa no permite cambiar la identidad institucional.');
         return;
       }
       if (isAdminModeEnabled()) {
         setAdminMode(true);
+        logDiagnostic('info', 'admin_access_already_enabled', {
+          editionProfile: EDITION_CONFIG.profile
+        });
         return;
       }
       const code = window.prompt('Ingresa el código de administrador de Smart Reality para editar la identidad institucional.');
-      if (code === null) return;
+      if (code === null) {
+        logDiagnostic('info', 'admin_access_cancelled', {
+          editionProfile: EDITION_CONFIG.profile
+        });
+        return;
+      }
       if (code.trim() === ADMIN_ACCESS_CODE) {
         setAdminMode(true);
+        logDiagnostic('info', 'admin_access_granted', {
+          editionProfile: EDITION_CONFIG.profile
+        });
         alert('Modo administrador activado.');
       } else {
+        logDiagnostic('warning', 'admin_access_denied', {
+          editionProfile: EDITION_CONFIG.profile
+        });
         alert('Código incorrecto.');
       }
     }
@@ -1462,6 +1485,57 @@
     saveBrandingConfig(branding);
     function tauriInvoke(command, args = {}) {
       return window.__TAURI__?.core?.invoke ? window.__TAURI__.core.invoke(command, args) : null;
+    }
+    async function logDiagnostic(level, eventName, details = {}) {
+      const entry = {
+        timestamp: new Date().toISOString(),
+        level: String(level || 'info'),
+        event: String(eventName || 'unknown_event'),
+        editionProfile: EDITION_CONFIG.profile,
+        clientId: branding?.clientId || '',
+        organizationName: branding?.organizationName || '',
+        details
+      };
+      try {
+        if (window.__TAURI__?.core?.invoke) {
+          await tauriInvoke('append_diagnostic_log', { entry: JSON.stringify(entry) });
+        } else {
+          console.log('[diagnostic]', entry);
+        }
+      } catch (err) {
+        console.warn('No se pudo registrar el diagnóstico.', err);
+      }
+      return entry;
+    }
+    async function exportDiagnosticLog() {
+      if (!window.__TAURI__?.core?.invoke) {
+        alert('La exportación de diagnóstico sólo está disponible en la app de escritorio.');
+        return;
+      }
+      try {
+        const path = await tauriInvoke('export_diagnostic_log');
+        await logDiagnostic('info', 'diagnostic_log_exported', { path });
+        alert(`Diagnóstico exportado correctamente en:\n${path}`);
+      } catch (err) {
+        await logDiagnostic('error', 'diagnostic_log_export_failed', { error: String(err || '') });
+        alert(`No fue posible exportar el diagnóstico.\n${err}`);
+      }
+    }
+    async function clearDiagnosticLog() {
+      if (!window.__TAURI__?.core?.invoke) {
+        alert('La limpieza de diagnóstico sólo está disponible en la app de escritorio.');
+        return;
+      }
+      const confirmed = window.confirm('¿Deseas limpiar el diagnóstico técnico de esta instalación?');
+      if (!confirmed) return;
+      try {
+        const path = await tauriInvoke('clear_diagnostic_log');
+        await logDiagnostic('info', 'diagnostic_log_cleared', { path });
+        alert('Diagnóstico técnico limpiado correctamente.');
+      } catch (err) {
+        await logDiagnostic('error', 'diagnostic_log_clear_failed', { error: String(err || '') });
+        alert(`No fue posible limpiar el diagnóstico.\n${err}`);
+      }
     }
     async function saveBrandingToDesktop() {
       const invoke = tauriInvoke;
@@ -1520,6 +1594,19 @@
     }
     applyBranding();
     applyAdminMode();
+    window.addEventListener('error', (event) => {
+      logDiagnostic('error', 'window_error', {
+        message: event.message || '',
+        source: event.filename || '',
+        line: event.lineno || 0,
+        column: event.colno || 0
+      });
+    });
+    window.addEventListener('unhandledrejection', (event) => {
+      logDiagnostic('error', 'unhandled_promise_rejection', {
+        reason: String(event.reason || '')
+      });
+    });
 
     function money(n) { n = Number(n || 0); return n.toLocaleString('es-EC', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 }); }
     function num(v) {
@@ -1615,8 +1702,10 @@
           contents: JSON.stringify(payload, null, 2),
           suggestedName: `${name}_branding`
         }).then((savedPath) => {
+          logDiagnostic('info', 'branding_exported', { path: savedPath, suggestedName: `${name}_branding` });
           alert(`Marca exportada correctamente en:\n${savedPath}`);
         }).catch((err) => {
+          logDiagnostic('error', 'branding_export_failed', { error: String(err || '') });
           alert(`No fue posible exportar la marca.\n${err}`);
         });
         return;
@@ -2922,8 +3011,17 @@ const html = `<div class="report"><div class="report-section"><div class="report
           contents: JSON.stringify(payload, null, 2),
           suggestedName
         }).then((savedPath) => {
+          logDiagnostic('info', 'costeo_exported', {
+            path: savedPath,
+            suggestedName,
+            snapshot: buildSupportSnapshot()
+          });
           alert(`Costeo exportado correctamente en:\n${savedPath}`);
         }).catch((err) => {
+          logDiagnostic('error', 'costeo_export_failed', {
+            error: String(err || ''),
+            suggestedName
+          });
           alert(`No fue posible exportar el costeo.\n${err}`);
         });
         return;
@@ -2943,8 +3041,12 @@ const html = `<div class="report"><div class="report-section"><div class="report
         tauriInvoke('import_costeo_file').then((raw) => {
           const payload = JSON.parse(raw);
           applyCosteoPayload(payload);
+          logDiagnostic('info', 'costeo_imported', {
+            snapshot: buildSupportSnapshot()
+          });
           alert('Archivo cargado correctamente.');
         }).catch((err) => {
+          logDiagnostic('error', 'costeo_import_failed', { error: String(err || '') });
           alert(`No fue posible cargar el archivo.\n${err}`);
         });
         return;
@@ -2957,8 +3059,10 @@ const html = `<div class="report"><div class="report-section"><div class="report
         try {
           const dataUrl = await tauriInvoke('import_logo_file');
           mergeBrandingConfig({ ...collectBrandingFormValues(), logoPath: dataUrl });
+          await logDiagnostic('info', 'branding_logo_loaded', { mode: 'desktop_picker' });
         } catch (err) {
           if (String(err || '').includes('No se seleccionó')) return;
+          await logDiagnostic('error', 'branding_logo_load_failed', { error: String(err || '') });
           alert(`No fue posible cargar el logo.\n${err}`);
         }
         return;
@@ -2967,10 +3071,15 @@ const html = `<div class="report"><div class="report-section"><div class="report
     };
     btnBrandApply.onclick = () => {
       mergeBrandingConfig(collectBrandingFormValues());
+      logDiagnostic('info', 'branding_applied', {
+        clientId: branding.clientId,
+        organizationName: branding.organizationName
+      });
       alert('Identidad institucional aplicada correctamente.');
     };
     btnBrandResetDefaults.onclick = () => {
       mergeBrandingConfig({ ...DEFAULT_BRANDING });
+      logDiagnostic('info', 'branding_reset_to_default', {});
       alert('Se restauró la identidad base del producto.');
     };
     btnAdminExit.onclick = () => {
@@ -2978,6 +3087,8 @@ const html = `<div class="report"><div class="report-section"><div class="report
       alert('Modo administrador desactivado.');
     };
     btnBrandExport.onclick = () => exportBrandingFile();
+    btnDiagExport.onclick = () => exportDiagnosticLog();
+    btnDiagClear.onclick = () => clearDiagnosticLog();
     btnBrandLoad.onclick = () => {
       brandLoader.value = '';
       brandLoader.click();
@@ -2996,8 +3107,16 @@ const html = `<div class="report"><div class="report-section"><div class="report
       try {
         const payload = JSON.parse(await file.text());
         applyCosteoPayload(payload);
+        await logDiagnostic('info', 'costeo_imported_browser', {
+          fileName: file.name,
+          snapshot: buildSupportSnapshot()
+        });
         alert('Archivo cargado correctamente.');
       } catch (err) {
+        await logDiagnostic('error', 'costeo_import_failed_browser', {
+          error: String(err || ''),
+          fileName: file?.name || ''
+        });
         alert('No fue posible cargar el archivo. Revisa que sea un JSON válido exportado por esta app.');
       }
     };
@@ -3007,8 +3126,15 @@ const html = `<div class="report"><div class="report-section"><div class="report
       try {
         const payload = JSON.parse(await file.text());
         mergeBrandingConfig(payload);
+        await logDiagnostic('info', 'branding_imported_browser', {
+          fileName: file.name
+        });
         alert('Marca cargada correctamente.');
       } catch (err) {
+        await logDiagnostic('error', 'branding_import_failed_browser', {
+          error: String(err || ''),
+          fileName: file?.name || ''
+        });
         alert('No fue posible cargar la marca. Revisa que sea un JSON válido de branding.');
       }
     };
@@ -3027,6 +3153,9 @@ const html = `<div class="report"><div class="report-section"><div class="report
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       document.querySelector('[data-tab="tab-report"]').classList.add('active');
       calcAll();
+      logDiagnostic('info', 'print_requested', {
+        snapshot: buildSupportSnapshot()
+      });
       setTimeout(() => window.print(), 150);
     };
 

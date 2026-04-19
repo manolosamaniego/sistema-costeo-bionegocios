@@ -95,6 +95,7 @@ Cuando un cliente reporte una falla, solicitar:
 - archivo JSON del costeo
 - versión de la app
 - archivo de marca, si aplica
+- archivo exportado desde `Exportar diagnóstico`
 - descripción breve de lo que intentó hacer
 
 Luego:
@@ -123,3 +124,4 @@ Revisa:
 - [Ediciones Matriz y Operativa](C:\Users\Usuario\Documents\Proyectos\App de Costos\sistema-costeo-bionegocios\docs\EDICIONES-MATRIZ-Y-OPERATIVA.md)
 - [Mecanismo de actualización](C:\Users\Usuario\Documents\Proyectos\App de Costos\sistema-costeo-bionegocios\docs\MECANISMO-DE-ACTUALIZACION.md)
 - [Actualizar cliente](C:\Users\Usuario\Documents\Proyectos\App de Costos\sistema-costeo-bionegocios\docs\ACTUALIZAR-CLIENTE.md)
+- [Diagnóstico y soporte remoto](C:\Users\Usuario\Documents\Proyectos\App de Costos\sistema-costeo-bionegocios\docs\DIAGNOSTICO-Y-SOPORTE-REMOTO.md)
