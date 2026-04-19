@@ -1,0 +1,3047 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistema Comercial de Costeo para Bionegocios</title>
+  <style>
+    :root {
+      --brand: #d94a1f;
+      --green: #6f9915;
+      --line: #d8dfd0;
+      --bg: #f7f7f3;
+      --card: #ffffff;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --shadow: 0 6px 18px rgba(0,0,0,.06);
+      --radius: 16px;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    }
+    body { line-height: 1.35; }
+    .wrap { max-width: 1280px; margin: 0 auto; padding: 16px; }
+    .small { font-size: 12px; color: var(--muted); }
+    .header {
+      position: sticky; top: 0; z-index: 10; background: #fff;
+      border-bottom: 1px solid var(--line); box-shadow: 0 2px 8px rgba(0,0,0,.03);
+    }
+    .header-inner {
+      max-width: 1280px; margin: 0 auto; padding: 10px 16px;
+      display: flex; gap: 14px; align-items: center; justify-content: space-between;
+    }
+    .brand-box { display: flex; align-items: center; gap: 12px; }
+    .brand-box img { height: 42px; width: auto; object-fit: contain; }
+    .brand-title { font-size: 28px; font-weight: 800; }
+    .brand-sub { font-size: 13px; color: var(--muted); }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    button {
+      border: none; background: var(--brand); color: #fff;
+      padding: 10px 14px; border-radius: 12px; cursor: pointer; font-weight: 700;
+    }
+    button.secondary { background: #fff; color: var(--ink); border: 1px solid var(--line); }
+    button.ghost { background: #f3f4f6; color: var(--ink); }
+    .tabs {
+      max-width: 1280px; margin: 0 auto; padding: 0 16px 12px;
+      display: flex; gap: 8px; overflow: auto; background: #fff;
+    }
+    .tab-btn {
+      background: #fff; color: var(--ink); border: 1px solid var(--line);
+      padding: 10px 14px; border-radius: 999px; white-space: nowrap;
+    }
+    .tab-btn.active { background: var(--green); color: #fff; border-color: var(--green); }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    .card {
+      background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 16px; margin-bottom: 16px;
+    }
+    .grid { display: grid; gap: 14px; }
+    .g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .g4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    @media (max-width: 900px) {
+      .g3, .g4 { grid-template-columns: 1fr; }
+      .brand-title { font-size: 22px; }
+      .header-inner { flex-direction: column; align-items: flex-start; }
+    }
+    .field label {
+      display: block; font-size: 12px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: .05em; color: #51604f; margin-bottom: 6px;
+    }
+    input, select, textarea {
+      width: 100%; border: 1px solid #cfd8c5; border-radius: 14px;
+      padding: 11px 12px; font-size: 15px; background: #fff; color: var(--ink);
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none; border-color: var(--green); box-shadow: 0 0 0 3px rgba(111,153,21,.12);
+    }
+    textarea { min-height: 78px; resize: vertical; }
+    .info-strip {
+      background: #eef5df; border-left: 5px solid var(--green);
+      border-radius: 14px; padding: 14px 16px;
+    }
+    .module-banner {
+      background: #eef5df;
+      border-left: 5px solid var(--green);
+      border-radius: 16px;
+      padding: 14px 18px;
+      margin-bottom: 16px;
+      display: grid;
+      gap: 6px;
+    }
+    .module-banner h3 {
+      margin: 0;
+      font-size: 24px;
+      color: #1f2937;
+    }
+    .module-banner p {
+      margin: 0;
+      font-size: 15px;
+      color: #495a52;
+      line-height: 1.55;
+      max-width: 980px;
+    }
+    .branding-card {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+    .branding-preview {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      background: #fff;
+      display: grid;
+      gap: 12px;
+      justify-items: center;
+    }
+    .branding-preview img {
+      max-width: 100%;
+      max-height: 90px;
+      object-fit: contain;
+    }
+    .branding-badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .branding-swatch {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 1px var(--line);
+    }
+    .branding-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .admin-only {
+      display: none !important;
+    }
+    .admin-only.admin-visible {
+      display: block !important;
+    }
+    .admin-inline.admin-visible {
+      display: inline-flex !important;
+    }
+    .admin-grid.admin-visible {
+      display: grid !important;
+    }
+    @media (max-width: 900px) {
+      .branding-card { grid-template-columns: 1fr; }
+    }
+
+    .home-hero {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 16px;
+      align-items: center;
+      background: #eef5df;
+      border-left: 5px solid var(--green);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 14px;
+    }
+    .home-hero-logo {
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:transparent;
+      border:none;
+      border-radius:0;
+      min-height:90px;
+      padding:0;
+    }
+    .home-hero-logo img {
+      max-width: 100%;
+      max-height: 84px;
+      object-fit: contain;
+    }
+    .home-hero-text h3 {
+      margin: 0 0 8px 0;
+      font-size: 18px;
+    }
+    .home-steps {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .home-step {
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:10px 12px;
+      font-size:13px;
+      line-height:1.35;
+    }
+    .home-step b {
+      color: var(--green);
+      display:block;
+      margin-bottom:4px;
+    }
+    @media (max-width: 900px) {
+      .home-hero {
+        grid-template-columns: 1fr;
+      }
+      .home-steps {
+        grid-template-columns: 1fr;
+      }
+    }
+    .info-grid {
+      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px; margin-top: 12px;
+    }
+    .info-box {
+      background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 12px;
+    }
+    @media (max-width: 900px) { .info-grid { grid-template-columns: 1fr; } }
+    .section-title { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+    .section-title h2 { font-size: 26px; }
+    .table-wrap { overflow: auto; border: 1px solid var(--line); border-radius: 14px; }
+    table { width: 100%; border-collapse: collapse; min-width: 980px; background: #fff; }
+    th, td { border-bottom: 1px solid #e6eadf; padding: 8px; text-align: left; vertical-align: top; }
+    th {
+      background: #f0f3ea; font-size: 12px; text-transform: uppercase;
+      letter-spacing: .05em; color: #49564b;
+    }
+    td input, td select { min-width: 100px; }
+    .row-total { font-weight: 800; color: #b83d19; white-space: nowrap; }
+    .cell-stack { display:grid; gap:6px; min-width: 150px; }
+    .cell-stack.compact { min-width: 120px; }
+    .cell-help { font-size: 11px; color: var(--muted); line-height: 1.35; }
+    .cell-warning {
+      font-size: 11px;
+      color: #8a4b12;
+      background: #fff5eb;
+      border: 1px solid #f3d2b2;
+      border-radius: 10px;
+      padding: 6px 8px;
+      min-width: 180px;
+    }
+    .status-pill {
+      display:inline-flex;
+      align-items:center;
+      padding:5px 9px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:800;
+      background:#eef5df;
+      color:#51604f;
+      white-space:nowrap;
+    }
+    .status-pill.warn { background:#fff5eb; color:#8a4b12; }
+    .status-pill.bad { background:#fdecea; color:#9c2f1d; }
+    .mini-inline-grid { display:grid; gap:6px; }
+    .mini-inline-grid.three { grid-template-columns: repeat(3, minmax(60px, 1fr)); }
+    .readonly-box {
+      border:1px solid #d8dfd0;
+      border-radius:12px;
+      background:#fafbf8;
+      padding:10px 12px;
+      font-size:14px;
+      min-width:100px;
+    }
+    .indirect-stack { display:grid; gap:12px; }
+    .indirect-row-wrap {
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:#fcfdf9;
+      overflow-x:auto;
+      padding:10px;
+    }
+    .indirect-row {
+      display:grid;
+      grid-auto-flow:column;
+      grid-auto-columns:minmax(150px, auto);
+      gap:10px;
+      align-items:start;
+      min-width:max-content;
+    }
+    .field-card {
+      border:1px solid #e4e9dc;
+      border-radius:14px;
+      background:#fff;
+      padding:10px;
+    }
+    .field-card label {
+      display:block;
+      font-size:11px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.05em;
+      color:#51604f;
+      margin-bottom:8px;
+    }
+    .field-card .hint {
+      font-size:12px;
+      color:var(--muted);
+      margin-top:8px;
+      line-height:1.4;
+    }
+    .formula-box {
+      border:1px solid #f1d6bd;
+      border-radius:14px;
+      background:#fff8f1;
+      padding:12px;
+      min-width: 180px;
+    }
+    .formula-box .amount {
+      font-size:26px;
+      font-weight:800;
+      color:#b83d19;
+      margin-bottom:4px;
+    }
+    .formula-box .formula {
+      font-size:12px;
+      color:#7c4a1f;
+      line-height:1.45;
+    }
+    .transform-row-wrap {
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:#fcfdf9;
+      overflow-x:auto;
+      padding:10px;
+    }
+    .transform-row {
+      display:grid;
+      grid-auto-flow:column;
+      grid-auto-columns:minmax(150px, auto);
+      gap:10px;
+      align-items:start;
+      min-width:max-content;
+    }
+    .summary-grid {
+      display:grid;
+      gap:12px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .summary-box {
+      border:1px solid #e4e9dc;
+      border-radius:14px;
+      background:#fff;
+      padding:14px;
+    }
+    .summary-box .label {
+      font-size:11px;
+      font-weight:800;
+      text-transform:uppercase;
+      color:#51604f;
+      letter-spacing:.05em;
+    }
+    .summary-box .value {
+      margin-top:8px;
+      font-size:28px;
+      font-weight:800;
+      color:#1f2937;
+    }
+    .summary-box .hint {
+      margin-top:6px;
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.45;
+    }
+    .summary-box .percent {
+      margin-top: 8px;
+      font-size: 18px;
+      font-weight: 800;
+      color: #6f9915;
+    }
+    .summary-box.review {
+      background:#fef2f2;
+      border-color:#f3c3c3;
+    }
+    .summary-box.review .value,
+    .summary-box.review .percent {
+      color:#b42318;
+    }
+    .summary-box.ok {
+      background:#f7fbef;
+    }
+    @media (max-width: 1100px) {
+      .summary-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 720px) {
+      .summary-grid { grid-template-columns: 1fr; }
+    }
+    .module-intro {
+      font-size: 15px;
+      color: #4b5563;
+      line-height: 1.55;
+      max-width: 980px;
+      margin-top: 4px;
+    }
+    .audit-banner {
+      display:grid;
+      gap:6px;
+      border-radius:14px;
+      padding:12px 14px;
+      margin-bottom:14px;
+      border:1px solid #dbe5cf;
+      background:#f7fbef;
+    }
+    .audit-banner .title {
+      font-size:12px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.05em;
+      color:#51604f;
+    }
+    .audit-banner .value {
+      font-size:24px;
+      font-weight:800;
+      color:#25643a;
+    }
+    .audit-banner .hint {
+      font-size:13px;
+      color:#53625a;
+      line-height:1.45;
+    }
+    .audit-banner.warn {
+      background:#fff7ed;
+      border-color:#f3d2b2;
+    }
+    .audit-banner.warn .value {
+      color:#b45309;
+    }
+    .audit-banner.error {
+      background:#fef2f2;
+      border-color:#f3c3c3;
+    }
+    .audit-banner.error .value {
+      color:#b42318;
+    }
+    .section-intro {
+      font-size: 15px;
+      color: #495a52;
+      line-height: 1.55;
+      margin-bottom: 12px;
+      max-width: 980px;
+    }
+    @media (max-width: 1100px) {
+      .indirect-row { gap:8px; }
+    }
+    @media (max-width: 720px) {
+      .indirect-row { gap:8px; }
+    }
+    .kpis { display: grid; gap: 12px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    @media (max-width: 900px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .kpi {
+      background: #fff; border: 1px solid var(--line); border-radius: 16px;
+      padding: 14px; box-shadow: var(--shadow);
+    }
+    .kpi.signal-green { background:#f5fbf6; border-color:#cfe6d3; }
+    .kpi.signal-yellow { background:#fff9ec; border-color:#f3ddb0; }
+    .kpi.signal-red { background:#fef2f2; border-color:#f3c3c3; }
+    .kpi .label { font-size: 12px; text-transform: uppercase; color: #51604f; font-weight: 800; }
+    .kpi .value { margin-top: 6px; font-size: 32px; font-weight: 800; color: #1f2f1c; }
+    .kpi .sub { font-size: 12px; color: var(--muted); margin-top: 3px; }
+    .signal-badge {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:800;
+      margin-top:8px;
+    }
+    .signal-badge.green { background:#e7f6ea; color:#25643a; }
+    .signal-badge.yellow { background:#fff2cf; color:#9a6700; }
+    .signal-badge.red { background:#fde8e8; color:#b42318; }
+    .split { display: grid; gap: 16px; grid-template-columns: 1.1fr .9fr; }
+    @media (max-width: 1000px) { .split { grid-template-columns: 1fr; } }
+    .bar-row { display: grid; grid-template-columns: 140px 1fr 90px; gap: 10px; align-items: center; margin: 10px 0; }
+    .bar-track { background: #edf0e7; border-radius: 999px; height: 16px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 999px; }
+    .exec-summary {
+      border:1px solid #dfe8d4;
+      border-radius:16px;
+      background:linear-gradient(135deg,#fbfcf7 0%, #f1f7e4 100%);
+      padding:16px 18px;
+      margin-top:12px;
+    }
+    .exec-summary .eyebrow {
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+      font-weight:800;
+      color:#6f9915;
+    }
+    .exec-summary .text {
+      margin-top:8px;
+      font-size:18px;
+      line-height:1.5;
+      color:#1f2937;
+      font-weight:600;
+    }
+    .composition-stack {
+      display:grid;
+      gap:12px;
+      margin-top:12px;
+    }
+    .composition-item {
+      border:1px solid #e3e9da;
+      border-radius:16px;
+      background:#fff;
+      padding:12px 14px;
+    }
+    .composition-top {
+      display:grid;
+      grid-template-columns: 1.2fr auto auto;
+      gap:12px;
+      align-items:center;
+    }
+    .composition-label {
+      font-size:18px;
+      font-weight:800;
+      color:#1f2937;
+    }
+    .composition-money {
+      font-size:24px;
+      font-weight:800;
+      color:#1f2937;
+      white-space:nowrap;
+    }
+    .composition-pct {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:88px;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:800;
+      background:#eef5df;
+      color:#51604f;
+      white-space:nowrap;
+    }
+    .composition-meta {
+      display:flex;
+      gap:8px;
+      align-items:center;
+      margin-bottom:8px;
+      flex-wrap:wrap;
+    }
+    .priority-tag {
+      display:inline-flex;
+      align-items:center;
+      padding:5px 9px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+    }
+    .priority-high { background:#fde8e8; color:#b42318; }
+    .priority-medium { background:#fff2cf; color:#9a6700; }
+    .priority-low { background:#eef5df; color:#51604f; }
+    .composition-bar {
+      margin-top:8px;
+      background:#eef1ea;
+      height:16px;
+      border-radius:999px;
+      overflow:hidden;
+    }
+    .composition-fill {
+      height:100%;
+      border-radius:999px;
+    }
+    .decision-findings .finding {
+      padding:22px;
+      border-radius:22px;
+      box-shadow: 0 12px 28px rgba(15, 23, 42, .08);
+    }
+    .decision-findings .finding h4 {
+      margin:0 0 12px 0;
+      font-size:28px;
+      line-height:1.1;
+    }
+    .decision-findings .finding .small {
+      font-size:20px;
+      line-height:1.55;
+      color:#223046;
+    }
+    .decision-findings .finding:nth-child(1) {
+      background:linear-gradient(135deg,#f4fae8 0%, #fbfdf6 100%);
+      border:1px solid #cfe2a1;
+    }
+    .decision-findings .finding:nth-child(2) {
+      background:linear-gradient(135deg,#fff2e7 0%, #fffaf6 100%);
+      border:1px solid #f0c49f;
+    }
+    .decision-findings .finding:nth-child(3) {
+      background:linear-gradient(135deg,#ffe7d4 0%, #fff7ef 100%);
+      border:1px solid #e9ae78;
+      transform: translateY(-2px);
+    }
+    .decision-canvas {
+      margin-top:18px;
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap:14px;
+    }
+    .canvas-box {
+      border:1px solid #d9e4cc;
+      border-radius:18px;
+      background:linear-gradient(180deg,#ffffff 0%, #fbfcf7 100%);
+      padding:18px;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, .05);
+    }
+    .canvas-box .label {
+      font-size:12px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.05em;
+      color:#6f9915;
+    }
+    .canvas-box .text {
+      margin-top:8px;
+      font-size:18px;
+      line-height:1.55;
+      color:#223046;
+    }
+    @media (max-width: 900px) {
+      .decision-canvas {
+        grid-template-columns: 1fr;
+      }
+    }
+    .findings { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    @media (max-width: 900px) { .findings { grid-template-columns: 1fr; } }
+    .finding { border: 1px solid var(--line); border-radius: 14px; padding: 14px; background: #fff; }
+    .report {
+      background: #fff; border: 1px solid var(--line); border-radius: 18px;
+      box-shadow: var(--shadow); overflow: hidden;
+    }
+    .report-header {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 14px 18px; border-bottom: 3px solid var(--green);
+    }
+    .report-header .left { display: flex; align-items: center; gap: 10px; }
+    .report-header img { height: 22px; width: auto; object-fit: contain; }
+    .report-header h2 { font-size: 28px; line-height: 1.05; }
+    .report-section { padding: 14px 18px; border-bottom: 1px solid #e8ece2; }
+    .report-section:last-child { border-bottom: none; }
+    .report-mini-grid { display: grid; gap: 10px; grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    @media (max-width: 900px) { .report-mini-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .mini { border: 1px solid var(--line); border-radius: 14px; padding: 10px 12px; background: #fafbf8; }
+    .mini .m-label { font-size: 11px; text-transform: uppercase; color: #51604f; font-weight: 800; }
+    .mini .m-val { font-size: 22px; font-weight: 800; margin-top: 4px; }
+    .exec-box { border-left: 4px solid var(--green); background: #f8fbf0; padding: 12px 14px; border-radius: 12px; }
+    .audit-grid { display:grid; grid-template-columns: 1.15fr .85fr; gap:12px; }
+    .audit-box {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+      background: #fafbf8;
+    }
+    .audit-box h4 {
+      margin: 0 0 8px 0;
+      font-size: 14px;
+    }
+    .audit-list {
+      display: grid;
+      gap: 6px;
+      font-size: 12px;
+      color: #334155;
+    }
+    .audit-line {
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      border-bottom:1px dashed #d8dfd0;
+      padding-bottom:4px;
+    }
+    .audit-line:last-child { border-bottom:none; padding-bottom:0; }
+    .audit-tag {
+      display:inline-flex;
+      align-items:center;
+      padding:4px 8px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:800;
+      background:#eef5df;
+      color:#51604f;
+    }
+    .audit-alerts {
+      display:grid;
+      gap:6px;
+      margin-top:8px;
+    }
+    .audit-alert {
+      border-radius:10px;
+      padding:8px 10px;
+      font-size:12px;
+      background:#fff5eb;
+      color:#8a4b12;
+      border:1px solid #f3d2b2;
+    }
+    .report-shell {
+      display:grid;
+      gap:0;
+    }
+    .report-hero {
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:12px;
+      align-items:start;
+    }
+    .report-title-block .left {
+      display:flex;
+      align-items:flex-start;
+      gap:12px;
+    }
+    .report-title-block .left img {
+      height:20px;
+      width:auto;
+      max-width:110px;
+      object-fit:contain;
+      margin-top:2px;
+      flex:0 0 auto;
+    }
+    .report-title-block h1 {
+      margin:0;
+      font-size:22px;
+      line-height:1.1;
+      color:#1f2937;
+    }
+    .report-title-block .report-subline {
+      margin-top:6px;
+      font-size:11px;
+      color:#667085;
+    }
+    .report-title-block .report-product-line {
+      margin-top:8px;
+      display:grid;
+      gap:3px;
+      font-size:13px;
+      line-height:1.35;
+      color:#344054;
+    }
+    .report-meta-grid {
+      display:grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap:10px;
+      margin-top:14px;
+    }
+    .report-meta {
+      border:1px solid #dde6d2;
+      background:#fbfcf8;
+      border-radius:14px;
+      padding:10px 12px;
+    }
+    .report-meta .k {
+      font-size:10px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+      color:#6b7280;
+    }
+    .report-meta .v {
+      margin-top:6px;
+      font-size:18px;
+      font-weight:800;
+      color:#1f2937;
+      line-height:1.2;
+    }
+    .report-kpi-strip {
+      display:grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap:12px;
+    }
+    .report-kpi {
+      border:1px solid #dbe5cf;
+      border-radius:18px;
+      padding:14px 16px;
+      background:linear-gradient(180deg,#ffffff 0%, #fbfcf8 100%);
+    }
+    .report-kpi.alert-red {
+      background:linear-gradient(180deg,#fff4f4 0%, #fffafa 100%);
+      border-color:#f0c2c2;
+    }
+    .report-kpi.alert-yellow {
+      background:linear-gradient(180deg,#fff8ec 0%, #fffdfa 100%);
+      border-color:#f0ddb2;
+    }
+    .report-kpi.alert-green {
+      background:linear-gradient(180deg,#f4faf3 0%, #fbfdf9 100%);
+      border-color:#cfe2cf;
+    }
+    .report-kpi .k {
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+      font-weight:800;
+      color:#51604f;
+    }
+    .report-kpi .v {
+      margin-top:8px;
+      font-size:24px;
+      line-height:1.05;
+      font-weight:900;
+      color:#142032;
+    }
+    .report-kpi .s {
+      margin-top:8px;
+      font-size:12px;
+      line-height:1.45;
+      color:#667085;
+    }
+    .report-summary-box {
+      border:1px solid #dce5d1;
+      background:linear-gradient(135deg,#fbfcf7 0%, #f4f8e8 100%);
+      border-radius:18px;
+      padding:16px 18px;
+    }
+    .report-summary-box .eyebrow {
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+      font-weight:800;
+      color:#6f9915;
+    }
+    .report-summary-box .text {
+      margin-top:8px;
+      font-size:15px;
+      line-height:1.55;
+      color:#1f2937;
+      font-weight:600;
+    }
+    .report-two-col {
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap:14px;
+    }
+    .report-panel {
+      border:1px solid #dfe6d5;
+      border-radius:18px;
+      padding:14px 16px;
+      background:#fff;
+    }
+    .report-panel h3 {
+      margin:0 0 10px 0;
+      font-size:18px;
+      line-height:1.1;
+      color:#1f2937;
+    }
+    .report-panel .intro {
+      font-size:12px;
+      line-height:1.45;
+      color:#667085;
+      margin-bottom:12px;
+    }
+    .report-comp-list {
+      display:grid;
+      gap:10px;
+    }
+    .report-comp-item {
+      border:1px solid #e4eadc;
+      border-radius:14px;
+      padding:12px;
+      background:#fbfcf8;
+    }
+    .report-comp-head {
+      display:grid;
+      grid-template-columns: 1fr auto auto;
+      gap:10px;
+      align-items:center;
+    }
+    .report-comp-head .label {
+      font-size:14px;
+      font-weight:800;
+      color:#1f2937;
+    }
+    .report-comp-head .money {
+      font-size:18px;
+      font-weight:900;
+      color:#162132;
+    }
+    .report-comp-head .pct {
+      font-size:12px;
+      font-weight:800;
+      color:#51604f;
+      background:#eef5df;
+      border-radius:999px;
+      padding:5px 8px;
+    }
+    .report-progress {
+      margin-top:8px;
+      height:14px;
+      background:#edf1ea;
+      border-radius:999px;
+      overflow:hidden;
+    }
+    .report-progress > span {
+      display:block;
+      height:100%;
+      border-radius:999px;
+    }
+    .market-hero {
+      display:grid;
+      gap:12px;
+    }
+    .market-hero-top {
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+    .market-box {
+      border:1px solid #e1e7d7;
+      border-radius:16px;
+      padding:14px;
+      background:#fbfcf8;
+    }
+    .market-box .k {
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+      font-weight:800;
+      color:#51604f;
+    }
+    .market-box .v {
+      margin-top:8px;
+      font-size:22px;
+      line-height:1.05;
+      font-weight:900;
+      color:#162132;
+    }
+    .market-box .s {
+      margin-top:8px;
+      font-size:12px;
+      color:#667085;
+    }
+    .report-signal {
+      display:inline-flex;
+      align-items:center;
+      padding:7px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:900;
+      margin-top:10px;
+    }
+    .report-signal.red { background:#fde8e8; color:#b42318; }
+    .report-signal.yellow { background:#fff2cf; color:#9a6700; }
+    .report-signal.green { background:#e7f6ea; color:#25643a; }
+    .report-final-grid {
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap:12px;
+    }
+    .report-final-card {
+      border-radius:18px;
+      padding:16px;
+      border:1px solid #dee6d2;
+      background:#fff;
+    }
+    .report-final-card h4 {
+      margin:0 0 10px 0;
+      font-size:18px;
+      line-height:1.1;
+      color:#1f2937;
+    }
+    .report-final-card p {
+      margin:0;
+      font-size:13px;
+      line-height:1.5;
+      color:#344054;
+    }
+    .report-final-card.primary {
+      background:linear-gradient(135deg,#fff0e1 0%, #fff9f4 100%);
+      border-color:#efc49e;
+    }
+    .report-note-strip {
+      display:grid;
+      gap:8px;
+      margin-top:12px;
+    }
+    .report-note {
+      font-size:12px;
+      line-height:1.45;
+      border-radius:12px;
+      padding:8px 10px;
+      border:1px solid #e6eadf;
+      background:#fafbf8;
+      color:#52606d;
+    }
+    @media (max-width: 900px) {
+      .report-hero,
+      .report-two-col,
+      .report-kpi-strip,
+      .report-meta-grid,
+      .report-final-grid,
+      .market-hero-top {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 900px) { .audit-grid { grid-template-columns: 1fr; } }
+    .hide-print {}
+    .only-report-print { display: none; }
+    @media print {
+      body { background: #fff; }
+      .header, .tabs, .hide-print { display: none !important; }
+      .wrap { max-width: none; padding: 0; }
+      .panel { display: none !important; }
+      #tab-report.panel { display: none !important; }
+      #report-print-only { display: block !important; }
+      .report, #report-print-only .report { border: none; box-shadow: none; border-radius: 0; }
+      @page { size: A4 portrait; margin: 8mm; }
+      html, body { width: 210mm; height: 297mm; }
+      .report-section { padding: 10px 12px; }
+      .report-title-block h1 { font-size: 21px; }
+      .report-title-block .report-product-line { font-size: 11px; }
+      .report-title-block .left { display:flex; align-items:flex-start; gap:10px; }
+      .report-title-block .left img { height: 16px; max-width: 88px; }
+      .report-hero { grid-template-columns: 1fr !important; gap: 10px; }
+      .report-meta-grid { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; gap: 8px; }
+      .report-kpi-strip { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; gap: 8px; }
+      .report-two-col { grid-template-columns: 1.05fr .95fr !important; gap: 10px; }
+      .report-final-grid { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 8px; }
+      .market-hero-top { grid-template-columns: 1fr 1fr !important; gap: 8px; }
+      .report-kpi .v { font-size: 20px; }
+      .report-summary-box .text { font-size: 13px; }
+      .report-panel h3 { font-size: 16px; }
+      .report-final-card h4 { font-size: 15px; }
+      .report-final-card p, .report-note, .market-box .s, .report-kpi .s, .report-panel .intro { font-size: 10px; line-height: 1.35; }
+      .report-comp-head .money, .market-box .v { font-size: 18px; }
+      .report-final-card { padding: 12px; }
+      .report-meta { padding: 8px 10px; }
+      .report-kpi { padding: 10px 12px; }
+      .report-panel { padding: 10px 12px; }
+      .report-comp-item { padding: 9px 10px; }
+      .report-note-strip { gap: 6px; margin-top: 8px; }
+      .report-note { padding: 6px 8px; }
+      .report-header, .report-section, .finding, .mini, .kpi, .card, table, tr, td {
+        break-inside: avoid; page-break-inside: avoid;
+      }
+      table { min-width: 0; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header hide-print">
+    <div class="header-inner">
+      <div class="brand-box">
+        <img id="brandHeaderLogo" src="Logo_Aliados.jpeg" alt="Aliados">
+        <div>
+          <div class="brand-title" id="brandHeaderTitle">Sistema Comercial de Costeo para Bionegocios</div>
+    <div class="brand-sub" id="brandHeaderSub">Creado por Smart Reality S.A.S.<br>"Diseñamos soluciones que impulsan el futuro."</div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="secondary" id="btnSave" type="button">Guardar archivo</button>
+        <button class="secondary" id="btnLoad" type="button">Cargar archivo</button>
+        <button class="secondary admin-only admin-inline" id="btnBrandExport" type="button">Exportar marca</button>
+        <button class="secondary admin-only admin-inline" id="btnBrandLoad" type="button">Cargar marca</button>
+        <button class="ghost" id="btnReset" type="button">Reiniciar</button>
+        <button id="btnPrint" type="button">Imprimir / PDF</button>
+        <input id="fileLoader" type="file" accept=".json" style="display:none">
+        <input id="brandLoader" type="file" accept=".json" style="display:none">
+      </div>
+    </div>
+    <nav class="tabs">
+      <button class="tab-btn active" data-tab="tab-home" type="button">Inicio</button>
+      <button class="tab-btn" data-tab="tab-costs" type="button">Costos</button>
+      <button class="tab-btn" data-tab="tab-transform" type="button">Transformacion</button>
+      <button class="tab-btn" data-tab="tab-market" type="button">Mercado</button>
+      <button class="tab-btn" data-tab="tab-results" type="button">Resultados</button>
+      <button class="tab-btn" data-tab="tab-report" type="button">Informe</button>
+    </nav>
+  </header>
+
+  <div class="wrap">
+    
+<section class="panel active" id="tab-home">
+      <div class="card">
+        <div class="home-hero">
+          <div class="home-hero-logo">
+            <img id="brandHomeLogo" src="Logo_Aliados.jpeg" alt="Aliados">
+          </div>
+          <div class="home-hero-text">
+            <h3>Ruta de uso</h3>
+            <div class="home-steps">
+              <div class="home-step"><b>1</b>Define los datos del costeo y el responsable.</div>
+              <div class="home-step"><b>2</b>Registra costos con la cuenta correcta.</div>
+              <div class="home-step"><b>3</b>Asigna salidas, presentaciones y merma.</div>
+              <div class="home-step"><b>4</b>Compara el precio con el mercado.</div>
+              <div class="home-step"><b>5</b>Emite el informe ejecutivo final.</div>
+            </div>
+          </div>
+        </div>
+        <div class="info-grid">
+          <div class="info-box"><h4>Contable</h4><div class="small">Las cuentas quedan organizadas para revision, soporte y trazabilidad del costeo.</div></div>
+          <div class="info-box"><h4>Financiero</h4><div class="small">La app separa costo total, costo variable, precio sugerido y punto de equilibrio.</div></div>
+          <div class="info-box"><h4>Comercial</h4><div class="small">El informe resume mercado, presion del costo y decision recomendada.</div></div>
+        </div>
+      </div>
+      <div class="card admin-only" id="brandingAdminCard">
+        <div class="module-banner">
+          <h3>Identidad institucional</h3>
+          <p>Usa este módulo para adaptar la app a una organización nueva. Aquí puedes cambiar el nombre visible del cliente, el nombre del sistema, los colores y el logo sin tocar el código.</p>
+        </div>
+        <div class="branding-card">
+          <div class="branding-preview">
+            <img id="brandingPreviewLogo" src="Logo_Aliados.jpeg" alt="Logo institucional">
+            <div class="small" id="brandingPreviewOrg">Fundacion Aliados</div>
+            <div class="branding-badges">
+              <span class="branding-swatch" id="brandingPrimarySwatch" style="background:#d94a1f"></span>
+              <span class="branding-swatch" id="brandingSecondarySwatch" style="background:#6f9915"></span>
+            </div>
+            <button class="secondary" id="btnBrandPickLogo" type="button">Seleccionar logo</button>
+          </div>
+          <div>
+            <div class="grid g3">
+              <div class="field"><label>Nombre de la organización visible</label><input id="brandingOrganizationName" type="text" placeholder="Ejemplo: Fundacion Aliados"></div>
+              <div class="field"><label>Nombre visible del sistema</label><input id="brandingProductDisplayName" type="text" placeholder="Sistema Comercial de Costeo para Bionegocios"></div>
+              <div class="field"><label>Identificador del cliente</label><input id="brandingClientId" type="text" placeholder="cliente-nuevo"></div>
+              <div class="field"><label>Color principal</label><input id="brandingPrimaryColor" type="color" value="#d94a1f"></div>
+              <div class="field"><label>Color secundario</label><input id="brandingSecondaryColor" type="color" value="#6f9915"></div>
+              <div class="field"><label>Nombre alterno del logo</label><input id="brandingLogoAlt" type="text" placeholder="Logo institucional"></div>
+            </div>
+            <div class="branding-actions">
+              <button class="secondary" id="btnBrandApply" type="button">Aplicar identidad</button>
+              <button class="secondary" id="btnBrandResetDefaults" type="button">Restaurar base</button>
+              <button class="ghost" id="btnAdminExit" type="button">Salir de modo administrador</button>
+            </div>
+            <div class="small" style="margin-top:10px">Después de aplicar la identidad, puedes usar <b>Exportar marca</b> para guardar el perfil del cliente y reutilizarlo en otras instalaciones.</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="module-banner">
+          <h3>Inicio</h3>
+          <p>Completa aquí los datos base del costeo y del responsable del proceso. Esta información alimenta los cálculos, el control de auditoría y el informe final.</p>
+        </div>
+        <div class="grid g3">
+          <div class="field"><label># de documento</label><input id="documentId" type="text" placeholder="Codigo o identificacion de este costeo"></div>
+          <div class="field"><label>Organizacion</label><input id="orgName" type="text" placeholder="Nombre de la organizacion"></div>
+          <div class="field"><label>Responsable del proceso</label><input id="responsible" type="text" placeholder="Nombre de la persona responsable"></div>
+          <div class="field"><label>Cargo del responsable</label><input id="responsibleRole" type="text" placeholder="Cargo para auditoria"></div>
+          <div class="field"><label>Producto principal o servicio</label><input id="productName" type="text" placeholder="Nombre del producto o servicio"></div>
+          <div class="field"><label>Tipo de actividad</label><select id="activityType"><option>Producto</option><option>Servicio</option></select></div>
+          <div class="field"><label>Periodo</label><select id="period"><option>por lote</option><option>por dia</option><option>por semana</option><option>por mes</option></select></div>
+          <div class="field"><label>Unidad base</label><select id="baseUnit"></select></div>
+          <div class="field"><label>Precio actual sin IVA</label><input id="currentPriceBase" type="number" min="0" step="0.01" value="0"></div>
+          <div class="field"><label>¿Aplica IVA?</label><select id="vatApplies"><option value="no">No</option><option value="si">Si</option></select></div>
+          <div class="field"><label>% IVA</label><input id="vatPct" type="number" min="0" step="0.01" value="15"></div>
+        </div>
+        <div class="field" style="margin-top:14px"><label>Observaciones</label><textarea id="notes" placeholder="Anota algo importante sobre este costeo."></textarea></div>
+      </div>
+      <div class="audit-banner" id="homeAuditBanner">
+        <div class="title">Control de auditoría</div>
+        <div class="value" id="homeAuditValue">OK</div>
+        <div class="hint" id="homeAuditHint">Completa los datos principales del costeo para dejar trazabilidad clara.</div>
+      </div>
+    </section>
+
+      <section class="panel" id="tab-costs">
+        <div class="module-banner">
+          <h3>Costos</h3>
+          <p>Registra aquí los costos del producto o servicio. Cada módulo te guía para cargar el dato correcto, calcularlo automáticamente y dejar soporte claro para revisión contable y auditoría.</p>
+        </div>
+        <div class="card"><div class="section-title"><h2>Costos directos</h2></div><div class="section-intro">Registra aquí solo lo que se puede asociar directamente al producto o servicio.</div><div class="table-wrap"><table id="tblDirect"><thead><tr><th>Cuenta contable</th><th>Descripción del costo</th><th>Unidad de medida</th><th>Cantidad usada</th><th>Valor por unidad</th><th>Tipo</th><th>Total</th><th></th></tr></thead><tbody></tbody></table></div><button class="secondary hide-print" id="addDirect" type="button">Agregar fila</button></div>
+      <div class="card">
+        <div class="section-title"><h2>Costos indirectos</h2></div>
+        <div class="module-intro">Registra aquí los gastos de apoyo del periodo. La app te dirá cómo repartirlos según la cuenta elegida y calculará automáticamente el valor asignado.</div>
+        <div id="indirectList" style="margin-top:14px"></div>
+        <button class="secondary hide-print" id="addIndirect" type="button">Agregar costo indirecto</button>
+      </div>
+      <div class="card"><div class="section-title"><h2>Comercialización</h2></div><div class="section-intro">Incluye aquí empaque comercial, distribución, promoción, comisiones y costos del canal.</div><div class="table-wrap"><table id="tblCommercial"><thead><tr><th>Cuenta contable</th><th>Descripción del costo</th><th>Unidad de medida</th><th>Cantidad</th><th>Valor por unidad</th><th>Tipo</th><th>Total</th><th></th></tr></thead><tbody></tbody></table></div><button class="secondary hide-print" id="addCommercial" type="button">Agregar fila</button></div>
+      <div class="card">
+        <div class="section-title"><h2>Biblioteca de equipos y depreciación</h2></div>
+        <div class="small">Registra aquí tus equipos para reutilizarlos en futuros costeos. La app calcula depreciación mensual y costo por hora en línea recta.</div>
+        <div class="table-wrap" style="margin-top:14px"><table id="tblEquipLibrary"><thead><tr><th>Equipo</th><th>Área</th><th>Valor de compra</th><th>Fecha de compra</th><th>Vida útil</th><th>Unidad</th><th>Horas por mes</th><th>Valor residual</th><th>Método</th><th>Depreciación mensual</th><th>Costo por hora</th><th>Observación</th><th>Responsable</th><th>Soporte</th><th></th></tr></thead><tbody></tbody></table></div>
+        <button class="secondary hide-print" id="addEquipLibrary" type="button">Agregar equipo</button>
+      </div>
+        <div class="card">
+          <div class="section-title"><h2>Asignación del uso de equipos al costeo</h2></div>
+          <div class="small">Aquí solo indicas qué equipo usaste y cuántas horas participó en este costeo. El costo por hora sale de la biblioteca.</div>
+          <div class="table-wrap" style="margin-top:14px"><table id="tblEquipUse"><thead><tr><th>Equipo</th><th>Costo por hora</th><th>Horas usadas</th><th>Tipo</th><th>Valor asignado</th><th>Observación</th><th></th></tr></thead><tbody></tbody></table></div>
+          <button class="secondary hide-print" id="addEquipUse" type="button">Agregar uso de equipo</button>
+        </div>
+        <div class="audit-banner" id="costAuditBanner">
+          <div class="title">Control de auditoría</div>
+          <div class="value" id="costAuditValue">OK</div>
+          <div class="hint" id="costAuditHint">La revisión validará si hay costos sin valor, sin soporte o sin base suficiente.</div>
+        </div>
+      </section>
+
+    <section class="panel" id="tab-transform">
+      <div class="module-banner">
+        <h3>Transformación</h3>
+        <p>Registra aquí lo que entra al proceso, las salidas reales y la merma. La app convierte todo a una unidad técnica comparable y reparte el costo común automáticamente.</p>
+      </div>
+      <div class="card">
+        <div class="section-title"><h2>Entrada del proceso</h2></div>
+        <div class="section-intro">Primero indica cuánto entra al proceso y cuál será la unidad comparable. Esta pestaña sólo aceptará cantidades que la app pueda sumar y revisar sin contradicciones.</div>
+        <div class="grid g4">
+          <div class="field"><label>Cantidad que entra al proceso</label><input id="inputQty" type="number" min="0" step="0.01" value="0"></div>
+          <div class="field"><label>Unidad de entrada</label><select id="inputUnit"></select></div>
+          <div class="field"><label>Unidad técnica base</label><select id="transformBaseUnit"></select></div>
+          <div class="field"><label>Qué estás costando aquí</label><select id="processType"><option value="primario">Un producto principal</option><option value="mezcla">Una mezcla o formulación</option><option value="coproductos">Varias salidas del mismo proceso</option><option value="envasado">Un producto en varias presentaciones</option><option value="servicio">Un servicio o entregable</option></select></div>
+        </div>
+        <div class="grid g3" style="margin-top:12px">
+          <div class="field"><label>Cómo se repartirá el costo</label><input id="allocationMethodLabel" type="text" value="Automático según cantidad física" disabled></div>
+          <div style="display:none"><select id="allocationMethod"><option value="physical">Según cantidad física</option><option value="sales">Según porcentaje de participación</option><option value="nrv">Según valor neto después del proceso</option></select></div>
+          <div class="field"><label>Control de merma</label><input type="text" value="Automática" disabled></div>
+          <div class="field"><label>Regla del proceso</label><input type="text" value="La salida útil nunca puede superar la entrada" disabled></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-title"><h2>Salidas y presentaciones</h2></div>
+        <div class="section-intro">Registra cada salida en una sola fila: nombre, cantidad final, contenido por salida y unidad. Si el proceso genera varias salidas valiosas, aquí mismo defines el porcentaje de participación y la suma debe cerrar en 100%.</div>
+        <div id="outputsList" style="margin-top:14px"></div>
+        <button class="secondary hide-print" id="addOutput" type="button">Agregar salida</button>
+      </div>
+      <div class="card">
+        <div class="section-title"><h2>Resumen del proceso</h2></div>
+        <div class="summary-grid">
+          <div class="summary-box"><div class="label">Entrada total</div><div id="sumInputQty" class="value">0</div><div class="hint">Cantidad registrada que entra al proceso.</div></div>
+          <div class="summary-box"><div class="label">Salida útil total</div><div id="sumUsefulOutput" class="value">0</div><div id="sumUsefulPct" class="percent">0%</div></div>
+          <div class="summary-box"><div class="label">Merma</div><div id="sumWaste" class="value">0</div><div id="sumWastePct" class="percent">0%</div></div>
+          <div class="summary-box ok" id="sumProcessCard"><div class="label">Estado del proceso</div><div id="sumProcessStatus" class="value">OK</div><div id="sumProcessHint" class="hint">Proceso consistente.</div></div>
+        </div>
+      </div>
+    </section>
+
+      <section class="panel" id="tab-market">
+        <div class="module-banner">
+          <h3>Mercado</h3>
+          <p>Registra aquí productos comparables para validar si tu precio sugerido está cerca, por debajo o por encima del mercado. La app prioriza presentaciones similares y te devuelve una lectura comercial simple.</p>
+        </div>
+        <div class="card">
+          <div class="section-title"><h2>Comparación con productos similares</h2></div>
+          <div class="section-intro">Llena una fila por comparable usando marca, producto, cantidad, unidad, precio y observación. Así la app puede comparar mejor sin depender de texto libre.</div>
+          <div class="table-wrap">
+            <table id="tblMarket">
+              <thead>
+                <tr>
+                  <th>Marca</th>
+                  <th>Producto</th>
+                  <th>Cantidad</th>
+                  <th>Unidad</th>
+                  <th>Precio</th>
+                  <th>Observación</th>
+                  <th>Lectura automática</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <button class="secondary hide-print" id="addMarket" type="button">Agregar comparable</button>
+        </div>
+        <div class="audit-banner" id="marketAuditBanner">
+          <div class="title">Control de auditoría</div>
+          <div class="value" id="marketAuditValue">Revisar</div>
+          <div class="hint" id="marketAuditHint">Aún no hay comparables suficientes para validar el precio frente al mercado.</div>
+        </div>
+      </section>
+
+      <section class="panel" id="tab-results">
+        <div class="module-banner">
+          <h3>Resultados</h3>
+          <p>Esta pestaña convierte el costeo en decisión comercial. Aquí defines el margen deseado después de conocer el costo real y la app te devuelve PVP, precio mayorista, margen de contribución, punto de equilibrio y lectura de mercado.</p>
+        </div>
+        <div class="card">
+          <div class="section-title"><h2>Política comercial</h2></div>
+          <div class="section-intro">Define aquí la política comercial del producto: margen para venta al público, margen para venta mayorista y volumen mínimo recomendado para activar ese precio.</div>
+          <div class="grid g3">
+            <div class="field"><label>Margen para PVP (%)</label><input id="profitPct" type="number" min="0" step="0.01" value="30"></div>
+            <div class="field"><label>Margen para precio mayorista (%)</label><input id="wholesaleMarginPct" type="number" min="0" step="0.01" value="18"></div>
+            <div class="field"><label>Cantidad mínima para mayorista</label><input id="wholesaleMinQty" type="number" min="2" step="1" value="12"></div>
+          </div>
+          <div id="policyWarning" class="audit-alert" style="display:none;margin-top:12px"></div>
+        </div>
+        <div class="card">
+          <div class="section-title"><h2>Resumen ejecutivo</h2></div>
+          <div class="section-intro">Vista ejecutiva para decidir precio, volumen mínimo y riesgo comercial.</div>
+          <div class="kpis" id="kpiGrid"></div>
+          <div class="exec-summary">
+            <div class="eyebrow">Lectura ejecutiva</div>
+            <div class="text" id="resultsExecutiveText">Completa el costeo para generar una lectura ejecutiva consolidada.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="section-title"><h2>Decisión comercial</h2></div>
+          <div class="section-intro">Indicadores clave para decidir cuánto cobrar, cuánto exige el canal mayorista y qué nivel de venta necesitas para sostener el negocio.</div>
+          <div class="kpis" id="decisionGrid"></div>
+          <div class="exec-summary">
+            <div class="eyebrow">Lectura comercial</div>
+            <div class="text" id="decisionExecutiveText">Completa el costeo para generar una lectura comercial consolidada.</div>
+          </div>
+        </div>
+        <div class="split">
+          <div class="card"><div class="section-title"><h2>Composición del costo</h2></div><div class="section-intro">Distribución visual del costo total por rubro, con prioridad de revisión y peso porcentual.</div><div id="costBars"></div><div class="small">Los valores se presentan en dólares y porcentaje para facilitar revisión gerencial, financiera y contable.</div></div>
+          <div class="card"><div class="section-title"><h2>Lectura frente al mercado</h2></div><div class="section-intro">Compara tu precio sugerido con el promedio de mercado validado por comparables útiles. Si la brecha es muy alta, la app te lo mostrará de inmediato.</div><div id="flowBars"></div><div class="small">La lectura comercial cruza tu precio sugerido contra el mercado cargado.</div></div>
+        </div>
+        <div class="card">
+          <div class="section-title"><h2>Conclusión estratégica</h2></div>
+          <div class="section-intro">Síntesis ejecutiva de hallazgos, riesgos y acción recomendada para tu Bionegocio.</div>
+          <div class="findings decision-findings"><div class="finding"><h4>Hallazgo principal</h4><div id="findingMain" class="small"></div></div><div class="finding"><h4>Riesgo principal</h4><div id="findingRisk" class="small"></div></div><div class="finding"><h4>Decisión recomendada</h4><div id="findingOpp" class="small"></div></div></div>
+          <div class="decision-canvas">
+            <div class="canvas-box"><div class="label">Diferenciador a reforzar</div><div class="text" id="canvasDifferentiator">Pendiente por definir.</div></div>
+            <div class="canvas-box"><div class="label">Próximo paso comercial</div><div class="text" id="canvasNextStep">Pendiente por definir.</div></div>
+            <div class="canvas-box"><div class="label">Validación clave</div><div class="text" id="canvasValidation">Pendiente por definir.</div></div>
+          </div>
+        </div>
+        <div class="audit-banner" id="resultsAuditBanner">
+          <div class="title">Control de auditoría</div>
+          <div class="value" id="resultsAuditValue">OK</div>
+          <div class="hint" id="resultsAuditHint">La lectura final verificará si hay base suficiente para costo, mercado y equilibrio.</div>
+        </div>
+      </section>
+
+    <section class="panel" id="tab-report"><div class="report" id="reportContent"></div></section>
+    <section id="report-print-only" class="only-report-print"></section>
+  </div>
+
+  <script>
+    const APP_PRODUCT = {
+      code: 'SRC-BIO-COSTEO',
+      name: 'Sistema Comercial de Costeo para Bionegocios',
+      vendor: 'Smart Reality S.A.S.',
+      slogan: 'Diseñamos soluciones que impulsan el futuro.',
+      edition: 'Comercial',
+      channel: 'offline-ready',
+      version: '1.0.0',
+      dataSchema: '2026-04',
+      supportEmail: 'soporte@smartrealitysas.com',
+      supportPhone: '',
+      updateEndpoint: '',
+      licenseEndpoint: '',
+      diagnosticsEndpoint: ''
+    };
+
+    const DEFAULT_BRANDING = {
+      clientId: 'fundacion-aliados',
+      organizationName: 'Fundacion Aliados',
+      productDisplayName: 'Sistema Comercial de Costeo para Bionegocios',
+      logoPath: 'Logo_Aliados.jpeg',
+      logoAlt: 'Logo institucional',
+      primaryColor: '#d94a1f',
+      secondaryColor: '#6f9915',
+      headerLine1: 'Creado por Smart Reality S.A.S.',
+      headerLine2: '"Diseñamos soluciones que impulsan el futuro."',
+      reportFooterLine1: 'Smart Reality S.A.S.',
+      reportFooterLine2: '"Diseñamos soluciones que impulsan el futuro."'
+    };
+    const BRANDING_STORAGE_KEY = 'smart_branding_config';
+    const ADMIN_MODE_STORAGE_KEY = 'smart_admin_mode';
+    const ADMIN_ACCESS_CODE = 'SR-ADMIN-2026';
+
+    const units = ["Año","Bidon","Bidones","Bolsa","Bolsas","Botella","Botellas","Caja","Cajas","Caneca","Canecas","Dia","Frasco","Frascos","Funda","Fundas","Galon","Galón","g","Hora","Horas","Jornada","Kg","kWh","Lb","Libra","Litro","Lote","m2","m3","Mes","Minuto","mL","Onza","Paquete","Paquetes","Par","Pares","Pote","Potes","Semana","Sobre","Sobres","Tarra","Tarras","Tubo","Tubos","Unidad"];
+    const behaviorOpts = ["Variable","Fijo"];
+    const directAccounts = ["Materia prima","Ingrediente","Insumo directo","Empaque directo","Mano de obra directa","Transporte de materia prima","Servicio directo","Otro directo"];
+    const indirectAccounts = ["Agua","Alquiler","Administracion","Apoyo tecnico","Comunicacion","Contabilidad","Coordinacion","Electricidad","Gas","Limpieza","Logistica administrativa","Mantenimiento","Servicios profesionales","Supervision","Otro indirecto"];
+    const commercialAccounts = ["Transporte de venta","Promocion y publicidad","Feria","Empaque de entrega","Etiquetado comercial","Comision de venta","Mano de obra de logistica","Distribucion","Otro comercial"];
+    const indirectAreas = ["Produccion","Administracion","Comercializacion"];
+    const yesNoOpts = ["Si","No"];
+    const indirectMethods = ["Horas","Dias","Horas de mano de obra","Horas maquina","Horas ponderadas","Kg procesados","Litros procesados","Unidades producidas","Lotes producidos","m2 usados","kWh reales","Porcentaje justificado"];
+    const lifeUnits = ["años","meses"];
+    const depreciationMethods = ["linea recta"];
+    const state = { direct: [], indirect: [], commercial: [], equipLibrary: [], equipUse: [], outputs: [], market: [] };
+    const EQUIP_LIBRARY_STORAGE_KEY = 'aliados_equip_library';
+    const transformUnits = ["Kg","g","Lb","Libra","Onza","Litro","mL","Galon","Galón"];
+
+    function loadBrandingConfig() {
+      try {
+        const raw = localStorage.getItem(BRANDING_STORAGE_KEY);
+        if (!raw) return { ...DEFAULT_BRANDING };
+        const parsed = JSON.parse(raw);
+        return { ...DEFAULT_BRANDING, ...(parsed || {}) };
+      } catch {
+        return { ...DEFAULT_BRANDING };
+      }
+    }
+    function saveBrandingConfig(cfg) {
+      try { localStorage.setItem(BRANDING_STORAGE_KEY, JSON.stringify(cfg || DEFAULT_BRANDING)); } catch {}
+    }
+    function isAdminModeEnabled() {
+      try { return localStorage.getItem(ADMIN_MODE_STORAGE_KEY) === 'true'; } catch { return false; }
+    }
+    function setAdminMode(enabled) {
+      try { localStorage.setItem(ADMIN_MODE_STORAGE_KEY, enabled ? 'true' : 'false'); } catch {}
+      applyAdminMode();
+    }
+    function applyAdminMode() {
+      const enabled = isAdminModeEnabled();
+      document.querySelectorAll('.admin-only').forEach((el) => {
+        el.classList.toggle('admin-visible', enabled);
+      });
+      document.querySelectorAll('.admin-inline.admin-only').forEach((el) => {
+        el.classList.toggle('admin-visible', enabled);
+      });
+      document.querySelectorAll('.admin-grid.admin-only').forEach((el) => {
+        el.classList.toggle('admin-visible', enabled);
+      });
+    }
+    function requestAdminAccess() {
+      if (isAdminModeEnabled()) {
+        setAdminMode(true);
+        return;
+      }
+      const code = window.prompt('Ingresa el código de administrador de Smart Reality para editar la identidad institucional.');
+      if (code === null) return;
+      if (code.trim() === ADMIN_ACCESS_CODE) {
+        setAdminMode(true);
+        alert('Modo administrador activado.');
+      } else {
+        alert('Código incorrecto.');
+      }
+    }
+    function syncBrandingForm() {
+      const mappings = {
+        brandingOrganizationName: branding.organizationName || '',
+        brandingProductDisplayName: branding.productDisplayName || '',
+        brandingClientId: branding.clientId || '',
+        brandingPrimaryColor: branding.primaryColor || DEFAULT_BRANDING.primaryColor,
+        brandingSecondaryColor: branding.secondaryColor || DEFAULT_BRANDING.secondaryColor,
+        brandingLogoAlt: branding.logoAlt || ''
+      };
+      Object.entries(mappings).forEach(([id, value]) => {
+        const el = document.getElementById(id);
+        if (el) el.value = value;
+      });
+      const previewLogo = document.getElementById('brandingPreviewLogo');
+      const previewOrg = document.getElementById('brandingPreviewOrg');
+      const primarySwatch = document.getElementById('brandingPrimarySwatch');
+      const secondarySwatch = document.getElementById('brandingSecondarySwatch');
+      if (previewLogo) previewLogo.src = branding.logoPath || DEFAULT_BRANDING.logoPath;
+      if (previewLogo) previewLogo.alt = branding.logoAlt || branding.organizationName || DEFAULT_BRANDING.logoAlt;
+      if (previewOrg) previewOrg.textContent = branding.organizationName || DEFAULT_BRANDING.organizationName;
+      if (primarySwatch) primarySwatch.style.background = branding.primaryColor || DEFAULT_BRANDING.primaryColor;
+      if (secondarySwatch) secondarySwatch.style.background = branding.secondaryColor || DEFAULT_BRANDING.secondaryColor;
+    }
+    let branding = loadBrandingConfig();
+    saveBrandingConfig(branding);
+    function tauriInvoke(command, args = {}) {
+      return window.__TAURI__?.core?.invoke ? window.__TAURI__.core.invoke(command, args) : null;
+    }
+    async function saveBrandingToDesktop() {
+      const invoke = tauriInvoke;
+      if (!window.__TAURI__?.core?.invoke) return;
+      try {
+        await invoke('save_branding_file', { contents: JSON.stringify(branding, null, 2) });
+      } catch (err) {
+        console.warn('No se pudo guardar el branding externo.', err);
+      }
+    }
+    async function syncBrandingFromDesktop() {
+      if (!window.__TAURI__?.core?.invoke) return;
+      try {
+        const raw = await tauriInvoke('load_branding_file');
+        if (raw && String(raw).trim()) {
+          const payload = JSON.parse(raw);
+          mergeBrandingConfig(payload, { saveDesktop: false });
+        } else {
+          await saveBrandingToDesktop();
+        }
+      } catch (err) {
+        console.warn('No se pudo cargar el branding externo.', err);
+      }
+    }
+    function mergeBrandingConfig(cfg={}, options={}) {
+      const { saveDesktop = true } = options;
+      branding = { ...DEFAULT_BRANDING, ...(cfg || {}) };
+      saveBrandingConfig(branding);
+      applyBranding();
+      if (saveDesktop) saveBrandingToDesktop();
+      if (typeof calcAll === 'function') calcAll();
+    }
+    function applyBranding() {
+      document.title = branding.productDisplayName || APP_PRODUCT.name;
+      document.documentElement.style.setProperty('--brand', branding.primaryColor || DEFAULT_BRANDING.primaryColor);
+      document.documentElement.style.setProperty('--green', branding.secondaryColor || DEFAULT_BRANDING.secondaryColor);
+
+      const headerLogo = document.getElementById('brandHeaderLogo');
+      const homeLogo = document.getElementById('brandHomeLogo');
+      const headerTitle = document.getElementById('brandHeaderTitle');
+      const headerSub = document.getElementById('brandHeaderSub');
+      const logoPath = branding.logoPath || DEFAULT_BRANDING.logoPath;
+      const logoAlt = branding.logoAlt || branding.organizationName || DEFAULT_BRANDING.logoAlt;
+
+      if (headerLogo) {
+        headerLogo.src = logoPath;
+        headerLogo.alt = logoAlt;
+      }
+      if (homeLogo) {
+        homeLogo.src = logoPath;
+        homeLogo.alt = logoAlt;
+      }
+      if (headerTitle) headerTitle.textContent = branding.productDisplayName || APP_PRODUCT.name;
+      if (headerSub) headerSub.innerHTML = `${branding.headerLine1 || DEFAULT_BRANDING.headerLine1}<br>${branding.headerLine2 || DEFAULT_BRANDING.headerLine2}`;
+      syncBrandingForm();
+    }
+    applyBranding();
+    applyAdminMode();
+
+    function money(n) { n = Number(n || 0); return n.toLocaleString('es-EC', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 }); }
+    function num(v) {
+      if (typeof v === 'string') {
+        const normalized = v.trim().replace(',', '.');
+        const parsed = Number(normalized);
+        return Number.isFinite(parsed) ? parsed : 0;
+      }
+      const parsed = Number(v || 0);
+      return Number.isFinite(parsed) ? parsed : 0;
+    }
+    function pct(v) { return (Number(v || 0)).toFixed(2) + '%'; }
+    function fillUnitSelect(el, value) { el.innerHTML = units.map(u => `<option ${u===value?'selected':''}>${u}</option>`).join(''); }
+    function fillTransformUnitSelect(el, value) { el.innerHTML = transformUnits.map(u => `<option ${u===value?'selected':''}>${u}</option>`).join(''); }
+    function setupUnits() { fillUnitSelect(baseUnit, baseUnit.value || 'Kg'); fillTransformUnitSelect(inputUnit, inputUnit.value || 'Kg'); fillTransformUnitSelect(transformBaseUnit, transformBaseUnit.value || 'Kg'); }
+    setupUnits();
+
+    function createTextInput(v='', ph='') { const i = document.createElement('input'); i.type = 'text'; i.value = v; i.placeholder = ph; return i; }
+    function createNumInput(v=0, step='0.01', min='0') { const i = document.createElement('input'); i.type='number'; i.min=min; i.step=step; i.value=v; return i; }
+    function createDateInput(v='') { const i = document.createElement('input'); i.type='date'; i.value=v; return i; }
+    function createSelect(opts, val) {
+      const s = document.createElement('select');
+      s.innerHTML = opts.map(o => {
+        if (typeof o === 'object' && o !== null) {
+          const optionValue = String(o.value ?? '');
+          const optionLabel = String(o.label ?? optionValue);
+          return `<option value="${optionValue}" ${optionValue===String(val ?? '')?'selected':''}>${optionLabel}</option>`;
+        }
+        const optionValue = String(o);
+        return `<option ${optionValue===String(val ?? '')?'selected':''}>${optionValue}</option>`;
+      }).join('');
+      return s;
+    }
+    function td(el) { const x = document.createElement('td'); x.appendChild(el); return x; }
+    function delBtn(fn) { const td = document.createElement('td'); const b = document.createElement('button'); b.type='button'; b.className='secondary hide-print'; b.textContent='Eliminar'; b.onclick = fn; td.appendChild(b); return td; }
+    function uid(prefix='id') { return `${prefix}_${Math.random().toString(36).slice(2,10)}`; }
+    function unitFamily(unit='') {
+      const u = String(unit || '').toLowerCase();
+      if (['kg','g','lb','libra','onza'].includes(u)) return 'weight';
+      if (['litro','ml','galon','galón'].includes(u)) return 'volume';
+      return 'other';
+    }
+    function convertToBase(value, fromUnit, baseUnit) {
+      const v = num(value);
+      const from = String(fromUnit || '').toLowerCase();
+      const base = String(baseUnit || '').toLowerCase();
+      if (!v || !from || !base) return 0;
+      if (unitFamily(from) !== unitFamily(base)) return NaN;
+      const weightMap = { kg:1000, g:1, lb:453.592, libra:453.592, onza:28.3495 };
+      const volumeMap = { litro:1000, ml:1, galon:3785.41, 'galón':3785.41 };
+      if (unitFamily(from) === 'weight') return (v * weightMap[from]) / weightMap[base];
+      if (unitFamily(from) === 'volume') return (v * volumeMap[from]) / volumeMap[base];
+      return NaN;
+    }
+    function saveEquipLibraryToStorage() {
+      try { localStorage.setItem(EQUIP_LIBRARY_STORAGE_KEY, JSON.stringify(state.equipLibrary || [])); } catch {}
+    }
+    function buildSupportSnapshot() {
+      return {
+        exportedAt: new Date().toISOString(),
+        platform: 'html-offline',
+        branding: {
+          clientId: branding.clientId,
+          organizationName: branding.organizationName,
+          productDisplayName: branding.productDisplayName
+        },
+        product: {
+          code: APP_PRODUCT.code,
+          name: APP_PRODUCT.name,
+          vendor: APP_PRODUCT.vendor,
+          edition: APP_PRODUCT.edition,
+          channel: APP_PRODUCT.channel,
+          version: APP_PRODUCT.version,
+          dataSchema: APP_PRODUCT.dataSchema
+        },
+        counters: {
+          direct: state.direct.length,
+          indirect: state.indirect.length,
+          commercial: state.commercial.length,
+          equipmentLibrary: state.equipLibrary.length,
+          equipmentUsage: state.equipUse.length,
+          outputs: state.outputs.length,
+          market: state.market.length
+        }
+      };
+    }
+    function exportBrandingFile() {
+      const payload = { ...branding };
+      const name = (branding.clientId || branding.organizationName || 'branding_cliente').replace(/[^\w\-]+/g, '_');
+      if (window.__TAURI__?.core?.invoke) {
+        tauriInvoke('export_branding_file', {
+          contents: JSON.stringify(payload, null, 2),
+          suggestedName: `${name}_branding`
+        }).then((savedPath) => {
+          alert(`Marca exportada correctamente en:\n${savedPath}`);
+        }).catch((err) => {
+          alert(`No fue posible exportar la marca.\n${err}`);
+        });
+        return;
+      }
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type:'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${name}_branding.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+    function slugPart(value='') {
+      return String(value || '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^\w\-]+/g, '_')
+        .replace(/^_+|_+$/g, '')
+        .replace(/_+/g, '_');
+    }
+    function buildCosteoSuggestedName() {
+      const g = getGeneral();
+      const parts = [
+        slugPart(g.orgName),
+        slugPart(g.productName),
+        slugPart(g.documentId)
+      ].filter(Boolean);
+      return parts.length ? parts.join('_') : 'costeo_bionegocios';
+    }
+    function collectBrandingFormValues() {
+      return {
+        ...branding,
+        organizationName: document.getElementById('brandingOrganizationName')?.value.trim() || DEFAULT_BRANDING.organizationName,
+        productDisplayName: document.getElementById('brandingProductDisplayName')?.value.trim() || DEFAULT_BRANDING.productDisplayName,
+        clientId: document.getElementById('brandingClientId')?.value.trim() || DEFAULT_BRANDING.clientId,
+        primaryColor: document.getElementById('brandingPrimaryColor')?.value || DEFAULT_BRANDING.primaryColor,
+        secondaryColor: document.getElementById('brandingSecondaryColor')?.value || DEFAULT_BRANDING.secondaryColor,
+        logoAlt: document.getElementById('brandingLogoAlt')?.value.trim() || DEFAULT_BRANDING.logoAlt
+      };
+    }
+    function applyCosteoPayload(payload) {
+      if (payload._branding) mergeBrandingConfig(payload._branding);
+      Object.entries(payload.general || {}).forEach(([k,v]) => { const el = document.getElementById(k); if (el) el.value = v; });
+      setupUnits();
+      Object.assign(state, {
+        direct: payload.state?.direct || [],
+        indirect: payload.state?.indirect || [],
+        commercial: payload.state?.commercial || [],
+        equipLibrary: payload.state?.equipLibrary || [],
+        equipUse: payload.state?.equipUse || [],
+        outputs: payload.state?.outputs || [],
+          market: payload.state?.market || []
+      });
+      if ((!state.equipLibrary || state.equipLibrary.length === 0) && payload.state?.equip) {
+        state.equipLibrary = (payload.state.equip || []).map(item => ({
+          id: uid('eq'),
+          name: item.description || '',
+          area: 'Produccion',
+          purchaseValue: num(item.purchaseValue),
+          purchaseDate: '',
+          lifeValue: num(item.usefulLife) || 60,
+          lifeUnit: 'meses',
+          hoursMonth: num(item.hoursMonth) || 1,
+          residualValue: 0,
+          method: 'linea recta',
+          observation: '',
+          responsible: '',
+          support: ''
+        }));
+        state.equipUse = (payload.state.equip || []).map((item, idx) => ({
+          libraryId: state.equipLibrary[idx]?.id || '',
+          behavior: item.behavior || 'Fijo',
+          hoursUsed: num(item.hoursUsed),
+          observation: ''
+        }));
+      }
+      if (state.equipLibrary.length) saveEquipLibraryToStorage();
+      initRows();
+      syncTransformMode();
+    }
+    function loadEquipLibraryFromStorage() {
+      try {
+        const raw = localStorage.getItem(EQUIP_LIBRARY_STORAGE_KEY);
+        if (!raw) return [];
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch { return []; }
+    }
+    function baseUnitForMethod(method) {
+      if (["Horas","Horas de mano de obra","Horas maquina","Horas ponderadas"].includes(method)) return "Horas";
+      if (method === "Dias") return "Dia";
+      if (method === "Kg procesados") return "Kg";
+      if (method === "Litros procesados") return "Litro";
+      if (method === "Unidades producidas") return "Unidad";
+      if (method === "Lotes producidos") return "Lote";
+      if (method === "m2 usados") return "m2";
+      if (method === "kWh reales") return "kWh";
+      if (method === "Porcentaje justificado") return "%";
+      return "Horas";
+    }
+    function methodOptionsForAccount(account='') {
+      const acc = String(account || '').toLowerCase();
+      if (['contabilidad','administracion','coordinacion','supervision','apoyo tecnico','logistica administrativa','limpieza'].includes(acc)) {
+        return ['Horas','Dias','Porcentaje justificado'];
+      }
+      if (acc === 'electricidad') {
+        return ['kWh reales','Horas ponderadas','Horas','Dias','Porcentaje justificado'];
+      }
+      if (acc === 'agua') {
+        return ['Litros procesados','Kg procesados','Horas','Dias','Lotes producidos','Porcentaje justificado'];
+      }
+      if (acc === 'alquiler') {
+        return ['m2 usados','Dias','Horas','Lotes producidos','Porcentaje justificado'];
+      }
+      if (acc === 'mantenimiento') {
+        return ['Horas maquina','Horas','Dias','Lotes producidos','Porcentaje justificado'];
+      }
+      if (acc === 'gas') {
+        return ['Horas','Dias','Kg procesados','Lotes producidos','Porcentaje justificado'];
+      }
+      return indirectMethods;
+    }
+    function profileForIndirect(account='', method='') {
+      const acc = String(account || '').toLowerCase();
+      let suggestedMethod = method || 'Horas';
+      let usageLabel = 'Dato de este costeo';
+      let totalLabel = 'Total del periodo';
+      let valueHelp = 'Aquí coloca lo que pagaste o causaste por este concepto en todo el periodo.';
+      let usageHelp = 'Aquí coloca cuánto de este recurso usó este costeo.';
+      let totalHelp = 'Aquí coloca el total de ese mismo recurso en el periodo.';
+      let suggestedTotal = '';
+      let title = 'Forma de reparto';
+
+      const personalAccounts = ['contabilidad','administracion','coordinacion','supervision','apoyo tecnico','logistica administrativa','limpieza'];
+      if (personalAccounts.includes(acc)) {
+        suggestedMethod = method || 'Horas';
+        if (suggestedMethod === 'Dias') {
+          usageLabel = 'Días usados en este costeo';
+          totalLabel = 'Días totales trabajados en el periodo';
+          usageHelp = 'Usa días si este apoyo se controla por jornadas y no por horas.';
+          totalHelp = 'La app sugiere 30 días para un mes completo. Si tu dato real es distinto, puedes cambiarlo.';
+          suggestedTotal = '30';
+          title = 'Días dedicados';
+        } else {
+          usageLabel = 'Horas usadas en este costeo';
+          totalLabel = 'Horas totales trabajadas en el periodo';
+          usageHelp = 'La app sugiere horas para personal administrativo o técnico.';
+          totalHelp = 'La app sugiere 240 horas para un mes completo de trabajo. Si tu dato real es distinto, puedes cambiarlo.';
+          suggestedTotal = '240';
+          title = 'Tiempo dedicado';
+        }
+      } else if (acc === 'electricidad') {
+        suggestedMethod = method && method !== 'Horas' ? method : 'kWh reales';
+        if (suggestedMethod === 'Dias') {
+          usageLabel = 'Días usados en este costeo';
+          totalLabel = 'Días totales del periodo';
+          usageHelp = 'Úsalo solo si la electricidad se reparte por días de operación.';
+          totalHelp = 'Coloca los días efectivos del periodo.';
+          suggestedTotal = '30';
+          title = 'Días de operación';
+        } else {
+          usageLabel = suggestedMethod === 'Horas ponderadas' ? 'Uso ponderado de este costeo' : 'kWh de este costeo';
+          totalLabel = suggestedMethod === 'Horas ponderadas' ? 'Uso ponderado total del periodo' : 'kWh totales del periodo';
+          usageHelp = suggestedMethod === 'Horas ponderadas' ? 'Si no tienes kWh, registra horas y factor de consumo.' : 'Aquí coloca el consumo eléctrico de este costeo.';
+          totalHelp = suggestedMethod === 'Horas ponderadas' ? 'Aquí coloca el total ponderado del periodo.' : 'Aquí coloca el consumo eléctrico total del periodo.';
+          title = suggestedMethod === 'Horas ponderadas' ? 'Horas ponderadas' : 'Consumo eléctrico (kWh)';
+        }
+      } else if (acc === 'agua') {
+        suggestedMethod = method || 'Litros procesados';
+        if (suggestedMethod === 'Horas' || suggestedMethod === 'Dias') {
+          usageLabel = suggestedMethod === 'Dias' ? 'Días usados en este costeo' : 'Horas usadas en este costeo';
+          totalLabel = suggestedMethod === 'Dias' ? 'Días operativos del periodo' : 'Horas operativas del periodo';
+          usageHelp = suggestedMethod === 'Dias' ? 'Usa días solo si el agua se reparte por jornadas de operación.' : 'Usa horas solo si no tienes una base física mejor.';
+          totalHelp = suggestedMethod === 'Dias' ? 'Coloca los días efectivos de operación del periodo.' : 'Coloca las horas efectivas de operación del periodo.';
+          suggestedTotal = suggestedMethod === 'Dias' ? '30' : suggestedTotal;
+          title = suggestedMethod === 'Dias' ? 'Días de operación' : 'Tiempo de operación';
+        } else {
+          usageLabel = suggestedMethod === 'Kg procesados' ? 'Kg de este costeo' : suggestedMethod === 'Lotes producidos' ? 'Lotes de este costeo' : 'Litros de este costeo';
+          totalLabel = suggestedMethod === 'Kg procesados' ? 'Kg totales del periodo' : suggestedMethod === 'Lotes producidos' ? 'Lotes totales del periodo' : 'Litros totales del periodo';
+          usageHelp = 'Usa una base física si refleja mejor el consumo de agua.';
+          totalHelp = 'Coloca el total físico del periodo.';
+          title = suggestedMethod;
+        }
+      } else if (acc === 'alquiler') {
+        suggestedMethod = method || 'm2 usados';
+        if (suggestedMethod === 'Horas' || suggestedMethod === 'Dias' || suggestedMethod === 'Lotes producidos') {
+          usageLabel = suggestedMethod === 'Lotes producidos' ? 'Lotes de este costeo' : suggestedMethod === 'Dias' ? 'Días usados en este costeo' : 'Horas usadas en este costeo';
+          totalLabel = suggestedMethod === 'Lotes producidos' ? 'Lotes totales del periodo' : suggestedMethod === 'Dias' ? 'Días totales del periodo' : 'Horas totales del periodo';
+          usageHelp = suggestedMethod === 'Dias' ? 'Usa días si el arriendo se reparte por días de uso.' : 'Usa tiempo o lotes si el arriendo se reparte por uso operativo.';
+          totalHelp = 'Coloca el total del mismo criterio usado en el periodo.';
+          suggestedTotal = suggestedMethod === 'Dias' ? '30' : suggestedTotal;
+          title = suggestedMethod === 'Lotes producidos' ? 'Lotes' : suggestedMethod === 'Dias' ? 'Días de uso' : 'Tiempo de uso';
+        } else {
+          usageLabel = 'm2 usados por este costeo';
+          totalLabel = 'm2 totales del área';
+          usageHelp = 'Usa m2 cuando el alquiler depende del espacio ocupado.';
+          totalHelp = 'Coloca el total del área usada para repartir el arriendo.';
+          title = 'Espacio usado (m2)';
+        }
+      } else if (acc === 'mantenimiento') {
+        suggestedMethod = method || 'Horas maquina';
+        if (suggestedMethod === 'Dias') {
+          usageLabel = 'Días usados en este costeo';
+          totalLabel = 'Días totales del periodo';
+          usageHelp = 'Usa días si el mantenimiento se reparte por jornadas de uso.';
+          totalHelp = 'Coloca los días efectivos del periodo.';
+          suggestedTotal = '30';
+          title = 'Días de uso';
+        } else {
+          usageLabel = 'Horas máquina de este costeo';
+          totalLabel = 'Horas máquina totales del periodo';
+          usageHelp = 'Usa horas máquina cuando el mantenimiento depende del uso del equipo.';
+          totalHelp = 'Coloca el total de horas máquina del periodo.';
+          title = 'Horas máquina';
+        }
+      } else if (acc === 'gas') {
+        suggestedMethod = method || 'Horas';
+        usageLabel = suggestedMethod === 'Dias' ? 'Días usados en este costeo' : 'Horas usadas en este costeo';
+        totalLabel = suggestedMethod === 'Dias' ? 'Días totales del periodo' : 'Horas totales del periodo';
+        usageHelp = suggestedMethod === 'Dias' ? 'Usa días si el consumo de gas depende de jornadas de operación.' : 'Usa tiempo de operación si el consumo de gas depende del proceso.';
+        totalHelp = 'Coloca el tiempo total del periodo.';
+        suggestedTotal = suggestedMethod === 'Dias' ? '30' : suggestedTotal;
+        title = suggestedMethod === 'Dias' ? 'Días de uso' : 'Tiempo de uso';
+      } else if (acc === 'control de calidad') {
+        suggestedMethod = method || 'Horas';
+        usageLabel = 'Horas usadas en este costeo';
+        totalLabel = 'Horas totales del periodo';
+        usageHelp = 'Usa horas si el control de calidad se mide por tiempo.';
+        totalHelp = 'Coloca el total de horas del periodo.';
+        title = 'Horas';
+      } else if (acc === 'servicios profesionales') {
+        suggestedMethod = method || 'Horas';
+        usageLabel = suggestedMethod === 'Porcentaje justificado' ? 'Porcentaje asignado a este costeo' : 'Horas usadas en este costeo';
+        totalLabel = suggestedMethod === 'Porcentaje justificado' ? 'Total de referencia' : 'Horas totales del periodo';
+        usageHelp = suggestedMethod === 'Porcentaje justificado' ? 'Úsalo solo si no existe una base mejor.' : 'Coloca las horas del servicio aplicadas a este costeo.';
+        totalHelp = suggestedMethod === 'Porcentaje justificado' ? 'La referencia es 100%.' : 'Coloca el total de horas del servicio en el periodo.';
+        title = suggestedMethod === 'Porcentaje justificado' ? 'Porcentaje justificado' : 'Horas';
+      }
+
+      return { suggestedMethod, usageLabel, totalLabel, valueHelp, usageHelp, totalHelp, suggestedTotal, title };
+    }
+
+    function addDirectRow(r={account:'Materia prima',description:'',unit:'Unidad',qty:0,unitCost:0,behavior:'Variable'}) { state.direct.push(r); renderDirect(); calcAll(); }
+    function addIndirectRow(r={id:uid('ind'),account:'Agua',description:'',area:'Produccion',includeInProduct:'Si',periodValue:0,method:'',baseUnit:'',usage:0,baseTotal:0,behavior:'Fijo',observation:'',responsible:'',support:'',weightedItems:[{name:'',hours:0,factor:1}],kwhUsage:0,kwhTotal:0}) { state.indirect.push(r); renderIndirect(); calcAll(); }
+    function addCommercialRow(r={account:'Transporte de venta',description:'',unit:'Unidad',qty:0,unitCost:0,behavior:'Variable'}) { state.commercial.push(r); renderCommercial(); calcAll(); }
+    function addEquipLibraryRow(r={id:uid('eq'),name:'',area:'Produccion',purchaseValue:0,purchaseDate:'',lifeValue:5,lifeUnit:'años',hoursMonth:1,residualValue:0,method:'linea recta',observation:'',responsible:'',support:''}) { state.equipLibrary.push(r); saveEquipLibraryToStorage(); renderEquipLibrary(); renderEquipUse(); calcAll(); }
+    function addEquipUseRow(r={libraryId:'',behavior:'Fijo',hoursUsed:0,observation:''}) { state.equipUse.push(r); renderEquipUse(); calcAll(); }
+    function addOutputRow(r={name:'',outputType:'Salida principal',size:1,unit:'Kg',qtyOut:0,costPct:0,currentPrice:0,nrvCost:0,note:''}) {
+      state.outputs.push(r);
+      if (allocationMethod.value === 'sales') syncOutputParticipation(true);
+      renderOutputs();
+      calcAll();
+    }
+    function addMarketRow(r={brand:'',product:'',presentationQty:0,presentationUnit:'Kg',price:0,note:'',result:''}) { state.market.push(r); renderMarket(); calcAll(); }
+
+    function syncOutputParticipation(forceEven = false) {
+      if (allocationMethod.value !== 'sales' || !state.outputs.length) return;
+      const shouldEven = forceEven || state.outputs.every(row => !num(row.costPct));
+      if (!shouldEven) return;
+      const evenShare = 100 / state.outputs.length;
+      state.outputs.forEach((row, index) => {
+        row.costPct = index === state.outputs.length - 1
+          ? Number((100 - evenShare * (state.outputs.length - 1)).toFixed(2))
+          : Number(evenShare.toFixed(2));
+      });
+    }
+
+    function syncTransformMode() {
+      const label = document.getElementById('allocationMethodLabel');
+      if (processType.value === 'coproductos') {
+        allocationMethod.value = 'sales';
+      } else {
+        allocationMethod.value = 'physical';
+      }
+      if (label) {
+        label.value = allocationMethod.value === 'sales'
+          ? 'Manual por porcentaje de participación'
+          : 'Automático según cantidad física';
+      }
+      if (allocationMethod.value === 'sales') syncOutputParticipation(true);
+      renderOutputs();
+      calcAll();
+    }
+
+    function renderDirect() {
+      const tb = document.querySelector('#tblDirect tbody'); tb.innerHTML='';
+      state.direct.forEach((r, i) => {
+        const tr = document.createElement('tr');
+        const account = createSelect(directAccounts, r.account), d = createTextInput(r.description, 'Aqui escribe que compraste o usaste'), u = createSelect(units, r.unit), q = createNumInput(r.qty), c = createNumInput(r.unitCost), b = createSelect(behaviorOpts, r.behavior);
+        account.onchange = e => { r.account = e.target.value; calcAll(); };
+        d.oninput = e => { r.description = e.target.value; };
+        d.onblur = calcAll;
+        u.onchange = e => { r.unit = e.target.value; calcAll(); };
+        q.oninput = e => { r.qty = num(e.target.value); calcAll(); };
+        c.oninput = e => { r.unitCost = num(e.target.value); calcAll(); };
+        b.onchange = e => { r.behavior = e.target.value; calcAll(); };
+        tr.append(td(account), td(d), td(u), td(q), td(c), td(b));
+        const t = document.createElement('td'); t.className='row-total'; t.textContent = money(num(r.qty)*num(r.unitCost)); tr.appendChild(t);
+        tr.appendChild(delBtn(() => { state.direct.splice(i,1); renderDirect(); calcAll(); }));
+        tb.appendChild(tr);
+      });
+    }
+
+    function getIndirectComputed(r) {
+      let usage = num(r.usage);
+      let baseTotal = num(r.baseTotal);
+      if (r.method === 'Horas ponderadas') {
+        const weighted = (r.weightedItems || []).reduce((sum, item) => sum + (num(item.hours) * num(item.factor || 1)), 0);
+        usage = weighted;
+      }
+      if (r.method === 'kWh reales') {
+        usage = num(r.kwhUsage);
+        baseTotal = num(r.kwhTotal);
+      }
+      if (r.method === 'Porcentaje justificado') {
+        baseTotal = 100;
+      }
+      const include = r.includeInProduct !== 'No';
+      const baseCost = baseTotal > 0 ? num(r.periodValue) / baseTotal : 0;
+      const assigned = include && baseTotal > 0 ? num(r.periodValue) * (usage / baseTotal) : 0;
+      const warnings = [];
+      if (!num(r.periodValue)) warnings.push('Falta valor del periodo.');
+      if (r.method === 'Porcentaje justificado') {
+        if (!usage) warnings.push('Falta el porcentaje justificado.');
+        if (!String(r.observation || '').trim()) warnings.push('Debes explicar la justificación.');
+      } else {
+        if (!usage) warnings.push('Falta uso del costeo.');
+        if (!baseTotal) warnings.push('Falta base total del periodo.');
+      }
+      if (baseTotal === 0 && (num(r.periodValue) || usage)) warnings.push('La base total no puede ser 0.');
+      if (r.includeInProduct === 'No') warnings.push('Está marcado fuera del costo del producto.');
+      if (r.area === 'Administracion' && r.includeInProduct === 'Si') warnings.push('Revisa esta asignación administrativa y justifícala.');
+      if (r.method === 'Horas' && r.account === 'Electricidad') warnings.push('Para electricidad suele ser mejor usar kWh reales u horas ponderadas.');
+      return { usage, baseTotal, baseCost, assigned, warnings };
+    }
+
+    function renderIndirect() {
+      const list = document.getElementById('indirectList');
+      list.innerHTML = '';
+      list.className = 'indirect-stack';
+      state.indirect.forEach((r, i) => {
+        if (!r.id) r.id = uid('ind');
+        if (!r.weightedItems || !r.weightedItems.length) r.weightedItems = [{name:'',hours:0,factor:1}];
+        const profile = profileForIndirect(r.account, r.method);
+        if (!r.method || r.method === 'Horas') r.method = profile.suggestedMethod;
+        if (!r.baseTotal && profile.suggestedTotal) r.baseTotal = num(profile.suggestedTotal);
+        r.baseUnit = baseUnitForMethod(r.method || profile.suggestedMethod || 'Horas');
+        r.includeInProduct = 'Si';
+        const calc = getIndirectComputed(r);
+
+        const account = createSelect(indirectAccounts, r.account);
+        const description = createTextInput(r.description, 'Ejemplo: Contadora, agua de planta, arriendo del local');
+        const area = createSelect(indirectAreas, r.area || 'Produccion');
+        const periodValue = createNumInput(r.periodValue);
+        const method = createSelect(methodOptionsForAccount(r.account), r.method || profile.suggestedMethod || 'Horas');
+        const usageInput = createNumInput(r.usage);
+        const baseInput = createNumInput(r.baseTotal);
+        const behavior = createSelect(behaviorOpts, r.behavior || 'Fijo');
+        const observation = createTextInput(r.observation, 'Explica el dato o criterio usado');
+        const responsible = createTextInput(r.responsible, 'Responsable del dato');
+        const support = createTextInput(r.support, 'Factura, rol, planilla o soporte');
+
+        account.onchange = e => { r.account = e.target.value; r.method = ''; r.baseUnit = ''; r.usage = 0; r.baseTotal = 0; r.kwhUsage = 0; r.kwhTotal = 0; renderIndirect(); calcAll(); };
+        description.oninput = e => { r.description = e.target.value; };
+        description.onblur = calcAll;
+        area.onchange = e => { r.area = e.target.value; calcAll(); };
+        periodValue.oninput = e => { r.periodValue = num(e.target.value); calcAll(); };
+        method.onchange = e => {
+          r.method = e.target.value;
+          r.baseUnit = baseUnitForMethod(r.method);
+          r.usage = 0;
+          r.baseTotal = (r.method === 'Porcentaje justificado' ? 100 : 0);
+          const nextProfile = profileForIndirect(r.account, r.method);
+          if (nextProfile.suggestedTotal) r.baseTotal = num(nextProfile.suggestedTotal);
+          r.kwhUsage = 0;
+          r.kwhTotal = 0;
+          renderIndirect();
+          calcAll();
+        };
+        usageInput.oninput = e => { r.usage = num(e.target.value); calcAll(); };
+        baseInput.oninput = e => { r.baseTotal = num(e.target.value); calcAll(); };
+        behavior.onchange = e => { r.behavior = e.target.value; calcAll(); };
+        observation.oninput = e => { r.observation = e.target.value; };
+        observation.onblur = calcAll;
+        responsible.oninput = e => { r.responsible = e.target.value; };
+        responsible.onblur = calcAll;
+        support.oninput = e => { r.support = e.target.value; };
+        support.onblur = calcAll;
+
+        const card = document.createElement('div');
+        card.className = 'indirect-row-wrap';
+
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'secondary hide-print';
+        removeBtn.textContent = 'Eliminar';
+        removeBtn.onclick = () => { state.indirect.splice(i,1); if(!state.indirect.length) addIndirectRow(); else { renderIndirect(); calcAll(); } };
+
+        const mkField = (label, input, hint='') => {
+          const box = document.createElement('div');
+          box.className = 'field-card';
+          box.innerHTML = `<label>${label}</label>`;
+          if (input) box.appendChild(input);
+          if (hint) {
+            const h = document.createElement('div');
+            h.className = 'hint';
+            h.textContent = hint;
+            box.appendChild(h);
+          }
+          return box;
+        };
+
+        const methodCard = mkField('Forma de reparto', method,
+          r.method === 'kWh reales'
+            ? 'Recomendado para electricidad cuando tienes consumo medido.'
+            : r.method === 'Horas ponderadas'
+              ? 'Úsalo si los equipos consumen distinto.'
+              : r.method === 'Porcentaje justificado'
+                ? 'Solo si no existe una base física mejor.'
+                : 'Usa esta forma si refleja bien el consumo real.');
+
+        if (r.method === 'Horas ponderadas') {
+          const weightedWrap = document.createElement('div');
+          weightedWrap.className = 'mini-inline-grid three';
+          weightedWrap.style.marginTop = '10px';
+          (r.weightedItems || []).slice(0, 2).forEach(item => {
+            const name = createTextInput(item.name, 'Equipo');
+            const hours = createNumInput(item.hours);
+            const factor = createNumInput(item.factor, '0.01', '0');
+            name.oninput = e => { item.name = e.target.value; };
+            name.onblur = calcAll;
+            hours.oninput = e => { item.hours = num(e.target.value); calcAll(); };
+            factor.oninput = e => { item.factor = num(e.target.value); calcAll(); };
+            weightedWrap.append(name, hours, factor);
+          });
+          methodCard.appendChild(weightedWrap);
+        }
+
+        let usageField, totalField;
+        if (r.method === 'kWh reales') {
+          const kwhUsage = createNumInput(r.kwhUsage);
+          const kwhTotal = createNumInput(r.kwhTotal);
+          kwhUsage.oninput = e => { r.kwhUsage = num(e.target.value); calcAll(); };
+          kwhTotal.oninput = e => { r.kwhTotal = num(e.target.value); calcAll(); };
+          usageField = mkField(profile.usageLabel, kwhUsage, profile.usageHelp);
+          totalField = mkField(profile.totalLabel, kwhTotal, profile.totalHelp);
+        } else {
+          if (r.method === 'Porcentaje justificado') {
+            usageInput.placeholder = 'Porcentaje';
+            baseInput.value = 100;
+            baseInput.disabled = true;
+          } else {
+            baseInput.disabled = false;
+          }
+          usageField = mkField(profile.usageLabel, usageInput, profile.usageHelp);
+          totalField = mkField(profile.totalLabel, baseInput, r.method === 'Porcentaje justificado' ? 'La referencia total es 100%.' : profile.totalHelp);
+        }
+
+        const formulaBox = document.createElement('div');
+        formulaBox.className = 'formula-box';
+        formulaBox.innerHTML = `<div class="amount" data-key="assigned">${money(calc.assigned)}</div><div class="formula" data-key="formula">${calc.baseTotal > 0 ? `${money(num(r.periodValue))} x (${calc.usage} / ${calc.baseTotal})` : 'Completa los datos para calcular.'}</div><div class="formula" data-key="basecost" style="margin-top:6px">Costo por unidad base: ${calc.baseTotal > 0 ? money(calc.baseCost) : 'Pendiente'}</div>`;
+
+        const controlBox = document.createElement('div');
+        controlBox.className = 'field-card';
+        controlBox.innerHTML = '<label>Control</label>';
+        const status = document.createElement('span');
+        status.className = 'status-pill' + (calc.warnings.length ? ' warn' : '');
+        status.setAttribute('data-key','status');
+        status.textContent = calc.warnings.length ? 'Revisar asignación' : 'Asignación consistente';
+        controlBox.appendChild(status);
+        const warning = document.createElement('div');
+        warning.className = 'cell-warning';
+        warning.style.marginTop = '10px';
+        warning.setAttribute('data-key','warning');
+        warning.textContent = calc.warnings.join(' ');
+        if (!calc.warnings.length) warning.style.display = 'none';
+        controlBox.appendChild(warning);
+
+        const row = document.createElement('div');
+        row.className = 'indirect-row';
+        row.append(
+          mkField('Cuenta', account, profile.title),
+          mkField('Descripción', description),
+          mkField('Área', area),
+          mkField('Valor total del periodo ($)', periodValue, profile.valueHelp),
+          methodCard,
+          usageField,
+          totalField,
+          mkField('Tipo', behavior),
+          formulaBox,
+          mkField('Observación', observation),
+          mkField('Responsable', responsible),
+          mkField('Soporte', support),
+          controlBox,
+          mkField('Acción', removeBtn)
+        );
+        card.appendChild(row);
+        list.appendChild(card);
+      });
+    }
+
+    function renderCommercial() {
+      const tb = document.querySelector('#tblCommercial tbody'); tb.innerHTML='';
+      state.commercial.forEach((r, i) => {
+        const tr = document.createElement('tr');
+        const account = createSelect(commercialAccounts, r.account), d = createTextInput(r.description, 'Ejemplo: Servientrega, embalaje'), u = createSelect(units, r.unit), q = createNumInput(r.qty), c = createNumInput(r.unitCost), b = createSelect(behaviorOpts, r.behavior);
+        account.onchange = e => { r.account = e.target.value; calcAll(); };
+        d.oninput = e => { r.description = e.target.value; };
+        d.onblur = calcAll;
+        u.onchange = e => { r.unit = e.target.value; calcAll(); };
+        q.oninput = e => { r.qty = num(e.target.value); calcAll(); };
+        c.oninput = e => { r.unitCost = num(e.target.value); calcAll(); };
+        b.onchange = e => { r.behavior = e.target.value; calcAll(); };
+        tr.append(td(account), td(d), td(u), td(q), td(c), td(b));
+        const t = document.createElement('td'); t.className='row-total'; t.textContent = money(num(r.qty)*num(r.unitCost)); tr.appendChild(t);
+        tr.appendChild(delBtn(() => { state.commercial.splice(i,1); renderCommercial(); calcAll(); }));
+        tb.appendChild(tr);
+      });
+    }
+
+    function getEquipLibraryComputed(r) {
+      const lifeMonths = r.lifeUnit === 'años' ? num(r.lifeValue) * 12 : num(r.lifeValue);
+      const depreciable = Math.max(0, num(r.purchaseValue) - num(r.residualValue));
+      const monthly = lifeMonths > 0 ? depreciable / lifeMonths : 0;
+      const costPerHour = num(r.hoursMonth) > 0 ? monthly / num(r.hoursMonth) : 0;
+      return { lifeMonths, monthly, costPerHour };
+    }
+
+    function renderEquipLibrary() {
+      const tb = document.querySelector('#tblEquipLibrary tbody'); tb.innerHTML='';
+      state.equipLibrary.forEach((r, i) => {
+        if (!r.id) r.id = uid('eq');
+        const calc = getEquipLibraryComputed(r);
+        const tr = document.createElement('tr');
+        const name = createTextInput(r.name, 'Ejemplo: selladora, batidora, refrigerador');
+        const area = createSelect(indirectAreas, r.area || 'Produccion');
+        const purchaseValue = createNumInput(r.purchaseValue);
+        const purchaseDate = createDateInput(r.purchaseDate || '');
+        const lifeValue = createNumInput(r.lifeValue || 5, '1', '1');
+        const lifeUnit = createSelect(lifeUnits, r.lifeUnit || 'años');
+        const hoursMonth = createNumInput(r.hoursMonth || 1, '0.01', '0');
+        const residualValue = createNumInput(r.residualValue || 0);
+        const method = createSelect(depreciationMethods, r.method || 'linea recta');
+        const observation = createTextInput(r.observation, 'Dato relevante del equipo');
+        const responsible = createTextInput(r.responsible, 'Responsable del dato');
+        const support = createTextInput(r.support, 'Factura, cotización o soporte');
+        name.oninput = e => { r.name = e.target.value; saveEquipLibraryToStorage(); };
+        name.onblur = () => { saveEquipLibraryToStorage(); renderEquipUse(); calcAll(); };
+        area.onchange = e => { r.area = e.target.value; saveEquipLibraryToStorage(); calcAll(); };
+        purchaseValue.oninput = e => { r.purchaseValue = num(e.target.value); saveEquipLibraryToStorage(); calcAll(); };
+        purchaseDate.oninput = e => { r.purchaseDate = e.target.value; saveEquipLibraryToStorage(); };
+        purchaseDate.onblur = () => { saveEquipLibraryToStorage(); calcAll(); };
+        lifeValue.oninput = e => { r.lifeValue = Math.max(1, num(e.target.value)); saveEquipLibraryToStorage(); calcAll(); };
+        lifeUnit.onchange = e => { r.lifeUnit = e.target.value; saveEquipLibraryToStorage(); calcAll(); };
+        hoursMonth.oninput = e => { r.hoursMonth = Math.max(0.01, num(e.target.value)); saveEquipLibraryToStorage(); calcAll(); };
+        residualValue.oninput = e => { r.residualValue = num(e.target.value); saveEquipLibraryToStorage(); calcAll(); };
+        method.onchange = e => { r.method = e.target.value; saveEquipLibraryToStorage(); calcAll(); };
+        observation.oninput = e => { r.observation = e.target.value; saveEquipLibraryToStorage(); };
+        observation.onblur = () => { saveEquipLibraryToStorage(); calcAll(); };
+        responsible.oninput = e => { r.responsible = e.target.value; saveEquipLibraryToStorage(); };
+        responsible.onblur = () => { saveEquipLibraryToStorage(); calcAll(); };
+        support.oninput = e => { r.support = e.target.value; saveEquipLibraryToStorage(); };
+        support.onblur = () => { saveEquipLibraryToStorage(); calcAll(); };
+        const monthly = document.createElement('div'); monthly.className='readonly-box'; monthly.textContent = money(calc.monthly);
+        const costPerHour = document.createElement('div'); costPerHour.className='readonly-box'; costPerHour.textContent = money(calc.costPerHour);
+        tr.append(td(name), td(area), td(purchaseValue), td(purchaseDate), td(lifeValue), td(lifeUnit), td(hoursMonth), td(residualValue), td(method), td(monthly), td(costPerHour), td(observation), td(responsible), td(support));
+        tr.appendChild(delBtn(() => {
+          const removedId = r.id;
+          state.equipLibrary.splice(i,1);
+          state.equipUse = state.equipUse.filter(item => item.libraryId !== removedId);
+          saveEquipLibraryToStorage();
+          if(!state.equipLibrary.length) addEquipLibraryRow(); else { renderEquipLibrary(); renderEquipUse(); calcAll(); }
+        }));
+        tb.appendChild(tr);
+      });
+    }
+
+    function renderEquipUse() {
+      const tb = document.querySelector('#tblEquipUse tbody'); tb.innerHTML='';
+      state.equipUse.forEach((r, i) => {
+        const tr = document.createElement('tr');
+        const equipment = createSelect(
+          state.equipLibrary.length ? state.equipLibrary.map(item => ({ value: item.id, label: item.name || 'Equipo sin nombre' })) : [{ value: '', label: 'Sin equipos en biblioteca' }],
+          state.equipLibrary.find(item => item.id === r.libraryId)?.id || state.equipLibrary[0]?.id || ''
+        );
+        if (!r.libraryId && state.equipLibrary[0]) r.libraryId = state.equipLibrary[0].id;
+        const selectedEquip = state.equipLibrary.find(item => item.id === r.libraryId);
+        const computed = selectedEquip ? getEquipLibraryComputed(selectedEquip) : { costPerHour: 0 };
+        const costHour = document.createElement('div'); costHour.className='readonly-box'; costHour.textContent = money(computed.costPerHour);
+        const hoursUsed = createNumInput(r.hoursUsed || 0, '0.01', '0');
+        const behavior = createSelect(behaviorOpts, r.behavior || 'Fijo');
+        const assigned = document.createElement('div'); assigned.className='row-total'; assigned.textContent = money(computed.costPerHour * num(r.hoursUsed));
+        const observation = createTextInput(r.observation, 'Ejemplo: uso en batido o sellado');
+        equipment.onchange = e => { r.libraryId = e.target.value; calcAll(); };
+        hoursUsed.oninput = e => { r.hoursUsed = num(e.target.value); calcAll(); };
+        behavior.onchange = e => { r.behavior = e.target.value; calcAll(); };
+        observation.oninput = e => { r.observation = e.target.value; };
+        observation.onblur = calcAll;
+        tr.append(td(equipment), td(costHour), td(hoursUsed), td(behavior), td(assigned), td(observation));
+        tr.appendChild(delBtn(() => { state.equipUse.splice(i,1); if(!state.equipUse.length) addEquipUseRow(); else { renderEquipUse(); calcAll(); } }));
+        tb.appendChild(tr);
+      });
+    }
+
+    function renderOutputs() {
+      const list = document.getElementById('outputsList'); list.innerHTML=''; list.className='indirect-stack';
+      state.outputs.forEach((r, i) => {
+        if (!transformUnits.includes(r.unit)) r.unit = transformBaseUnit.value || inputUnit.value || 'Kg';
+        if (!r.outputType) r.outputType = 'Salida principal';
+        const wrap = document.createElement('div'); wrap.className='transform-row-wrap';
+        const row = document.createElement('div'); row.className='transform-row';
+        const n = createTextInput(r.name, 'Nombre de la salida');
+        const q = createNumInput(r.qtyOut);
+        const s = createNumInput(r.size);
+        const u = createSelect(transformUnits.map(item => ({ value:item, label:item })), r.unit || (transformBaseUnit.value || 'Kg'));
+        const shareInput = createNumInput(r.costPct || 0);
+        const note = createTextInput(r.note || '', 'Observación');
+        n.oninput = e => { r.name = e.target.value; };
+        n.onblur = calcAll;
+        s.oninput = e => { r.size = num(e.target.value); calcAll(); };
+        u.onchange = e => { r.unit = e.target.value; calcAll(); };
+        q.oninput = e => { r.qtyOut = num(e.target.value); calcAll(); };
+        shareInput.oninput = e => { r.costPct = num(e.target.value); calcAll(); };
+        note.oninput = e => { r.note = e.target.value; };
+        note.onblur = calcAll;
+        const mkField = (label, input, hint='') => {
+          const box = document.createElement('div');
+          box.className = 'field-card';
+          box.innerHTML = `<label>${label}</label>`;
+          if (input) box.appendChild(input);
+          if (hint) {
+            const h = document.createElement('div');
+            h.className = 'hint';
+            h.textContent = hint;
+            box.appendChild(h);
+          }
+          return box;
+        };
+        const metrics = document.createElement('div');
+        metrics.className = 'formula-box';
+        metrics.innerHTML = `<div class="amount" data-key="costAssigned">${money(0)}</div><div class="formula" data-key="sharePct">Participación: 0,00%</div><div class="formula" data-key="baseOutput" style="margin-top:6px">Salida total base: 0</div><div class="formula" data-key="costPer">Costo por presentación: ${money(0)}</div><div class="formula" data-key="suggestNoVat">Precio sugerido sin IVA: ${money(0)}</div><div class="formula" data-key="suggestVat">Precio sugerido con IVA: ${money(0)}</div>`;
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'secondary hide-print';
+        removeBtn.textContent = 'Eliminar';
+        removeBtn.onclick = () => { state.outputs.splice(i,1); if(!state.outputs.length) state.outputs.push({name:'',outputType:'Presentación comercial',size:1,unit:transformBaseUnit.value || 'Kg',qtyOut:0,costPct:0,currentPrice:0,nrvCost:0,note:''}); renderOutputs(); calcAll(); };
+        const allocationMode = allocationMethod.value;
+        row.append(
+          mkField('Nombre de salida', n),
+          mkField('Cantidad final', q, 'Cuántas unidades o presentaciones salieron al final del proceso.'),
+          mkField('Contenido por salida', s, 'Cantidad contenida en cada salida o presentación.'),
+          mkField('Unidad', u, 'Debe ser compatible con la unidad base.')
+        );
+        if (allocationMode === 'sales') {
+          row.append(
+            mkField('% de participación', shareInput, 'Usa este campo solo cuando varias salidas valiosas comparten el costo. La suma debe ser 100%.')
+          );
+        }
+        row.append(
+          metrics,
+          mkField('Observación', note),
+          mkField('Acción', removeBtn)
+        );
+        wrap.appendChild(row);
+        list.appendChild(wrap);
+      });
+    }
+
+    function renderMarket() {
+      const tb = document.querySelector('#tblMarket tbody'); tb.innerHTML='';
+      state.market.forEach((r, i) => {
+        if (r.presentation && !r.presentationQty) {
+          const parsed = parsePresentationText(r.presentation);
+          r.presentationQty = parsed.value;
+          r.presentationUnit = parsed.unit || 'Kg';
+        }
+        const tr = document.createElement('tr');
+        const b = createTextInput(r.brand, 'Marca');
+        const p = createTextInput(r.product, 'Producto');
+        const qty = createNumInput(r.presentationQty || 0);
+        const unit = createSelect(transformUnits.map(item => ({ value:item, label:item })), r.presentationUnit || 'Kg');
+        const pc = createNumInput(r.price);
+        const n = createTextInput(r.note, 'Observación');
+        const rs = document.createElement('div');
+        rs.className = 'status-pill';
+        if ((r.result || '').includes('Revisar')) rs.className += ' warn';
+        rs.textContent = r.result || 'Pendiente';
+        rs.dataset.rowResult = String(i);
+        [['brand',b],['product',p],['note',n]].forEach(([k, el]) => {
+          el.oninput = e => { r[k] = e.target.value; };
+          el.onblur = calcAll;
+        });
+        qty.oninput = e => { r.presentationQty = num(e.target.value); };
+        qty.onblur = calcAll;
+        unit.onchange = e => { r.presentationUnit = e.target.value; calcAll(); };
+        pc.oninput = e => { r.price = num(e.target.value); };
+        pc.onblur = calcAll;
+        tr.append(td(b), td(p), td(qty), td(unit), td(pc), td(n), td(rs));
+        tr.appendChild(delBtn(() => {
+          state.market.splice(i,1);
+          if(!state.market.length) state.market.push({brand:'',product:'',presentationQty:0,presentationUnit:'Kg',price:0,note:'',result:''});
+          renderMarket();
+          calcAll();
+        }));
+        tb.appendChild(tr);
+      });
+    }
+
+      function getGeneral() {
+        return {
+          documentId: documentId.value.trim(), orgName: orgName.value.trim(), responsible: responsible.value.trim(), responsibleRole: responsibleRole.value.trim(), productName: productName.value.trim(), activityType: activityType.value,
+          period: period.value, baseUnit: baseUnit.value, profitPct: num(profitPct.value), currentPriceBase: num(currentPriceBase.value), vatApplies: vatApplies.value,
+          vatPct: num(vatPct.value), wholesaleMarginPct: num(wholesaleMarginPct.value), wholesaleMinQty: num(wholesaleMinQty.value), notes: notes.value.trim(), inputQty: num(inputQty.value), inputUnit: inputUnit.value
+        };
+      }
+
+    function renderKpis(m) {
+      const stateTone = m.marketState === 'Riesgo alto' ? 'red' : m.marketState === 'Algo por encima' || m.marketState === 'Sin base suficiente' ? 'yellow' : 'green';
+      const items = [
+        { label:'Costo unitario total', value: money(m.unitCostTotal), sub:'Costo real por unidad o presentación base.', tone:'' },
+        { label:'PVP sugerido', value: money(m.suggestMain), sub:'Precio sugerido sin IVA para venta al público.', tone:'' },
+        { label:'Precio mayorista', value: money(m.wholesalePrice), sub:`Referencia desde ${m.wholesaleMinQty.toFixed(0)} unidades.`, tone:'' },
+        { label:'Punto de equilibrio', value: m.breakEvenUnits.toFixed(2)+' unidades', sub:'Calculado sobre el PVP sugerido.', tone:'' },
+        { label:'Estado comercial', value: m.marketState || 'Sin base suficiente', sub: m.marketAvg ? `Brecha: ${money(m.gapMoney)} · ${pct(m.gapPct)}` : 'Aún faltan comparables útiles.', tone: stateTone, badge: m.marketState || 'Sin base suficiente' }
+      ];
+      kpiGrid.innerHTML='';
+      items.forEach(item => {
+        const d = document.createElement('div');
+        d.className = 'kpi' + (item.tone ? ` signal-${item.tone}` : '');
+        d.innerHTML = `<div class="label">${item.label}</div><div class="value">${item.value}</div><div class="sub">${item.sub}</div>${item.badge ? `<div class="signal-badge ${item.tone}">${item.badge}</div>` : ''}`;
+        kpiGrid.appendChild(d);
+      });
+    }
+
+    function renderExecutiveSummary(v) {
+      const text = !v.marketAvg
+        ? `El costo unitario total se ubica en ${money(v.unitCostTotal)}. El PVP sugerido es ${money(v.pvp)} y el precio mayorista recomendado es ${money(v.wholesalePrice)}. Aún falta base suficiente de mercado para validar el riesgo comercial con mayor seguridad.`
+        : `El costo unitario total se ubica en ${money(v.unitCostTotal)}. El PVP sugerido es ${money(v.pvp)}, el precio mayorista recomendado es ${money(v.wholesalePrice)} y el punto de equilibrio exige ${v.breakEvenUnits.toFixed(2)} unidades. Frente al mercado, la lectura actual es ${v.marketState.toLowerCase()}.`;
+      resultsExecutiveText.textContent = text;
+    }
+
+    function renderDecisionCards(m) {
+      const items = [
+        ['Costo unitario total', money(m.unitCostTotal), 'Cuánto cuesta realmente una unidad o presentación.'],
+        ['Costo variable unitario', money(m.variablePerUnit), 'Lo que sube tu costo si vendes una unidad más.'],
+        ['Margen de contribución', money(m.contrib), m.contrib > 0 ? 'Cada unidad aporta a cubrir costos fijos.' : 'Este margen no sostiene el negocio.'],
+        ['Precio mayorista sugerido', money(m.wholesalePrice), `Referencia para ventas desde ${m.wholesaleMinQty.toFixed(0)} unidades.`],
+        ['Punto de equilibrio en ventas', money(m.breakEvenSales), 'Ventas mínimas para cubrir costos fijos.'],
+        ['Lectura mayorista', m.wholesaleState, m.wholesaleHint]
+      ];
+      decisionGrid.innerHTML = '';
+      items.forEach(([l,v,s]) => {
+        const d = document.createElement('div');
+        d.className = 'kpi';
+        d.innerHTML = `<div class="label">${l}</div><div class="value">${v}</div><div class="sub">${s}</div>`;
+        decisionGrid.appendChild(d);
+      });
+    }
+
+    function renderDecisionSummary(v) {
+      const text = v.wholesaleState === 'Inválido'
+        ? `El precio mayorista propuesto no es defendible porque cae por debajo del costo unitario total. Antes de ofrecer canal mayorista, corrige el margen o revisa el costo.`
+        : v.wholesaleState === 'Riesgoso'
+        ? `El mayorista sugerido se ubica en ${money(v.wholesalePrice)} y deja una contribución débil. Conviene ajustar margen, volumen o estructura de costo antes de negociar con el canal.`
+        : `El mayorista sugerido se ubica en ${money(v.wholesalePrice)} para pedidos desde ${v.wholesaleMinQty.toFixed(0)} unidades. La contribución por unidad es ${money(v.contrib)} y el negocio requiere ${v.breakEvenUnits.toFixed(2)} unidades para cubrir sus costos fijos.`;
+      decisionExecutiveText.textContent = text;
+    }
+
+    function barRow(label, value, total, color, suffix='') {
+      const pc = total>0 ? Math.max(0, Math.min(100, (value/total)*100)) : 0;
+      return `<div class="bar-row"><div>${label}</div><div class="bar-track"><div class="bar-fill" style="width:${pc}%;background:${color}"></div></div><div>${suffix ? value.toFixed(2)+' '+suffix : money(value)}</div></div>`;
+    }
+
+    function renderBars(v) {
+      const parts = [
+        { label:'Directos', value:v.directTotal, color:'#d94a1f' },
+        { label:'Indirectos', value:v.indirectTotal, color:'#6f9915' },
+        { label:'Comercialización', value:v.commercialTotal, color:'#2d6cdf' },
+        { label:'Equipos', value:v.equipTotal, color:'#7c3aed' }
+      ].sort((a,b)=>b.value-a.value);
+      const top = parts[0];
+      const actionText = top.label === 'Directos'
+        ? 'Empieza revisando materia prima, mano de obra directa y rendimiento.'
+        : top.label === 'Indirectos'
+        ? 'Revisa primero los gastos de apoyo y la forma en que se están repartiendo.'
+        : top.label === 'Comercialización'
+        ? 'La oportunidad de mejora está en distribución, promoción o canal comercial.'
+        : 'El uso de equipos merece revisión antes de ajustar precio.';
+      costBars.innerHTML = `<div class="exec-summary" style="margin-top:0"><div class="eyebrow">Mensaje clave</div><div class="text">La mayor presión del costo está en ${top.label}. ${actionText}</div></div><div class="composition-stack">${
+        parts.map(item => {
+          const share = v.totalCost>0 ? (item.value/v.totalCost)*100 : 0;
+          const priority = share >= 40 ? ['Prioridad alta','priority-high'] : share >= 12 ? ['Prioridad media','priority-medium'] : ['Prioridad baja','priority-low'];
+          return `<div class="composition-item">
+            <div class="composition-meta">
+              <span class="priority-tag ${priority[1]}">${priority[0]}</span>
+            </div>
+            <div class="composition-top">
+              <div class="composition-label">${item.label}</div>
+              <div class="composition-money">${money(item.value)}</div>
+              <div class="composition-pct">${pct(share)}</div>
+            </div>
+            <div class="composition-bar"><div class="composition-fill" style="width:${share}%;background:${item.color}"></div></div>
+          </div>`;
+        }).join('')
+      }</div>`;
+      const marketTone = !v.marketAvg ? 'Sin base suficiente' : (v.gapPct > 12 ? 'Muy por encima del mercado' : (v.gapPct > 5 ? 'Algo por encima del mercado' : (v.gapPct < -5 ? 'Competitivo frente al mercado' : 'Alineado con el mercado')));
+      const badgeTone = !v.marketAvg ? 'yellow' : (v.gapPct > 12 ? 'red' : (v.gapPct > 5 ? 'yellow' : 'green'));
+      flowBars.innerHTML = `
+        <div class="kpi signal-${badgeTone}" style="box-shadow:none">
+          <div class="label">Conclusión comercial</div>
+          <div class="value">${marketTone}</div>
+          <div class="sub">${v.marketAvg ? 'Lectura basada en comparables útiles cargados.' : 'Falta base de mercado para concluir con seguridad.'}</div>
+          <div class="signal-badge ${badgeTone}">${v.marketState || 'Sin base suficiente'}</div>
+        </div>
+        <div class="kpi" style="box-shadow:none;margin-top:10px">
+          <div class="label">Precio sugerido</div>
+          <div class="value">${money(v.pvp || 0)}</div>
+          <div class="sub">Promedio mercado: ${v.marketAvg ? money(v.marketAvg) : 'Sin base suficiente'}</div>
+        </div>
+        <div class="kpi" style="box-shadow:none;margin-top:10px">
+          <div class="label">Brecha frente al mercado</div>
+          <div class="value">${v.marketAvg ? money(v.gapMoney) : 'N/D'}</div>
+          <div class="sub">${v.marketAvg ? pct(v.gapPct) : 'Aún no hay comparables suficientes.'}</div>
+          <div class="signal-badge ${badgeTone}">${v.marketAvg ? (v.gapPct > 12 ? 'Brecha alta' : (v.gapPct > 5 ? 'Brecha media' : (v.gapPct < -5 ? 'Competitiva' : 'Brecha controlada'))) : 'Sin base'}</div>
+        </div>`;
+    }
+
+    function renderFindings(v) {
+      findingMain.textContent = v.directShare>=60 ? 'La mayor presión del costo está en costos directos. Ahí conviene actuar primero.' : 'El costo está más distribuido. Conviene revisar varias palancas de costo.';
+      findingRisk.textContent = v.marketCount===0 ? 'Aún faltan comparables similares para validar el precio sugerido.' : (v.marketState === 'Riesgo alto' ? 'El precio sugerido está muy por encima del mercado cargado.' : (v.wholesaleState === 'Riesgoso' ? 'El precio mayorista propuesto reduce demasiado el margen de contribución.' : 'El precio debe contrastarse con el valor percibido del producto.'));
+      findingOpp.textContent = v.breakEvenUnits>0 ? `Debes vender aproximadamente ${v.breakEvenUnits.toFixed(2)} unidades o ${money(v.breakEvenSales)} para no perder. El mayorista sugerido es ${money(v.wholesalePrice)}.` : 'Ajusta precio o costo variable antes de tomar una decisión comercial.';
+      const differentiator = v.marketState === 'Riesgo alto'
+        ? 'Refuerza atributos visibles que justifiquen un precio superior: calidad, origen, proceso, impacto o presentación.'
+        : 'Destaca el beneficio principal que hace más valiosa tu oferta frente a comparables similares.';
+      const nextStep = v.marketState === 'Riesgo alto'
+        ? 'Validar mercado antes de escalar: probar precio, revisar empaque o reducir costo directo.'
+        : v.wholesaleState === 'Riesgoso'
+        ? 'Revisar la propuesta mayorista antes de negociar volumen con distribuidores o aliados.'
+        : 'Avanzar con prueba comercial controlada y seguimiento de rotación, margen y aceptación.';
+      const validation = v.marketCount===0
+        ? 'Cargar comparables reales de mercado para validar la lectura comercial final.'
+        : 'Confirmar que el cliente percibe valor suficiente para sostener el precio propuesto.';
+      canvasDifferentiator.textContent = differentiator;
+      canvasNextStep.textContent = nextStep;
+      canvasValidation.textContent = validation;
+    }
+
+    function esc(s) { return String(s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
+
+    function parsePresentationBase(text) {
+      const match = String(text || '').replace(',', '.').match(/(\d+(?:\.\d+)?)\s*(kg|g|ml|l|litro|gal[oó]n|onza|libra)/i);
+      if (!match) return 0;
+      const value = num(match[1]);
+      const unit = match[2].toLowerCase();
+      if (unit === 'kg') return value * 1000;
+      if (unit === 'g') return value;
+      if (unit === 'ml') return value;
+      if (unit === 'l' || unit === 'litro') return value * 1000;
+      if (unit === 'galón' || unit === 'galon') return value * 3785.41;
+      if (unit === 'onza') return value * 28.3495;
+      if (unit === 'libra') return value * 453.592;
+      return 0;
+    }
+
+    function parsePresentationText(text) {
+      const match = String(text || '').replace(',', '.').match(/(\d+(?:\.\d+)?)\s*(kg|g|ml|mL|l|litro|gal[oó]n|onza|libra)/i);
+      if (!match) return { value: 0, unit: '' };
+      let unit = match[2];
+      if (/^l$/i.test(unit)) unit = 'Litro';
+      if (/^ml$/i.test(unit)) unit = 'mL';
+      if (/^kg$/i.test(unit)) unit = 'Kg';
+      if (/^g$/i.test(unit)) unit = 'g';
+      if (/^libra$/i.test(unit)) unit = 'Libra';
+      if (/^onza$/i.test(unit)) unit = 'Onza';
+      if (/^gal[oó]n$/i.test(unit)) unit = 'Galón';
+      if (/^litro$/i.test(unit)) unit = 'Litro';
+      return { value: num(match[1]), unit };
+    }
+
+    function convertMarketPresentation(row) {
+      if (num(row.presentationQty) <= 0 || !row.presentationUnit) return 0;
+      return convertToBase(num(row.presentationQty), row.presentationUnit, transformBaseUnit.value || inputUnit.value || 'Kg');
+    }
+
+    function topItems(rows, getValue, limit=3) {
+      return [...rows]
+        .map(row => ({ label: row.description || row.name || row.account || 'Sin detalle', value: getValue(row) }))
+        .filter(row => row.value > 0)
+        .sort((a,b) => b.value - a.value)
+        .slice(0, limit);
+    }
+
+    function auditAlerts(v) {
+      const alerts = [];
+      if (!v.g.responsible) alerts.push('Falta el responsable del proceso.');
+      if (!v.g.responsibleRole) alerts.push('Falta el cargo del responsable para auditoría.');
+      if (v.totalCost <= 0) alerts.push('El costo total aún no tiene valores suficientes.');
+      if (v.totalOutputUseful <= 0) alerts.push('No hay salidas registradas para distribuir el costo común.');
+      if (v.g.inputQty > 0 && v.totalOutputUseful > v.g.inputQty) alerts.push('La salida útil supera la entrada del proceso. Revisa cantidades y merma.');
+      if (v.marketAvg === 0) alerts.push('No hay comparables suficientes para validar el precio frente al mercado.');
+      if (v.fixedWeak) alerts.push('La base de costos fijos es débil para un punto de equilibrio confiable.');
+      if (v.contrib <= 0) alerts.push('El margen de contribución es cero o negativo. No hay punto de equilibrio defendible.');
+      if (v.indirectMissing > 0) alerts.push(`Hay ${v.indirectMissing} costo(s) indirecto(s) sin base completa de asignación.`);
+      return alerts;
+    }
+
+    function renderReport(v) {
+      const p = v.primary || {};
+      const unitCostTotal = num(p.qtyOut) > 0 ? (v.totalCost * (num(p.costPct) / 100)) / num(p.qtyOut) : 0;
+      const wholesale = unitCostTotal * (1 + num(v.g.wholesaleMarginPct) / 100);
+      const summary = !v.marketAvg
+        ? `${v.g.productName || 'El producto'} presenta un costo unitario total de ${money(unitCostTotal)}, un PVP sugerido de ${money(p._suggestNoVat || 0)} y un precio mayorista recomendado de ${money(wholesale)}. Aún falta una base suficiente de mercado para validar con mayor seguridad el riesgo comercial.`
+        : `${v.g.productName || 'El producto'} presenta un costo unitario total de ${money(unitCostTotal)}, un PVP sugerido de ${money(p._suggestNoVat || 0)} y un precio mayorista recomendado de ${money(wholesale)}. El punto de equilibrio exige ${(v.breakEvenUnits || 0).toFixed(2)} unidades y la lectura de mercado actual es ${String(v.marketState || 'Sin base suficiente').toLowerCase()}.`;
+      const components = [
+        { label:'Directos', value:v.directTotal, color:'#d94a1f' },
+        { label:'Indirectos', value:v.indirectTotal, color:'#6f9915' },
+        { label:'Comercialización', value:v.commercialTotal, color:'#2d6cdf' },
+        { label:'Equipos', value:v.equipTotal, color:'#7c3aed' }
+      ].sort((a,b) => b.value - a.value);
+      const compHtml = components.map(item => {
+        const share = v.totalCost > 0 ? (item.value / v.totalCost) * 100 : 0;
+        return `<div class="report-comp-item">
+          <div class="report-comp-head">
+            <div class="label">${item.label}</div>
+            <div class="money">${money(item.value)}</div>
+            <div class="pct">${pct(share)}</div>
+          </div>
+          <div class="report-progress"><span style="width:${share}%;background:${item.color}"></span></div>
+        </div>`;
+      }).join('');
+      const stateTone = v.marketState === 'Riesgo alto' ? 'red' : v.marketState === 'Algo por encima' || v.marketState === 'Sin base suficiente' ? 'yellow' : 'green';
+      const gapTone = !v.marketAvg ? 'yellow' : v.gapPct > 12 ? 'red' : v.gapPct > 5 ? 'yellow' : 'green';
+      const alerts = auditAlerts(v).slice(0, 3).map(text => `<div class="report-note">${esc(text)}</div>`).join('') || `<div class="report-note" style="background:#eef8ef;color:#25643a;border-color:#cfe6d3">Sin alertas críticas de consistencia en esta revisión.</div>`;
+      const presentationLabel = `${num(p.qtyOut || 0).toFixed(2)} x ${num(p.size || 0).toFixed(2)} ${esc(p.unit || v.g.baseUnit || '-')}`;
+const html = `<div class="report"><div class="report-section"><div class="report-shell"><div class="report-hero"><div class="report-title-block"><div class="left"><img src="${branding.logoPath || DEFAULT_BRANDING.logoPath}" alt="${esc(branding.logoAlt || branding.organizationName || 'Logo institucional')}"><div><h1>Informe de costeo de ${esc(v.g.orgName || branding.organizationName || 'la organización')}</h1><div class="report-product-line"><div><b>Producto:</b> ${esc(v.g.productName || '-')}</div><div><b>Presentación:</b> ${presentationLabel}</div></div><div class="report-subline">Documento ${esc(v.g.documentId || '-')} · ${new Date().toLocaleDateString('es-EC')}</div></div></div><div class="report-meta-grid"><div class="report-meta"><div class="k">Responsable</div><div class="v">${esc(v.g.responsible || '-')}</div></div><div class="report-meta"><div class="k">Cargo</div><div class="v">${esc(v.g.responsibleRole || '-')}</div></div><div class="report-meta"><div class="k">Periodo</div><div class="v">${esc(v.g.period || '-')}</div></div><div class="report-meta"><div class="k">Unidad base</div><div class="v">${esc(v.g.baseUnit || '-')}</div></div></div></div><div class="report-summary-box"><div class="eyebrow">Resumen ejecutivo</div><div class="text">${esc(summary)}</div></div></div></div></div><div class="report-section"><div class="report-kpi-strip"><div class="report-kpi"><div class="k">Costo unitario total</div><div class="v">${money(unitCostTotal)}</div><div class="s">Costo real por unidad o presentación base.</div></div><div class="report-kpi"><div class="k">PVP sugerido</div><div class="v">${money(p._suggestNoVat || 0)}</div><div class="s">Referencia principal para venta al público.</div></div><div class="report-kpi"><div class="k">Precio mayorista</div><div class="v">${money(wholesale)}</div><div class="s">Referencia desde ${num(v.g.wholesaleMinQty || 0).toFixed(0)} unidades.</div></div><div class="report-kpi"><div class="k">Punto de equilibrio</div><div class="v">${(v.breakEvenUnits || 0).toFixed(2)} und.</div><div class="s">Calculado sobre el PVP sugerido.</div></div><div class="report-kpi alert-${stateTone}"><div class="k">Estado comercial</div><div class="v">${esc(v.marketState || 'Sin base suficiente')}</div><div class="s">${v.marketAvg ? `Brecha: ${money(v.gapMoney)} · ${pct(v.gapPct)}` : 'Faltan comparables útiles para validar el precio.'}</div></div></div></div><div class="report-section"><div class="report-two-col"><div class="report-panel"><h3>Composición del costo</h3><div class="intro">Distribución del costo total por rubro para identificar la principal presión del negocio.</div><div class="report-comp-list">${compHtml}</div><div class="report-note-strip"><div class="report-note"><b>Hallazgo principal:</b> ${esc(findingMain.textContent)}</div></div></div><div class="report-panel"><h3>Lectura frente al mercado</h3><div class="intro">Comparación del precio sugerido frente al benchmark válido cargado.</div><div class="market-hero"><div class="market-hero-top"><div class="market-box"><div class="k">Precio sugerido</div><div class="v">${money(p._suggestNoVat || 0)}</div><div class="s">Promedio mercado: ${v.marketAvg ? money(v.marketAvg) : 'Sin base suficiente'}</div></div><div class="market-box"><div class="k">Brecha frente al mercado</div><div class="v">${v.marketAvg ? money(v.gapMoney) : 'N/D'}</div><div class="s">${v.marketAvg ? pct(v.gapPct) : 'Aún no hay comparables suficientes.'}</div></div></div><div class="report-signal ${gapTone}">${!v.marketAvg ? 'Sin base suficiente' : v.gapPct > 12 ? 'Brecha alta' : v.gapPct > 5 ? 'Brecha media' : v.gapPct < -5 ? 'Competitivo' : 'Alineado'}</div><div class="report-note-strip"><div class="report-note"><b>Riesgo principal:</b> ${esc(findingRisk.textContent)}</div></div></div></div></div></div><div class="report-section"><div class="report-final-grid"><div class="report-final-card"><h4>Hallazgo principal</h4><p>${esc(findingMain.textContent)}</p></div><div class="report-final-card"><h4>Riesgo principal</h4><p>${esc(findingRisk.textContent)}</p></div><div class="report-final-card primary"><h4>Conclusión estratégica</h4><p>${esc(findingOpp.textContent)}</p></div></div><div class="report-note-strip" style="margin-top:14px">${alerts}<div class="report-note" style="text-align:center;font-weight:800;color:#475467">${esc(branding.reportFooterLine1 || DEFAULT_BRANDING.reportFooterLine1)}<br>${esc(branding.reportFooterLine2 || DEFAULT_BRANDING.reportFooterLine2)}</div></div></div></div>`;
+      reportContent.innerHTML = html;
+      document.getElementById('report-print-only').innerHTML = html;
+    }
+
+    function calcAll() {
+      const g = getGeneral();
+      const directTotal = state.direct.reduce((a,r) => a + num(r.qty)*num(r.unitCost), 0);
+      const indirectTotal = state.indirect.reduce((a,r) => a + getIndirectComputed(r).assigned, 0);
+      const commercialTotal = state.commercial.reduce((a,r) => a + num(r.qty)*num(r.unitCost), 0);
+      const equipTotal = state.equipUse.reduce((a,r) => {
+        const equip = state.equipLibrary.find(item => item.id === r.libraryId);
+        return a + (equip ? getEquipLibraryComputed(equip).costPerHour * num(r.hoursUsed) : 0);
+      }, 0);
+      const totalCost = directTotal + indirectTotal + commercialTotal + equipTotal;
+      const directRows = document.querySelectorAll('#tblDirect tbody tr');
+      state.direct.forEach((r, i) => {
+        const row = directRows[i];
+        if (!row) return;
+        const totalEl = row.querySelector('.row-total');
+        if (totalEl) totalEl.textContent = money(num(r.qty) * num(r.unitCost));
+      });
+      const commercialRows = document.querySelectorAll('#tblCommercial tbody tr');
+      state.commercial.forEach((r, i) => {
+        const row = commercialRows[i];
+        if (!row) return;
+        const totalEl = row.querySelector('.row-total');
+        if (totalEl) totalEl.textContent = money(num(r.qty) * num(r.unitCost));
+      });
+      const equipLibraryRows = document.querySelectorAll('#tblEquipLibrary tbody tr');
+      state.equipLibrary.forEach((r, i) => {
+        const row = equipLibraryRows[i];
+        if (!row) return;
+        const calc = getEquipLibraryComputed(r);
+        const readonly = row.querySelectorAll('.readonly-box');
+        if (readonly[0]) readonly[0].textContent = money(calc.monthly);
+        if (readonly[1]) readonly[1].textContent = money(calc.costPerHour);
+      });
+      const equipUseRows = document.querySelectorAll('#tblEquipUse tbody tr');
+      state.equipUse.forEach((r, i) => {
+        const row = equipUseRows[i];
+        if (!row) return;
+        const equip = state.equipLibrary.find(item => item.id === r.libraryId);
+        const costPerHour = equip ? getEquipLibraryComputed(equip).costPerHour : 0;
+        const readonly = row.querySelectorAll('.readonly-box');
+        if (readonly[0]) readonly[0].textContent = money(costPerHour);
+        const assignedEl = row.querySelector('.row-total');
+        if (assignedEl) assignedEl.textContent = money(costPerHour * num(r.hoursUsed));
+      });
+      const baseFamily = unitFamily(transformBaseUnit.value || inputUnit.value || g.baseUnit);
+      const inputFamily = unitFamily(g.inputUnit);
+      const inputQtyBase = inputFamily === baseFamily ? convertToBase(g.inputQty, g.inputUnit, transformBaseUnit.value || g.inputUnit) : 0;
+      const outputRows = document.querySelectorAll('#outputsList .transform-row-wrap');
+      const outputValues = state.outputs.map(r => {
+        const basePerPresentation = convertToBase(num(r.size), r.unit, transformBaseUnit.value || g.inputUnit);
+        const totalBase = Number.isFinite(basePerPresentation) ? basePerPresentation * num(r.qtyOut) : NaN;
+        const relativeValue = num(r.qtyOut) * num(r.currentPrice);
+        const nrvValue = Math.max(0, relativeValue - num(r.nrvCost || 0));
+        return { basePerPresentation, totalBase, relativeValue, nrvValue };
+      });
+      const totalOutputUseful = outputValues.reduce((a,r) => a + (Number.isFinite(r.totalBase) ? r.totalBase : 0), 0);
+      const waste = Math.max(0, inputQtyBase - totalOutputUseful);
+      const yieldPct = inputQtyBase>0 ? (totalOutputUseful/inputQtyBase)*100 : 0;
+      const fixedDirect = state.direct.filter(r=>r.behavior==='Fijo').reduce((a,r)=>a+num(r.qty)*num(r.unitCost),0);
+      const fixedIndirect = state.indirect.filter(r=>r.behavior==='Fijo').reduce((a,r)=>a+getIndirectComputed(r).assigned,0);
+      const fixedCommercial = state.commercial.filter(r=>r.behavior==='Fijo').reduce((a,r)=>a+num(r.qty)*num(r.unitCost),0);
+      const fixedEquip = state.equipUse.filter(r=>r.behavior==='Fijo').reduce((a,r)=>{
+        const equip = state.equipLibrary.find(item => item.id === r.libraryId);
+        return a + (equip ? getEquipLibraryComputed(equip).costPerHour * num(r.hoursUsed) : 0);
+      },0);
+      const fixedCosts = fixedDirect + fixedIndirect + fixedCommercial + fixedEquip;
+      const variableCosts = Math.max(0, totalCost - fixedCosts);
+      const directShare = totalCost>0 ? (directTotal/totalCost)*100 : 0;
+      const vatMult = g.vatApplies==='si' ? (1 + g.vatPct/100) : 1;
+      const totalShareBase = outputValues.reduce((a,r) => a + (Number.isFinite(r.totalBase) ? r.totalBase : 0), 0);
+      const totalManualShare = state.outputs.reduce((a, r) => a + num(r.costPct), 0);
+      const totalNrvValue = outputValues.reduce((a,r) => a + r.nrvValue, 0);
+      state.outputs.forEach((r, i) => {
+        const values = outputValues[i];
+        let share = 0;
+        if (allocationMethod.value === 'sales') share = totalManualShare > 0 ? num(r.costPct) / totalManualShare : 0;
+        else if (allocationMethod.value === 'nrv') share = totalNrvValue > 0 ? values.nrvValue / totalNrvValue : 0;
+        else share = totalShareBase > 0 ? (Number.isFinite(values.totalBase) ? values.totalBase : 0) / totalShareBase : 0;
+        if (allocationMethod.value !== 'sales') r.costPct = share * 100;
+        const assigned = totalCost*share;
+        const costPer = num(r.qtyOut)>0 ? assigned/num(r.qtyOut) : 0;
+        const suggestNoVat = costPer*(1 + g.profitPct/100);
+        const suggestVat = suggestNoVat*vatMult;
+        r._costAssigned = assigned; r._costPer = costPer; r._suggestNoVat = suggestNoVat; r._suggestVat = suggestVat;
+        if (outputRows[i]) {
+          const row = outputRows[i];
+          const assignedEl = row.querySelector('[data-key="costAssigned"]');
+          const shareEl = row.querySelector('[data-key="sharePct"]');
+          const baseEl = row.querySelector('[data-key="baseOutput"]');
+          const costPerEl = row.querySelector('[data-key="costPer"]');
+          const noVatEl = row.querySelector('[data-key="suggestNoVat"]');
+          const vatEl = row.querySelector('[data-key="suggestVat"]');
+          if (assignedEl) assignedEl.textContent = money(assigned);
+          if (shareEl) shareEl.textContent = `Participación: ${pct(r.costPct)}`;
+          if (baseEl) baseEl.textContent = `Salida total base: ${Number.isFinite(values.totalBase) ? values.totalBase.toFixed(2) : 'Unidad incompatible'} ${transformBaseUnit.value || g.inputUnit}`;
+          if (costPerEl) costPerEl.textContent = `Costo por presentación: ${money(costPer)}`;
+          if (noVatEl) noVatEl.textContent = `Precio sugerido sin IVA: ${money(suggestNoVat)}`;
+          if (vatEl) vatEl.textContent = `Precio sugerido con IVA: ${money(suggestVat)}`;
+        }
+      });
+      sumInputQty.textContent = `${inputQtyBase.toFixed(2)} ${transformBaseUnit.value || g.inputUnit}`;
+      sumUsefulOutput.textContent = `${totalOutputUseful.toFixed(2)} ${transformBaseUnit.value || g.inputUnit}`;
+      sumWaste.textContent = `${waste.toFixed(2)} ${transformBaseUnit.value || g.inputUnit}`;
+      sumUsefulPct.textContent = `${pct(yieldPct)} de la entrada`;
+      const wastePct = inputQtyBase > 0 ? (waste / inputQtyBase) * 100 : 0;
+      sumWastePct.textContent = `${pct(wastePct)} de merma`;
+      const hasIncompatible = state.outputs.some((r, i) => !Number.isFinite(outputValues[i].totalBase));
+      const exceedsInput = totalOutputUseful > inputQtyBase && inputQtyBase > 0;
+      const processCard = document.getElementById('sumProcessCard');
+      if (hasIncompatible) {
+        sumProcessStatus.textContent = 'Revisar';
+        sumProcessHint.textContent = 'Hay salidas con unidades incompatibles con la unidad base.';
+        if (processCard) processCard.className = 'summary-box review';
+      } else if (exceedsInput) {
+        sumProcessStatus.textContent = 'Error';
+        sumProcessHint.textContent = 'La salida útil total no puede ser mayor que la entrada al proceso.';
+        if (processCard) processCard.className = 'summary-box review';
+      } else if (allocationMethod.value === 'sales' && Math.abs(totalManualShare - 100) > 0.01) {
+        sumProcessStatus.textContent = 'Revisar';
+        sumProcessHint.textContent = `La participación total suma ${pct(totalManualShare)}. Debe cerrar en 100%.`;
+        if (processCard) processCard.className = 'summary-box review';
+      } else {
+        sumProcessStatus.textContent = 'OK';
+        sumProcessHint.textContent = allocationMethod.value === 'sales' ? 'Reparto validado por porcentaje de participación.' : 'Reparto validado por cantidad física.';
+        if (processCard) processCard.className = 'summary-box ok';
+      }
+      const p = state.outputs[0] || { qtyOut:0, costPct:100, currentPrice:0, _suggestNoVat:0 };
+      const primaryShare = num(p.costPct)/100;
+      const fixedPrimary = fixedCosts*primaryShare;
+      const variablePrimaryTotal = variableCosts*primaryShare;
+      const variablePerUnit = num(p.qtyOut)>0 ? variablePrimaryTotal/num(p.qtyOut) : 0;
+      const unitCostTotal = num(p.qtyOut)>0 ? (totalCost * primaryShare) / num(p.qtyOut) : 0;
+      const invalidMarginOrder = g.wholesaleMarginPct > g.profitPct;
+      const invalidWholesaleMinQty = g.wholesaleMinQty < 2;
+      const usedPriceNoVat = num(p.currentPrice)>0 ? num(p.currentPrice) : num(p._suggestNoVat);
+      const contrib = usedPriceNoVat - variablePerUnit;
+      const breakEvenUnits = contrib>0 ? fixedPrimary/contrib : 0;
+      const breakEvenSales = breakEvenUnits*usedPriceNoVat;
+      const wholesalePrice = unitCostTotal * (1 + g.wholesaleMarginPct / 100);
+      const wholesaleContrib = wholesalePrice - variablePerUnit;
+      const wholesaleState = wholesalePrice <= unitCostTotal
+        ? 'Inválido'
+        : wholesaleContrib <= 0
+        ? 'Riesgoso'
+        : wholesaleContrib < unitCostTotal * 0.1
+        ? 'Ajustado'
+        : 'Saludable';
+      const wholesaleHint = wholesalePrice <= unitCostTotal
+        ? 'El precio mayorista no puede quedar por debajo del costo unitario total.'
+        : wholesaleContrib <= 0
+        ? 'Ese mayorista no deja contribución suficiente para sostener el negocio.'
+        : wholesaleContrib < unitCostTotal * 0.1
+        ? 'Funciona, pero con un margen estrecho. Conviene revisar.'
+        : 'El mayorista conserva margen y puede usarse como referencia comercial.';
+      const fixedWeak = totalCost>0 ? fixedCosts/totalCost < 0.05 : true;
+      const primaryBase = num(p.size) || 0;
+      const comparablePrices = [];
+      let marketRowsWithData = 0;
+      state.market.forEach(item => {
+        if (item.presentation && !item.presentationQty) {
+          const parsedText = parsePresentationText(item.presentation);
+          item.presentationQty = parsedText.value;
+          item.presentationUnit = parsedText.unit || item.presentationUnit || 'Kg';
+        }
+        const parsed = convertMarketPresentation(item);
+        const similar = primaryBase > 0 && parsed > 0 ? Math.abs(parsed - primaryBase) / primaryBase <= 0.15 : false;
+        if (String(item.brand || '').trim() || String(item.product || '').trim() || num(item.presentationQty) > 0 || num(item.price) > 0) {
+          marketRowsWithData += 1;
+        }
+        item.result = similar
+          ? (num(item.price) >= num(p._suggestNoVat) ? 'Comparable · mercado más caro' : 'Comparable · mercado más barato')
+          : 'Revisar presentación';
+        if (similar && num(item.price) > 0) comparablePrices.push(num(item.price));
+      });
+      const marketAvg = comparablePrices.length ? comparablePrices.reduce((a,b)=>a+b,0) / comparablePrices.length : 0;
+      const gapMoney = num(p._suggestNoVat) - marketAvg;
+      const gapPct = marketAvg > 0 ? (gapMoney / marketAvg) * 100 : 0;
+      const marketState = marketAvg === 0 ? 'Sin base suficiente' : (gapPct < -5 ? 'Competitivo' : (gapPct <= 5 ? 'Alineado' : (gapPct <= 12 ? 'Algo por encima' : 'Riesgo alto')));
+      const policyWarning = document.getElementById('policyWarning');
+      if (policyWarning) {
+        const warnings = [];
+        if (invalidMarginOrder) warnings.push('El margen mayorista no debe ser mayor que el margen de PVP.');
+        if (invalidWholesaleMinQty) warnings.push('La cantidad mínima para mayorista debe ser al menos 2 unidades.');
+        policyWarning.textContent = warnings.join(' ');
+        policyWarning.style.display = warnings.length ? 'block' : 'none';
+      }
+      const marketAuditBanner = document.getElementById('marketAuditBanner');
+      const marketAuditValue = document.getElementById('marketAuditValue');
+      const marketAuditHint = document.getElementById('marketAuditHint');
+      if (marketAuditBanner && marketAuditValue && marketAuditHint) {
+        if (!marketRowsWithData) {
+          marketAuditBanner.className = 'audit-banner warn';
+          marketAuditValue.textContent = 'Revisar';
+          marketAuditHint.textContent = 'Carga comparables reales para validar el precio sugerido frente al mercado.';
+        } else if (!comparablePrices.length) {
+          marketAuditBanner.className = 'audit-banner warn';
+          marketAuditValue.textContent = 'Revisar';
+          marketAuditHint.textContent = 'Hay comparables cargados, pero sus presentaciones no son suficientemente parecidas para validar el precio.';
+        } else {
+          marketAuditBanner.className = 'audit-banner';
+          marketAuditValue.textContent = 'OK';
+          marketAuditHint.textContent = `Hay ${comparablePrices.length} comparable(s) útiles para contrastar el precio sugerido con el mercado.`;
+        }
+      }
+      const indirectMissing = state.indirect.filter(r => {
+        const calc = getIndirectComputed(r);
+        return !(num(r.periodValue) > 0 && calc.usage > 0 && calc.baseTotal > 0);
+      }).length;
+      const homeAuditBanner = document.getElementById('homeAuditBanner');
+      const homeAuditValue = document.getElementById('homeAuditValue');
+      const homeAuditHint = document.getElementById('homeAuditHint');
+      const homeMissing = [];
+      if (!g.documentId) homeMissing.push('# de documento');
+      if (!g.orgName) homeMissing.push('organización');
+      if (!g.responsible) homeMissing.push('responsable');
+      if (!g.responsibleRole) homeMissing.push('cargo del responsable');
+      if (!g.productName) homeMissing.push('producto o servicio');
+      if (homeAuditBanner && homeAuditValue && homeAuditHint) {
+        if (homeMissing.length) {
+          homeAuditBanner.className = 'audit-banner warn';
+          homeAuditValue.textContent = 'Revisar';
+          homeAuditHint.textContent = `Faltan datos clave: ${homeMissing.join(', ')}.`;
+        } else {
+          homeAuditBanner.className = 'audit-banner';
+          homeAuditValue.textContent = 'OK';
+          homeAuditHint.textContent = 'Los datos base del costeo y del responsable están completos para auditoría.';
+        }
+      }
+      const costAuditBanner = document.getElementById('costAuditBanner');
+      const costAuditValue = document.getElementById('costAuditValue');
+      const costAuditHint = document.getElementById('costAuditHint');
+      const directMissing = state.direct.filter(r => !(String(r.description || '').trim() && num(r.qty) > 0 && num(r.unitCost) > 0)).length;
+      const commercialMissing = state.commercial.filter(r => !(String(r.description || '').trim() && num(r.qty) > 0 && num(r.unitCost) > 0)).length;
+      const equipMissing = state.equipUse.filter(r => {
+        const equip = state.equipLibrary.find(item => item.id === r.libraryId);
+        return !equip || num(r.hoursUsed) <= 0;
+      }).length;
+      if (costAuditBanner && costAuditValue && costAuditHint) {
+        const issues = [];
+        if (directMissing) issues.push(`${directMissing} directo(s) incompletos`);
+        if (indirectMissing) issues.push(`${indirectMissing} indirecto(s) sin base suficiente`);
+        if (commercialMissing) issues.push(`${commercialMissing} costo(s) comerciales incompletos`);
+        if (equipMissing) issues.push(`${equipMissing} uso(s) de equipo sin horas`);
+        if (issues.length) {
+          costAuditBanner.className = 'audit-banner warn';
+          costAuditValue.textContent = 'Revisar';
+          costAuditHint.textContent = `Pendiente por corregir: ${issues.join(', ')}.`;
+        } else {
+          costAuditBanner.className = 'audit-banner';
+          costAuditValue.textContent = 'OK';
+          costAuditHint.textContent = 'Los costos cargados tienen valores y bases suficientes para revisión.';
+        }
+      }
+      const resultsAuditBanner = document.getElementById('resultsAuditBanner');
+      const resultsAuditValue = document.getElementById('resultsAuditValue');
+      const resultsAuditHint = document.getElementById('resultsAuditHint');
+      if (resultsAuditBanner && resultsAuditValue && resultsAuditHint) {
+        const resultIssues = [];
+        if (totalCost <= 0) resultIssues.push('no hay costo total consolidado');
+        if (totalOutputUseful <= 0) resultIssues.push('no hay salidas válidas');
+        if (allocationMethod.value === 'sales' && Math.abs(totalManualShare - 100) > 0.01) resultIssues.push('la participación no cierra en 100%');
+        if (!marketAvg) resultIssues.push('no hay base suficiente de mercado');
+        if (breakEvenUnits <= 0 || !Number.isFinite(breakEvenUnits)) resultIssues.push('el punto de equilibrio no es defendible');
+        if (wholesalePrice <= unitCostTotal) resultIssues.push('el precio mayorista está por debajo del costo unitario');
+        if (invalidMarginOrder) resultIssues.push('el margen mayorista supera el margen de PVP');
+        if (invalidWholesaleMinQty) resultIssues.push('la cantidad mínima mayorista debe ser mayor que 1');
+        if (resultIssues.length) {
+          resultsAuditBanner.className = 'audit-banner warn';
+          resultsAuditValue.textContent = 'Revisar';
+          resultsAuditHint.textContent = `Antes de decidir, corrige esto: ${resultIssues.join(', ')}.`;
+        } else {
+          resultsAuditBanner.className = 'audit-banner';
+          resultsAuditValue.textContent = 'OK';
+          resultsAuditHint.textContent = 'La lectura final tiene base suficiente en costo, mercado y punto de equilibrio.';
+        }
+      }
+      const indirectCards = document.querySelectorAll('#indirectList .indirect-row-wrap');
+      state.indirect.forEach((r, i) => {
+        const calc = getIndirectComputed(r);
+        const card = indirectCards[i];
+        if (!card) return;
+        const assignedEl = card.querySelector('[data-key="assigned"]');
+        const formulaEl = card.querySelector('[data-key="formula"]');
+        const baseCostEl = card.querySelector('[data-key="basecost"]');
+        const statusEl = card.querySelector('[data-key="status"]');
+        const warningEl = card.querySelector('[data-key="warning"]');
+        if (assignedEl) assignedEl.textContent = money(calc.assigned);
+        if (formulaEl) formulaEl.textContent = calc.baseTotal > 0 ? `${money(num(r.periodValue))} x (${calc.usage} / ${calc.baseTotal})` : 'Completa los datos para calcular.';
+        if (baseCostEl) baseCostEl.textContent = `Costo por unidad base: ${calc.baseTotal > 0 ? money(calc.baseCost) : 'Pendiente'}`;
+        if (statusEl) {
+          statusEl.textContent = calc.warnings.length ? 'Revisar asignación' : 'Asignación consistente';
+          statusEl.className = 'status-pill' + (calc.warnings.length ? ' warn' : '');
+        }
+        if (warningEl) {
+          warningEl.textContent = calc.warnings.join(' ');
+          warningEl.style.display = calc.warnings.length ? 'block' : 'none';
+        }
+      });
+      const pressures = [
+        { label:'directos', value:directTotal },
+        { label:'indirectos', value:indirectTotal },
+        { label:'comercialización', value:commercialTotal },
+        { label:'equipos', value:equipTotal }
+      ].sort((a,b)=>b.value-a.value);
+      const mainPressure = pressures[0]?.label || 'directos';
+      const marketResultPills = document.querySelectorAll('#tblMarket [data-row-result]');
+      state.market.forEach((item, index) => {
+        const pill = marketResultPills[index];
+        if (!pill) return;
+        pill.textContent = item.result || 'Pendiente';
+        pill.className = 'status-pill' + (((item.result || '').includes('Revisar')) ? ' warn' : '');
+      });
+      renderKpis({ totalCost, totalOutputUseful, waste, yieldPct, directShare, suggestMain:num(p._suggestNoVat), suggestMainVat:num(p._suggestVat), breakEvenUnits, g, marketState, marketAvg, gapMoney, gapPct, wholesalePrice, wholesaleMinQty:g.wholesaleMinQty, unitCostTotal });
+      renderExecutiveSummary({ unitCostTotal, pvp:num(p._suggestNoVat), wholesalePrice, breakEvenUnits, marketAvg, marketState });
+      renderDecisionCards({ unitCostTotal, variablePerUnit, contrib, wholesalePrice, wholesaleMinQty:g.wholesaleMinQty, breakEvenSales, wholesaleState, wholesaleHint });
+      renderDecisionSummary({ wholesaleState, wholesalePrice, wholesaleMinQty:g.wholesaleMinQty, contrib, breakEvenUnits });
+      renderBars({ directTotal, indirectTotal, commercialTotal, equipTotal, totalCost, inputQty:g.inputQty, useful:totalOutputUseful, waste, g, marketState, marketAvg, gapMoney, gapPct, pvp:num(p._suggestNoVat) });
+      renderFindings({ directShare, yieldPct, marketCount:state.market.length, marketState, gapPct, breakEvenUnits, breakEvenSales, wholesalePrice, wholesaleState });
+      renderReport({ g, directTotal, indirectTotal, commercialTotal, equipTotal, totalCost, totalOutputUseful, waste, yieldPct, directShare, fixedCosts, variableCosts, primary:p, breakEvenUnits, breakEvenSales, fixedWeak, marketState, marketAvg, gapMoney, gapPct, variablePerUnit, usedPriceNoVat, contrib, indirectMissing, mainPressure, marketComparableCount: comparablePrices.length });
+    }
+
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.onclick = () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      document.getElementById(btn.dataset.tab).classList.add('active');
+    });
+
+      ['documentId','orgName','responsible','responsibleRole','productName','activityType','period','baseUnit','profitPct','wholesaleMarginPct','wholesaleMinQty','currentPriceBase','vatApplies','vatPct','notes','inputQty','inputUnit','transformBaseUnit'].forEach(id => {
+        document.getElementById(id).addEventListener('input', calcAll);
+        document.getElementById(id).addEventListener('change', calcAll);
+      });
+      processType.addEventListener('change', syncTransformMode);
+      allocationMethod.addEventListener('change', syncTransformMode);
+
+    addDirect.onclick = () => addDirectRow();
+    addIndirect.onclick = () => addIndirectRow();
+    addCommercial.onclick = () => addCommercialRow();
+    addEquipLibrary.onclick = () => addEquipLibraryRow();
+    addEquipUse.onclick = () => addEquipUseRow();
+    addOutput.onclick = () => addOutputRow();
+    addMarket.onclick = () => addMarketRow();
+
+    btnSave.onclick = () => {
+      const suggestedName = buildCosteoSuggestedName();
+      const payload = {
+        _app: {
+          code: APP_PRODUCT.code,
+          name: APP_PRODUCT.name,
+          vendor: APP_PRODUCT.vendor,
+          version: APP_PRODUCT.version,
+          dataSchema: APP_PRODUCT.dataSchema
+        },
+        _branding: { ...branding },
+        _support: buildSupportSnapshot(),
+        general:getGeneral(),
+        state
+      };
+      if (window.__TAURI__?.core?.invoke) {
+        tauriInvoke('export_costeo_file', {
+          contents: JSON.stringify(payload, null, 2),
+          suggestedName
+        }).then((savedPath) => {
+          alert(`Costeo exportado correctamente en:\n${savedPath}`);
+        }).catch((err) => {
+          alert(`No fue posible exportar el costeo.\n${err}`);
+        });
+        return;
+      }
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type:'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${suggestedName}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    };
+    btnLoad.onclick = () => {
+      if (window.__TAURI__?.core?.invoke) {
+        tauriInvoke('import_costeo_file').then((raw) => {
+          const payload = JSON.parse(raw);
+          applyCosteoPayload(payload);
+          alert('Archivo cargado correctamente.');
+        }).catch((err) => {
+          alert(`No fue posible cargar el archivo.\n${err}`);
+        });
+        return;
+      }
+      fileLoader.value = '';
+      fileLoader.click();
+    };
+    btnBrandPickLogo.onclick = async () => {
+      if (window.__TAURI__?.core?.invoke) {
+        try {
+          const dataUrl = await tauriInvoke('import_logo_file');
+          mergeBrandingConfig({ ...collectBrandingFormValues(), logoPath: dataUrl });
+        } catch (err) {
+          if (String(err || '').includes('No se seleccionó')) return;
+          alert(`No fue posible cargar el logo.\n${err}`);
+        }
+        return;
+      }
+      alert('La selección nativa de logo funciona en la versión de escritorio.');
+    };
+    btnBrandApply.onclick = () => {
+      mergeBrandingConfig(collectBrandingFormValues());
+      alert('Identidad institucional aplicada correctamente.');
+    };
+    btnBrandResetDefaults.onclick = () => {
+      mergeBrandingConfig({ ...DEFAULT_BRANDING });
+      alert('Se restauró la identidad base del producto.');
+    };
+    btnAdminExit.onclick = () => {
+      setAdminMode(false);
+      alert('Modo administrador desactivado.');
+    };
+    btnBrandExport.onclick = () => exportBrandingFile();
+    btnBrandLoad.onclick = () => {
+      brandLoader.value = '';
+      brandLoader.click();
+    };
+    brandHeaderTitle.ondblclick = () => requestAdminAccess();
+    brandHeaderLogo.ondblclick = () => requestAdminAccess();
+    document.addEventListener('keydown', (event) => {
+      if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === 'a') {
+        event.preventDefault();
+        requestAdminAccess();
+      }
+    });
+    fileLoader.onchange = async () => {
+      const file = fileLoader.files && fileLoader.files[0];
+      if (!file) return;
+      try {
+        const payload = JSON.parse(await file.text());
+        applyCosteoPayload(payload);
+        alert('Archivo cargado correctamente.');
+      } catch (err) {
+        alert('No fue posible cargar el archivo. Revisa que sea un JSON válido exportado por esta app.');
+      }
+    };
+    brandLoader.onchange = async () => {
+      const file = brandLoader.files && brandLoader.files[0];
+      if (!file) return;
+      try {
+        const payload = JSON.parse(await file.text());
+        mergeBrandingConfig(payload);
+        alert('Marca cargada correctamente.');
+      } catch (err) {
+        alert('No fue posible cargar la marca. Revisa que sea un JSON válido de branding.');
+      }
+    };
+    btnReset.onclick = () => {
+      if (!confirm('¿Deseas reiniciar toda la información del costeo actual?')) return;
+      document.querySelectorAll('input[type=text],textarea').forEach(el => el.value='');
+        document.querySelectorAll('input[type=number]').forEach(el => el.value = (el.id==='profitPct'?30:(el.id==='wholesaleMarginPct'?18:(el.id==='wholesaleMinQty'?12:(el.id==='vatPct'?15:0)))));
+      activityType.value='Producto'; period.value='por lote'; baseUnit.value='Kg'; vatApplies.value='no'; inputUnit.value='Kg'; transformBaseUnit.value='Kg'; processType.value='primario'; allocationMethod.value='physical';
+      const persistedEquipLibrary = state.equipLibrary.length ? [...state.equipLibrary] : loadEquipLibraryFromStorage();
+      Object.assign(state, { direct:[], indirect:[], commercial:[], equipLibrary:persistedEquipLibrary, equipUse:[], outputs:[], market:[] });
+      initRows(); syncTransformMode();
+    };
+    btnPrint.onclick = () => {
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      document.getElementById('tab-report').classList.add('active');
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector('[data-tab="tab-report"]').classList.add('active');
+      calcAll();
+      setTimeout(() => window.print(), 150);
+    };
+
+      function renderAll() {
+        if (allocationMethod.value === 'sales') syncOutputParticipation();
+        renderDirect();
+        renderIndirect();
+        renderCommercial();
+        renderEquipLibrary();
+        renderEquipUse();
+        renderOutputs();
+        renderMarket();
+      }
+    function initRows() {
+      if (state.direct.length===0) state.direct.push({account:'Materia prima',description:'',unit:'Kg',qty:0,unitCost:0,behavior:'Variable'});
+      if (state.indirect.length===0) state.indirect.push({id:uid('ind'),account:'Agua',description:'',area:'Produccion',includeInProduct:'Si',periodValue:0,method:'',baseUnit:'',usage:0,baseTotal:0,behavior:'Fijo',observation:'',responsible:'',support:'',weightedItems:[{name:'',hours:0,factor:1}],kwhUsage:0,kwhTotal:0});
+      if (state.commercial.length===0) state.commercial.push({account:'Transporte de venta',description:'',unit:'Unidad',qty:0,unitCost:0,behavior:'Variable'});
+      if (state.equipLibrary.length===0) state.equipLibrary.push({id:uid('eq'),name:'',area:'Produccion',purchaseValue:0,purchaseDate:'',lifeValue:5,lifeUnit:'años',hoursMonth:1,residualValue:0,method:'linea recta',observation:'',responsible:'',support:''});
+      if (state.equipUse.length===0) state.equipUse.push({libraryId:state.equipLibrary[0]?.id || '',behavior:'Fijo',hoursUsed:0,observation:''});
+      if (state.outputs.length===0) state.outputs.push({name:'',outputType:'Presentación comercial',size:1,unit:'Kg',qtyOut:0,costPct:0,currentPrice:0,nrvCost:0,note:''});
+        if (state.market.length===0) state.market.push({brand:'',product:'',presentationQty:0,presentationUnit:'Kg',price:0,note:'',result:''});
+      renderAll();
+    }
+
+    const storedEquipLibrary = loadEquipLibraryFromStorage();
+    if (storedEquipLibrary.length) state.equipLibrary = storedEquipLibrary;
+    initRows();
+    syncTransformMode();
+    syncBrandingFromDesktop();
+  </script>
+</body>
+</html>
+
+
+
