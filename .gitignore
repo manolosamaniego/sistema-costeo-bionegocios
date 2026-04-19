@@ -33,6 +33,7 @@ target
 *.msi
 *.exe
 *.zip
+releases/**/paquete/
 
 # Local client data and temporary exports
 Downloads/

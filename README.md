@@ -51,6 +51,12 @@ npm run tauri build
 npm run release:prepare
 ```
 
+### Preparar entrega para cliente operativo
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\preparar-entrega-cliente.ps1 -ClientId aliados -BrandingFile .\clientes\aliados\branding.1.0.0.json
+```
+
 ### Verificar laptop de soporte
 
 ```powershell
