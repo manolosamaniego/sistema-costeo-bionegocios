@@ -45,6 +45,12 @@ npm run edition:operativa
 npm run tauri build
 ```
 
+### Preparar carpeta de release
+
+```powershell
+npm run release:prepare
+```
+
 ### Cambiar edición del producto
 
 ```powershell
@@ -115,3 +121,5 @@ Revisa:
 - [Trabajo desde otra laptop](C:\Users\Usuario\Documents\Proyectos\App de Costos\sistema-costeo-bionegocios\docs\TRABAJAR-DESDE-OTRA-LAPTOP.md)
 - [Checklist de laptop de viaje](C:\Users\Usuario\Documents\Proyectos\App de Costos\sistema-costeo-bionegocios\docs\CHECKLIST-LAPTOP-DE-VIAJE.md)
 - [Ediciones Matriz y Operativa](C:\Users\Usuario\Documents\Proyectos\App de Costos\sistema-costeo-bionegocios\docs\EDICIONES-MATRIZ-Y-OPERATIVA.md)
+- [Mecanismo de actualización](C:\Users\Usuario\Documents\Proyectos\App de Costos\sistema-costeo-bionegocios\docs\MECANISMO-DE-ACTUALIZACION.md)
+- [Actualizar cliente](C:\Users\Usuario\Documents\Proyectos\App de Costos\sistema-costeo-bionegocios\docs\ACTUALIZAR-CLIENTE.md)
