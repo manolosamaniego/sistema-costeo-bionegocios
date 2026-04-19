@@ -51,6 +51,18 @@ npm run tauri build
 npm run release:prepare
 ```
 
+### Verificar laptop de soporte
+
+```powershell
+npm run support:check
+```
+
+### Traer la última matriz en otra laptop
+
+```powershell
+npm run support:update
+```
+
 ### Cambiar edición del producto
 
 ```powershell

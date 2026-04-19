@@ -16,8 +16,11 @@
 
 - [ ] Descargar JSON del cliente
 - [ ] Descargar branding si aplica
+- [ ] Exportar diagnóstico si el cliente reportó error
 - [ ] Registrar incidencia
 - [ ] Confirmar versión afectada
+- [ ] Ejecutar `npm run support:check`
+- [ ] Ejecutar `npm run support:update`
 
 ## Antes de entregar corrección
 
@@ -25,4 +28,3 @@
 - [ ] Compilar instalador
 - [ ] Anotar versión corregida
 - [ ] Guardar nota de entrega
-

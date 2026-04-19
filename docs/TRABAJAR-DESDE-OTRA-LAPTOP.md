@@ -35,6 +35,35 @@ Ese script:
 - instala dependencias
 - verifica herramientas
 
+## Cuando la laptop ya está preparada
+
+Si ya tienes la laptop lista y solo quieres traer la última matriz, usa:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\actualizar-matriz.ps1
+```
+
+Ese script:
+
+- hace `fetch`
+- cambia a `main`
+- hace `pull`
+- instala dependencias si algo cambió
+- activa edición matriz
+
+## Verificación rápida antes de atender soporte
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\verificar-entorno.ps1
+```
+
+También puedes usar desde `package.json`:
+
+```powershell
+npm run support:check
+npm run support:update
+```
+
 ## Preparación manual
 
 ```powershell
@@ -79,4 +108,3 @@ Cuando el cliente reporte un error:
 
 No trabajar sobre una copia suelta del cliente.
 Siempre trabajar sobre el repositorio clonado desde la matriz.
-

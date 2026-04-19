@@ -7,6 +7,8 @@
     "edition:matriz": "powershell -ExecutionPolicy Bypass -File scripts\\activar-edicion.ps1 -Edition matriz",
     "edition:operativa": "powershell -ExecutionPolicy Bypass -File scripts\\activar-edicion.ps1 -Edition operativa",
     "release:prepare": "powershell -ExecutionPolicy Bypass -File scripts\\preparar-release.ps1 -Version 1.0.0",
+    "support:check": "powershell -ExecutionPolicy Bypass -File scripts\\verificar-entorno.ps1",
+    "support:update": "powershell -ExecutionPolicy Bypass -File scripts\\actualizar-matriz.ps1",
     "dev": "node dev-server.mjs",
     "tauri": "tauri"
   },
