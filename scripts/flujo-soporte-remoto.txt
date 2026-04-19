@@ -1,0 +1,34 @@
+FLUJO RAPIDO DE SOPORTE REMOTO
+==============================
+
+1. Recibir del cliente:
+   - captura del error
+   - JSON del costeo
+   - version de la app
+   - branding si aplica
+
+2. Abrir la matriz:
+   - git pull
+   - npm install si es necesario
+
+3. Reproducir:
+   - cargar el JSON
+   - ubicar el modulo
+   - registrar incidencia
+
+4. Corregir:
+   - editar en la matriz
+   - probar con el mismo caso
+
+5. Registrar:
+   - actualizar incidencia
+   - actualizar changelog si aplica
+
+6. Compilar:
+   - npm run tauri build
+
+7. Entregar:
+   - instalador
+   - nota breve del ajuste
+   - nueva version
+

@@ -98,4 +98,5 @@ Revisa:
 - [Matriz del producto](C:\Users\Usuario\Documents\Proyectos\App de Costos\sistema-costeo-bionegocios\docs\MATRIZ-DEL-PRODUCTO.md)
 - [Flujo de soporte](C:\Users\Usuario\Documents\Proyectos\App de Costos\sistema-costeo-bionegocios\docs\FLUJO-DE-SOPORTE.md)
 - [Versionado y entregas](C:\Users\Usuario\Documents\Proyectos\App de Costos\sistema-costeo-bionegocios\docs\VERSIONADO-Y-ENTREGAS.md)
-
+- [Trabajo desde otra laptop](C:\Users\Usuario\Documents\Proyectos\App de Costos\sistema-costeo-bionegocios\docs\TRABAJAR-DESDE-OTRA-LAPTOP.md)
+- [Checklist de laptop de viaje](C:\Users\Usuario\Documents\Proyectos\App de Costos\sistema-costeo-bionegocios\docs\CHECKLIST-LAPTOP-DE-VIAJE.md)
