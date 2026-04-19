@@ -34,14 +34,28 @@ Desde `C:\Users\Usuario\Documents\Proyectos\App de Costos\sistema-costeo-bionego
 
 ```powershell
 npm install
+npm run edition:matriz
 npm run tauri dev
 ```
 
 ### Compilar instalador
 
 ```powershell
+npm run edition:operativa
 npm run tauri build
 ```
+
+### Cambiar edición del producto
+
+```powershell
+npm run edition:matriz
+npm run edition:operativa
+```
+
+Usa:
+
+- `matriz` para la edición de administración, soporte y marca
+- `operativa` para la edición de cliente o sucursal sin acceso de personalización
 
 ## Rutas clave
 
@@ -100,3 +114,4 @@ Revisa:
 - [Versionado y entregas](C:\Users\Usuario\Documents\Proyectos\App de Costos\sistema-costeo-bionegocios\docs\VERSIONADO-Y-ENTREGAS.md)
 - [Trabajo desde otra laptop](C:\Users\Usuario\Documents\Proyectos\App de Costos\sistema-costeo-bionegocios\docs\TRABAJAR-DESDE-OTRA-LAPTOP.md)
 - [Checklist de laptop de viaje](C:\Users\Usuario\Documents\Proyectos\App de Costos\sistema-costeo-bionegocios\docs\CHECKLIST-LAPTOP-DE-VIAJE.md)
+- [Ediciones Matriz y Operativa](C:\Users\Usuario\Documents\Proyectos\App de Costos\sistema-costeo-bionegocios\docs\EDICIONES-MATRIZ-Y-OPERATIVA.md)

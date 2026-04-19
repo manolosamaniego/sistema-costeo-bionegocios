@@ -1326,6 +1326,7 @@
     <section id="report-print-only" class="only-report-print"></section>
   </div>
 
+  <script src="edition-config.js"></script>
   <script>
     const APP_PRODUCT = {
       code: 'SRC-BIO-COSTEO',
@@ -1341,6 +1342,13 @@
       updateEndpoint: '',
       licenseEndpoint: '',
       diagnosticsEndpoint: ''
+    };
+    const EDITION_CONFIG = window.APP_EDITION_CONFIG || {
+      profile: 'matriz',
+      label: 'Edición Matriz',
+      allowAdminBranding: true,
+      allowBrandImportExport: true,
+      allowHiddenAdminAccess: true
     };
 
     const DEFAULT_BRANDING = {
@@ -1387,6 +1395,9 @@
     function saveBrandingConfig(cfg) {
       try { localStorage.setItem(BRANDING_STORAGE_KEY, JSON.stringify(cfg || DEFAULT_BRANDING)); } catch {}
     }
+    function isMatrixEdition() {
+      return EDITION_CONFIG.profile === 'matriz';
+    }
     function isAdminModeEnabled() {
       try { return localStorage.getItem(ADMIN_MODE_STORAGE_KEY) === 'true'; } catch { return false; }
     }
@@ -1395,7 +1406,7 @@
       applyAdminMode();
     }
     function applyAdminMode() {
-      const enabled = isAdminModeEnabled();
+      const enabled = isMatrixEdition() && EDITION_CONFIG.allowAdminBranding && isAdminModeEnabled();
       document.querySelectorAll('.admin-only').forEach((el) => {
         el.classList.toggle('admin-visible', enabled);
       });
@@ -1407,6 +1418,10 @@
       });
     }
     function requestAdminAccess() {
+      if (!isMatrixEdition() || !EDITION_CONFIG.allowAdminBranding || !EDITION_CONFIG.allowHiddenAdminAccess) {
+        alert('Esta edición operativa no permite cambiar la identidad institucional.');
+        return;
+      }
       if (isAdminModeEnabled()) {
         setAdminMode(true);
         return;
@@ -1575,9 +1590,10 @@
           code: APP_PRODUCT.code,
           name: APP_PRODUCT.name,
           vendor: APP_PRODUCT.vendor,
-          edition: APP_PRODUCT.edition,
+          edition: `${APP_PRODUCT.edition} · ${EDITION_CONFIG.label}`,
           channel: APP_PRODUCT.channel,
           version: APP_PRODUCT.version,
+          editionProfile: EDITION_CONFIG.profile,
           dataSchema: APP_PRODUCT.dataSchema
         },
         counters: {
@@ -2893,6 +2909,7 @@ const html = `<div class="report"><div class="report-section"><div class="report
           name: APP_PRODUCT.name,
           vendor: APP_PRODUCT.vendor,
           version: APP_PRODUCT.version,
+          editionProfile: EDITION_CONFIG.profile,
           dataSchema: APP_PRODUCT.dataSchema
         },
         _branding: { ...branding },

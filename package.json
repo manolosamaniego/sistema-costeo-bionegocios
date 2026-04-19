@@ -4,6 +4,8 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "edition:matriz": "powershell -ExecutionPolicy Bypass -File scripts\\activar-edicion.ps1 -Edition matriz",
+    "edition:operativa": "powershell -ExecutionPolicy Bypass -File scripts\\activar-edicion.ps1 -Edition operativa",
     "dev": "node dev-server.mjs",
     "tauri": "tauri"
   },
