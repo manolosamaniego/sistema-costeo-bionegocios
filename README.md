@@ -69,6 +69,12 @@ powershell -ExecutionPolicy Bypass -File .\scripts\generar-licencia-cliente.ps1 
 powershell -ExecutionPolicy Bypass -File .\scripts\publicar-manifiesto-actualizacion.ps1 -Mode cliente -ClientId aliados -ClientName "Fundacion Aliados" -Version 1.0.0 -SupportUntil 2027-04-19
 ```
 
+Opcional:
+
+- `-InstallerUrl` si el instalador quedará publicado en una URL directa
+- `-ReleaseNotesUrl` si la nota se servirá fuera del repositorio
+- `-PublicBaseUrl` si cambias la base remota del canal
+
 ### Verificar laptop de soporte
 
 ```powershell
@@ -122,6 +128,7 @@ Ese código es provisional. En la siguiente etapa conviene moverlo a una políti
 - La app puede compilarse con licencia de matriz o licencia por cliente.
 - Cada cliente puede tener su propio archivo `licencia.<version>.json`.
 - Cada canal puede publicar su propio `manifest.json` para controlar actualizaciones.
+- La app ya puede consultar el canal remoto desde el botón `Verificar actualización`.
 - La entrega operativa de cliente usa:
   - branding del cliente
   - licencia del cliente
@@ -167,3 +174,4 @@ Revisa:
 - [Diagnóstico y soporte remoto](C:\Users\Usuario\Documents\Proyectos\App de Costos\sistema-costeo-bionegocios\docs\DIAGNOSTICO-Y-SOPORTE-REMOTO.md)
 - [Licencias y canales](C:\Users\Usuario\Documents\Proyectos\App de Costos\sistema-costeo-bionegocios\docs\LICENCIAS-Y-CANALES.md)
 - [Política de soporte por versión](C:\Users\Usuario\Documents\Proyectos\App de Costos\sistema-costeo-bionegocios\docs\POLITICA-DE-SOPORTE-POR-VERSION.md)
+- [Activar GitLab Pages](C:\Users\Usuario\Documents\Proyectos\App de Costos\sistema-costeo-bionegocios\docs\ACTIVAR-GITLAB-PAGES.md)

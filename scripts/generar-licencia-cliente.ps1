@@ -6,7 +6,8 @@ param(
   [string]$Version = "1.0.0",
   [string]$SupportUntil = "2027-12-31",
   [string]$UpdatesUntil = "",
-  [string]$SupportLevel = "comercial"
+  [string]$SupportLevel = "comercial",
+  [string]$PublicBaseUrl = "https://manolo.samaniego-group.gitlab.io/sistema-costeo-bionegocios"
 )
 
 $ErrorActionPreference = "Stop"
@@ -34,6 +35,7 @@ $payload = [ordered]@{
   editionProfile = "operativa"
   currentVersion = $Version
   updateChannel = "clientes/$clientSlug/estable"
+  manifestUrl = "$PublicBaseUrl/updates/clientes/$clientSlug/manifest.json"
   supportLevel = $SupportLevel
   supportUntil = $SupportUntil
   updatesUntil = $UpdatesUntil

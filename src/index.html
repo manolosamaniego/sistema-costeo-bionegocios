@@ -1063,6 +1063,7 @@
         <button class="secondary" id="btnLoad" type="button">Cargar archivo</button>
         <button class="secondary admin-only admin-inline" id="btnBrandExport" type="button">Exportar marca</button>
         <button class="secondary admin-only admin-inline" id="btnBrandLoad" type="button">Cargar marca</button>
+        <button class="secondary" id="btnCheckUpdates" type="button">Verificar actualización</button>
         <button class="secondary admin-only admin-inline" id="btnDiagExport" type="button">Exportar diagnóstico</button>
         <button class="secondary admin-only admin-inline" id="btnDiagClear" type="button">Limpiar diagnóstico</button>
         <button class="ghost" id="btnReset" type="button">Reiniciar</button>
@@ -1342,7 +1343,7 @@
       dataSchema: '2026-04',
       supportEmail: 'soporte@smartrealitysas.com',
       supportPhone: '',
-      updateEndpoint: '',
+      updateEndpoint: 'https://manolo.samaniego-group.gitlab.io/sistema-costeo-bionegocios',
       licenseEndpoint: '',
       diagnosticsEndpoint: ''
     };
@@ -1361,6 +1362,7 @@
       editionProfile: 'matriz',
       currentVersion: APP_PRODUCT.version,
       updateChannel: 'matriz/estable',
+      manifestUrl: `${APP_PRODUCT.updateEndpoint}/updates/matriz/manifest.json`,
       supportLevel: 'interno',
       supportUntil: '2099-12-31',
       updatesUntil: '2099-12-31',
@@ -1397,6 +1399,15 @@
     const lifeUnits = ["años","meses"];
     const depreciationMethods = ["linea recta"];
     const state = { direct: [], indirect: [], commercial: [], equipLibrary: [], equipUse: [], outputs: [], market: [] };
+    const updateStatus = {
+      lastCheckAt: '',
+      manifestUrl: '',
+      status: 'sin_revisar',
+      remoteVersion: '',
+      message: '',
+      installerUrl: '',
+      releaseNotesUrl: ''
+    };
     const EQUIP_LIBRARY_STORAGE_KEY = 'aliados_equip_library';
     const transformUnits = ["Kg","g","Lb","Libra","Onza","Litro","mL","Galon","Galón"];
 
@@ -1553,6 +1564,125 @@
         alert(`No fue posible limpiar el diagnóstico.\n${err}`);
       }
     }
+    function compareVersions(left, right) {
+      const a = String(left || '0').split('.').map((item) => Number(item || 0));
+      const b = String(right || '0').split('.').map((item) => Number(item || 0));
+      const length = Math.max(a.length, b.length);
+      for (let i = 0; i < length; i += 1) {
+        const av = a[i] || 0;
+        const bv = b[i] || 0;
+        if (av > bv) return 1;
+        if (av < bv) return -1;
+      }
+      return 0;
+    }
+    function resolveManifestUrl() {
+      if (LICENSE_CONFIG.manifestUrl) return LICENSE_CONFIG.manifestUrl;
+      const base = String(APP_PRODUCT.updateEndpoint || '').replace(/\/+$/, '');
+      if (!base) return '';
+      const channel = String(LICENSE_CONFIG.updateChannel || '');
+      if (channel.startsWith('clientes/')) {
+        const [, clientId] = channel.split('/');
+        return clientId ? `${base}/updates/clientes/${clientId}/manifest.json` : '';
+      }
+      if (channel.startsWith('matriz/')) return `${base}/updates/matriz/manifest.json`;
+      return '';
+    }
+    function resolvePublicAssetUrl(value) {
+      if (!value) return '';
+      if (/^https?:\/\//i.test(value)) return value;
+      const base = String(APP_PRODUCT.updateEndpoint || '').replace(/\/+$/, '');
+      if (!base) return String(value);
+      return `${base}/${String(value).replace(/^\/+/, '')}`;
+    }
+    async function checkForUpdates({ silent = false } = {}) {
+      const manifestUrl = resolveManifestUrl();
+      updateStatus.manifestUrl = manifestUrl;
+      if (!manifestUrl) {
+        updateStatus.status = 'sin_canal';
+        updateStatus.message = 'Esta instalación no tiene un canal de actualización configurado.';
+        await logDiagnostic('warning', 'update_check_without_manifest', {
+          channel: LICENSE_CONFIG.updateChannel || '',
+          manifestUrl
+        });
+        if (!silent) {
+          alert('Esta instalación no tiene un canal remoto de actualización configurado.');
+        }
+        return null;
+      }
+
+      try {
+        const response = await fetch(manifestUrl, { cache: 'no-store' });
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        const manifest = await response.json();
+        const currentVersion = String(LICENSE_CONFIG.currentVersion || APP_PRODUCT.version || '0.0.0');
+        const remoteVersion = String(manifest.currentVersion || currentVersion);
+        const releaseNotesUrl = resolvePublicAssetUrl(manifest.releaseNotesUrl || manifest.releaseNotes || '');
+        const installerUrl = String(manifest.installerUrl || '');
+        const compare = compareVersions(remoteVersion, currentVersion);
+
+        updateStatus.lastCheckAt = new Date().toISOString();
+        updateStatus.remoteVersion = remoteVersion;
+        updateStatus.releaseNotesUrl = releaseNotesUrl;
+        updateStatus.installerUrl = installerUrl;
+
+        if (compare > 0) {
+          updateStatus.status = 'disponible';
+          updateStatus.message = `Hay una actualización disponible: ${remoteVersion}.`;
+          await logDiagnostic('info', 'update_available', {
+            currentVersion,
+            remoteVersion,
+            channel: manifest.channel || LICENSE_CONFIG.updateChannel || '',
+            manifestUrl,
+            installerUrl,
+            releaseNotesUrl
+          });
+
+          if (!silent) {
+            let message = `Hay una actualización disponible para esta edición.\n\nVersión actual: ${currentVersion}\nVersión publicada: ${remoteVersion}`;
+            if (manifest.supportUntil) message += `\nSoporte vigente hasta: ${manifest.supportUntil}`;
+            if (installerUrl || releaseNotesUrl) {
+              const openUrl = installerUrl || releaseNotesUrl;
+              const shouldOpen = window.confirm(`${message}\n\nPresiona Aceptar para abrir la referencia de actualización.`);
+              if (shouldOpen && openUrl) {
+                window.open(openUrl, '_blank', 'noopener');
+              }
+            } else {
+              message += '\n\nNo hay enlace público de descarga en este canal. Solicita el instalador a soporte.';
+              alert(message);
+            }
+          }
+        } else {
+          updateStatus.status = 'vigente';
+          updateStatus.message = 'Esta instalación ya está al día.';
+          await logDiagnostic('info', 'update_check_ok', {
+            currentVersion,
+            remoteVersion,
+            channel: manifest.channel || LICENSE_CONFIG.updateChannel || '',
+            manifestUrl
+          });
+          if (!silent) {
+            alert(`Esta instalación ya está al día.\n\nVersión actual: ${currentVersion}`);
+          }
+        }
+
+        return manifest;
+      } catch (err) {
+        updateStatus.lastCheckAt = new Date().toISOString();
+        updateStatus.status = 'error';
+        updateStatus.message = `No se pudo consultar el canal remoto. ${String(err || '')}`;
+        await logDiagnostic('error', 'update_check_failed', {
+          manifestUrl,
+          error: String(err || '')
+        });
+        if (!silent) {
+          alert(`No fue posible consultar actualizaciones remotas.\n${err}`);
+        }
+        return null;
+      }
+    }
     async function saveBrandingToDesktop() {
       const invoke = tauriInvoke;
       if (!window.__TAURI__?.core?.invoke) return;
@@ -1707,9 +1837,19 @@
           editionProfile: LICENSE_CONFIG.editionProfile || '',
           currentVersion: LICENSE_CONFIG.currentVersion || '',
           updateChannel: LICENSE_CONFIG.updateChannel || '',
+          manifestUrl: resolveManifestUrl(),
           supportLevel: LICENSE_CONFIG.supportLevel || '',
           supportUntil: LICENSE_CONFIG.supportUntil || '',
           updatesUntil: LICENSE_CONFIG.updatesUntil || ''
+        },
+        updates: {
+          lastCheckAt: updateStatus.lastCheckAt || '',
+          manifestUrl: updateStatus.manifestUrl || resolveManifestUrl(),
+          status: updateStatus.status || '',
+          remoteVersion: updateStatus.remoteVersion || '',
+          message: updateStatus.message || '',
+          installerUrl: updateStatus.installerUrl || '',
+          releaseNotesUrl: updateStatus.releaseNotesUrl || ''
         },
         counters: {
           direct: state.direct.length,
@@ -3110,6 +3250,7 @@ const html = `<div class="report"><div class="report-section"><div class="report
       logDiagnostic('info', 'branding_reset_to_default', {});
       alert('Se restauró la identidad base del producto.');
     };
+    btnCheckUpdates.onclick = () => checkForUpdates();
     btnAdminExit.onclick = () => {
       setAdminMode(false);
       alert('Modo administrador desactivado.');
@@ -3213,6 +3354,9 @@ const html = `<div class="report"><div class="report-section"><div class="report
     initRows();
     syncTransformMode();
     syncBrandingFromDesktop();
+    if (navigator.onLine && resolveManifestUrl()) {
+      setTimeout(() => checkForUpdates({ silent: true }), 1200);
+    }
   </script>
 </body>
 </html>

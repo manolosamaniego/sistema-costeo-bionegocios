@@ -39,6 +39,7 @@ window.APP_LICENSE_CONFIG = {
   editionProfile: '$(ConvertTo-SafeJsString ([string]$license.editionProfile))',
   currentVersion: '$(ConvertTo-SafeJsString ([string]$license.currentVersion))',
   updateChannel: '$(ConvertTo-SafeJsString ([string]$license.updateChannel))',
+  manifestUrl: '$(ConvertTo-SafeJsString ([string]$license.manifestUrl))',
   supportLevel: '$(ConvertTo-SafeJsString ([string]$license.supportLevel))',
   supportUntil: '$(ConvertTo-SafeJsString ([string]$license.supportUntil))',
   updatesUntil: '$(ConvertTo-SafeJsString ([string]$license.updatesUntil))',

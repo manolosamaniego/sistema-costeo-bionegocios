@@ -16,6 +16,8 @@ Esta base separa tres cosas:
   Licencia activa que usa la app al compilar.
 - `clientes/<cliente>/licencia.<version>.json`
   Archivo de licencia por cliente.
+- `manifestUrl`
+  URL pública del canal que esa instalación debe consultar.
 - `updates/matriz/manifest.json`
   Canal de actualización de la matriz.
 - `updates/clientes/<cliente>/manifest.json`

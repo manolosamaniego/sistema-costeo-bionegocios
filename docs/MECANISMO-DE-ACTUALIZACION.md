@@ -6,9 +6,14 @@ Definir cómo publicar correcciones y mejoras del producto sin perder control so
 
 ## Modelo recomendado actual
 
-### Fase 1: actualización manual controlada
+### Fase 1: actualización híbrida controlada
 
 Esta es la fase actual recomendada.
+
+Combina dos cosas:
+
+1. una publicación remota del `manifest.json` por canal
+2. una entrega controlada del instalador cuando la versión cambia
 
 Consiste en:
 
@@ -16,15 +21,15 @@ Consiste en:
 2. registrar cambio
 3. compilar nuevo instalador
 4. preparar carpeta de release
-5. entregar instalador al cliente
-6. indicar si debe reinstalar o reemplazar su versión
+5. publicar o actualizar el manifiesto del canal
+6. entregar instalador al cliente o cargar su URL pública
 
 ## Por qué empezar así
 
 - es más estable
 - reduce riesgo técnico
 - te permite vender ya
-- no depende todavía de servidor de updates
+- permite revisar versiones por internet sin depender todavía de auto-update binario
 - mantiene control total por cliente
 
 ## Qué se mantiene después de actualizar
@@ -44,14 +49,19 @@ Eso permite que:
 3. subir cambio al repositorio
 4. compilar release
 5. preparar carpeta de entrega
-6. documentar versión
-7. entregar al cliente
+6. actualizar licencia del cliente si aplica
+7. publicar `updates/matriz/manifest.json` o `updates/clientes/<cliente>/manifest.json`
+8. documentar versión
+9. entregar al cliente o activar enlace de descarga
 
 ## Qué lleva una actualización
 
 - instalador `.exe`
 - opcionalmente instalador `.msi`
 - nota de cambios
+- `manifestUrl`
+- `releaseNotesUrl`
+- `installerUrl` si la descarga quedará pública
 - versión entregada
 - fecha
 - observación de compatibilidad
@@ -65,6 +75,14 @@ Si cambias algo grande:
 - sube el número mayor o menor según impacto
 - documenta la diferencia
 - prueba carga de JSON anterior
+
+## Cómo consulta la app
+
+- cada instalación lleva una `license-config`
+- esa licencia define `updateChannel` y `manifestUrl`
+- la app consulta el `manifest.json` remoto desde el botón `Verificar actualización`
+- si la versión remota es mayor, muestra el canal, la versión publicada y el enlace disponible
+- si el manifiesto no trae `installerUrl`, la app igual informa que existe una versión nueva y remite a soporte o a la nota de entrega
 
 ## Ruta futura
 
@@ -95,4 +113,3 @@ Primero consolidar:
 - soporte
 - clientes
 - branding
-

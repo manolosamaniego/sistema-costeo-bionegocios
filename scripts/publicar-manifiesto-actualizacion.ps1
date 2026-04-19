@@ -4,7 +4,11 @@ param(
   [string]$ClientId = "",
   [string]$ClientName = "",
   [string]$Version = "1.0.0",
-  [string]$SupportUntil = "2099-12-31"
+  [string]$SupportUntil = "2099-12-31",
+  [string]$PublicBaseUrl = "https://manolo.samaniego-group.gitlab.io/sistema-costeo-bionegocios",
+  [string]$InstallerUrl = "",
+  [string]$ReleaseNotesUrl = "",
+  [string]$PublishedBy = "Smart Reality S.A.S."
 )
 
 $ErrorActionPreference = "Stop"
@@ -16,16 +20,22 @@ if ($Mode -eq "matriz") {
   $manifestDir = Join-Path $repoRoot "updates\matriz"
   New-Item -ItemType Directory -Path $manifestDir -Force | Out-Null
   $manifestPath = Join-Path $manifestDir "manifest.json"
+
   $payload = [ordered]@{
     productCode = "SRC-BIO-COSTEO"
     channel = "matriz/estable"
+    manifestUrl = "$PublicBaseUrl/updates/matriz/manifest.json"
     editionProfile = "matriz"
     currentVersion = $Version
     minimumSupportedVersion = $Version
     publishedAt = $publishedAt
     supportUntil = $SupportUntil
+    releaseNotesUrl = $ReleaseNotesUrl
+    installerUrl = $InstallerUrl
+    publishedBy = $PublishedBy
     notes = "Canal base de la matriz interna para desarrollo, soporte y liberación."
   }
+
   $payload | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath $manifestPath -Encoding UTF8
   Write-Host "Manifiesto matriz actualizado en: $manifestPath"
   exit 0
@@ -43,9 +53,15 @@ if ([string]::IsNullOrWhiteSpace($ClientName)) {
 $manifestDir = Join-Path $repoRoot "updates\clientes\$clientSlug"
 New-Item -ItemType Directory -Path $manifestDir -Force | Out-Null
 $manifestPath = Join-Path $manifestDir "manifest.json"
+
+if ([string]::IsNullOrWhiteSpace($ReleaseNotesUrl)) {
+  $ReleaseNotesUrl = "$PublicBaseUrl/releases/$Version/$clientSlug/NOTA-DE-ENTREGA.md"
+}
+
 $payload = [ordered]@{
   productCode = "SRC-BIO-COSTEO"
   channel = "clientes/$clientSlug/estable"
+  manifestUrl = "$PublicBaseUrl/updates/clientes/$clientSlug/manifest.json"
   editionProfile = "operativa"
   clientId = $clientSlug
   clientName = $ClientName
@@ -54,7 +70,10 @@ $payload = [ordered]@{
   publishedAt = $publishedAt
   supportUntil = $SupportUntil
   releaseNotes = "releases/$Version/$clientSlug/NOTA-DE-ENTREGA.md"
+  releaseNotesUrl = $ReleaseNotesUrl
   installer = "releases/$Version/$clientSlug/paquete/Sistema Comercial de Costeo para Bionegocios_${Version}_x64-setup.exe"
+  installerUrl = $InstallerUrl
+  publishedBy = $PublishedBy
   notes = "Canal operativo para $ClientName."
 }
 

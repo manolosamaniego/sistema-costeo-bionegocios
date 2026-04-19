@@ -1,14 +1,18 @@
-﻿{
-    "productCode":  "SRC-BIO-COSTEO",
-    "channel":  "clientes/aliados/estable",
-    "editionProfile":  "operativa",
-    "clientId":  "aliados",
-    "clientName":  "Fundacion Aliados",
-    "currentVersion":  "1.0.0",
-    "minimumSupportedVersion":  "1.0.0",
-    "publishedAt":  "2026-04-19T13:18:20-05:00",
-    "supportUntil":  "2027-04-19",
-    "releaseNotes":  "releases/1.0.0/aliados/NOTA-DE-ENTREGA.md",
-    "installer":  "releases/1.0.0/aliados/paquete/Sistema Comercial de Costeo para Bionegocios_1.0.0_x64-setup.exe",
-    "notes":  "Canal operativo para Fundacion Aliados."
+{
+  "productCode": "SRC-BIO-COSTEO",
+  "channel": "clientes/aliados/estable",
+  "manifestUrl": "https://manolo.samaniego-group.gitlab.io/sistema-costeo-bionegocios/updates/clientes/aliados/manifest.json",
+  "editionProfile": "operativa",
+  "clientId": "aliados",
+  "clientName": "Fundacion Aliados",
+  "currentVersion": "1.0.0",
+  "minimumSupportedVersion": "1.0.0",
+  "publishedAt": "2026-04-19T13:18:20-05:00",
+  "supportUntil": "2027-04-19",
+  "releaseNotes": "releases/1.0.0/aliados/NOTA-DE-ENTREGA.md",
+  "releaseNotesUrl": "https://manolo.samaniego-group.gitlab.io/sistema-costeo-bionegocios/releases/1.0.0/aliados/NOTA-DE-ENTREGA.md",
+  "installer": "releases/1.0.0/aliados/paquete/Sistema Comercial de Costeo para Bionegocios_1.0.0_x64-setup.exe",
+  "installerUrl": "",
+  "publishedBy": "Smart Reality S.A.S.",
+  "notes": "Canal operativo para Fundacion Aliados."
 }
