@@ -6,12 +6,12 @@
 
 ## Fecha
 
-2026-04-19 13:40
+2026-04-19 14:31
 
 ## Contenido
 
 - instalador .exe
-- instalador .msi: No se pudo generar MSI en esta ejecuciÃ³n. Se entrega el instalador EXE como paquete principal.
+- instalador .msi
 - branding del cliente
 - licencia del cliente
 - ediciÃ³n operativa bloqueada para uso comercial

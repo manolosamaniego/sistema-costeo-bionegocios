@@ -30,6 +30,36 @@ function Get-PackageVersion {
   return [string]$json.version
 }
 
+function Invoke-MsiBuildWithRetry {
+  param(
+    [Parameter(Mandatory = $true)]
+    [string]$RepoRoot,
+    [Parameter(Mandatory = $true)]
+    [string]$MsiSource
+  )
+
+  $wixSource = Join-Path $RepoRoot "src-tauri\target\release\wix"
+
+  try {
+    Invoke-Native npx tauri build --bundles msi
+    return $true
+  } catch {
+    Write-Host ""
+    Write-Host "Primer intento MSI falló. Se limpiará WiX y se reintentará..." -ForegroundColor Yellow
+
+    if (Test-Path $wixSource) {
+      Remove-Item -LiteralPath $wixSource -Recurse -Force
+    }
+    if (Test-Path $MsiSource) {
+      Remove-Item -LiteralPath $MsiSource -Recurse -Force
+    }
+
+    Start-Sleep -Seconds 2
+    Invoke-Native npx tauri build --bundles msi
+    return $true
+  }
+}
+
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $packageJsonPath = Join-Path $repoRoot "package.json"
 $resolvedVersion = if ($Version) { $Version } else { Get-PackageVersion -PackageJsonPath $packageJsonPath }
@@ -110,8 +140,7 @@ try {
   Invoke-Native npx tauri build --bundles nsis
 
   try {
-    Invoke-Native npx tauri build --bundles msi
-    $msiBuilt = $true
+    $msiBuilt = Invoke-MsiBuildWithRetry -RepoRoot $repoRoot -MsiSource $msiSource
     $msiNote = "Generado correctamente."
   } catch {
     $msiNote = "No se pudo generar MSI en esta ejecución. Se entrega el instalador EXE como paquete principal."
