@@ -5,7 +5,7 @@ param(
   [string]$ClientName = "",
   [string]$Version = "1.0.0",
   [string]$SupportUntil = "2099-12-31",
-  [string]$PublicBaseUrl = "https://manolo.samaniego-group.gitlab.io/sistema-costeo-bionegocios",
+  [string]$PublicBaseUrl = "https://sistema-costeo-bionegocios-4e2c8f.gitlab.io",
   [string]$InstallerUrl = "",
   [string]$ReleaseNotesUrl = "",
   [string]$PublishedBy = "Smart Reality S.A.S."

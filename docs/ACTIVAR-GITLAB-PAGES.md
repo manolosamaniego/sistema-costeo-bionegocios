@@ -8,7 +8,7 @@ Publicar los manifiestos `manifest.json` y las notas de entrega en una URL públ
 
 La base pública configurada para este proyecto es:
 
-`https://manolo.samaniego-group.gitlab.io/sistema-costeo-bionegocios`
+`https://sistema-costeo-bionegocios-4e2c8f.gitlab.io`
 
 ## Pasos
 
@@ -32,8 +32,8 @@ Al abrir la URL base debe aparecer una página simple con enlaces como:
 
 Estas URLs deben responder:
 
-- `https://manolo.samaniego-group.gitlab.io/sistema-costeo-bionegocios/updates/matriz/manifest.json`
-- `https://manolo.samaniego-group.gitlab.io/sistema-costeo-bionegocios/updates/clientes/aliados/manifest.json`
+- `https://sistema-costeo-bionegocios-4e2c8f.gitlab.io/updates/matriz/manifest.json`
+- `https://sistema-costeo-bionegocios-4e2c8f.gitlab.io/updates/clientes/aliados/manifest.json`
 
 ## Si no funciona
 

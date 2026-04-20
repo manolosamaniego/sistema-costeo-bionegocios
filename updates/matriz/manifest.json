@@ -1,7 +1,7 @@
 {
   "productCode": "SRC-BIO-COSTEO",
   "channel": "matriz/estable",
-  "manifestUrl": "https://manolo.samaniego-group.gitlab.io/sistema-costeo-bionegocios/updates/matriz/manifest.json",
+  "manifestUrl": "https://sistema-costeo-bionegocios-4e2c8f.gitlab.io/updates/matriz/manifest.json",
   "editionProfile": "matriz",
   "currentVersion": "1.0.0",
   "minimumSupportedVersion": "1.0.0",
