@@ -7,7 +7,7 @@ param(
   [string]$SupportUntil = "2027-12-31",
   [string]$UpdatesUntil = "",
   [string]$SupportLevel = "comercial",
-  [string]$PublicBaseUrl = "https://sistema-costeo-bionegocios-4e2c8f.gitlab.io"
+  [string]$PublicBaseUrl = "https://manolosamaniego.github.io/sistema-costeo-bionegocios"
 )
 
 $ErrorActionPreference = "Stop"

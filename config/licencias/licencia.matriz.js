@@ -6,7 +6,7 @@ window.APP_LICENSE_CONFIG = {
   editionProfile: 'matriz',
   currentVersion: '1.0.0',
   updateChannel: 'matriz/estable',
-  manifestUrl: 'https://sistema-costeo-bionegocios-4e2c8f.gitlab.io/updates/matriz/manifest.json',
+  manifestUrl: 'https://manolosamaniego.github.io/sistema-costeo-bionegocios/updates/matriz/manifest.json',
   supportLevel: 'interno',
   supportUntil: '2099-12-31',
   updatesUntil: '2099-12-31',

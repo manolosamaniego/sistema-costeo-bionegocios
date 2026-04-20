@@ -1,14 +1,14 @@
-{
-  "productCode": "SRC-BIO-COSTEO",
-  "channel": "matriz/estable",
-  "manifestUrl": "https://sistema-costeo-bionegocios-4e2c8f.gitlab.io/updates/matriz/manifest.json",
-  "editionProfile": "matriz",
-  "currentVersion": "1.0.0",
-  "minimumSupportedVersion": "1.0.0",
-  "publishedAt": "2026-04-19T00:00:00-05:00",
-  "supportUntil": "2099-12-31",
-  "releaseNotesUrl": "",
-  "installerUrl": "",
-  "publishedBy": "Smart Reality S.A.S.",
-  "notes": "Canal base de la matriz interna para desarrollo, soporte y liberación."
+﻿{
+    "productCode":  "SRC-BIO-COSTEO",
+    "channel":  "matriz/estable",
+    "manifestUrl":  "https://manolosamaniego.github.io/sistema-costeo-bionegocios/updates/matriz/manifest.json",
+    "editionProfile":  "matriz",
+    "currentVersion":  "1.0.0",
+    "minimumSupportedVersion":  "1.0.0",
+    "publishedAt":  "2026-04-20T12:13:48-05:00",
+    "supportUntil":  "2099-12-31",
+    "releaseNotesUrl":  "",
+    "installerUrl":  "",
+    "publishedBy":  "Smart Reality S.A.S.",
+    "notes":  "Canal base de la matriz interna para desarrollo, soporte y liberaciÃ³n."
 }

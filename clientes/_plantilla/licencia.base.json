@@ -5,7 +5,7 @@
   "editionProfile": "operativa",
   "currentVersion": "1.0.0",
   "updateChannel": "clientes/cliente-base/estable",
-  "manifestUrl": "https://sistema-costeo-bionegocios-4e2c8f.gitlab.io/updates/clientes/cliente-base/manifest.json",
+  "manifestUrl": "https://manolosamaniego.github.io/sistema-costeo-bionegocios/updates/clientes/cliente-base/manifest.json",
   "supportLevel": "comercial",
   "supportUntil": "2027-12-31",
   "updatesUntil": "2027-12-31",
