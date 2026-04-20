@@ -4,6 +4,7 @@ use std::io::Write;
 use std::path::PathBuf;
 
 use base64::Engine;
+use reqwest::blocking::Client;
 use tauri::{AppHandle, Manager};
 use tauri_plugin_dialog::{DialogExt, FilePath};
 
@@ -184,6 +185,29 @@ fn clear_diagnostic_log(app: AppHandle) -> Result<String, String> {
     Ok(path.display().to_string())
 }
 
+#[tauri::command]
+fn fetch_remote_text(url: String) -> Result<String, String> {
+    let client = Client::builder()
+        .build()
+        .map_err(|e| format!("No se pudo crear el cliente HTTP: {e}"))?;
+
+    let response = client
+        .get(&url)
+        .send()
+        .map_err(|e| format!("No fue posible consultar actualizaciones remotas. {e}"))?;
+
+    if !response.status().is_success() {
+        return Err(format!(
+            "No fue posible consultar actualizaciones remotas. Estado {}.",
+            response.status()
+        ));
+    }
+
+    response
+        .text()
+        .map_err(|e| format!("No fue posible leer la respuesta remota. {e}"))
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -198,7 +222,8 @@ pub fn run() {
             import_logo_file,
             append_diagnostic_log,
             export_diagnostic_log,
-            clear_diagnostic_log
+            clear_diagnostic_log,
+            fetch_remote_text
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

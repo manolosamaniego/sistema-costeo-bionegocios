@@ -1612,11 +1612,16 @@
       }
 
       try {
-        const response = await fetch(manifestUrl, { cache: 'no-store' });
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`);
-        }
-        const manifest = await response.json();
+        const rawManifest = window.__TAURI__?.core?.invoke
+          ? await tauriInvoke('fetch_remote_text', { url: manifestUrl })
+          : await (async () => {
+              const response = await fetch(manifestUrl, { cache: 'no-store' });
+              if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+              }
+              return response.text();
+            })();
+        const manifest = JSON.parse(rawManifest);
         const currentVersion = String(LICENSE_CONFIG.currentVersion || APP_PRODUCT.version || '0.0.0');
         const remoteVersion = String(manifest.currentVersion || currentVersion);
         const releaseNotesUrl = resolvePublicAssetUrl(manifest.releaseNotesUrl || manifest.releaseNotes || '');
