@@ -175,4 +175,6 @@ Revisa:
 - [Licencias y canales](C:\Users\Usuario\Documents\Proyectos\App de Costos\sistema-costeo-bionegocios\docs\LICENCIAS-Y-CANALES.md)
 - [Política de soporte por versión](C:\Users\Usuario\Documents\Proyectos\App de Costos\sistema-costeo-bionegocios\docs\POLITICA-DE-SOPORTE-POR-VERSION.md)
 - [Activar GitLab Pages](C:\Users\Usuario\Documents\Proyectos\App de Costos\sistema-costeo-bionegocios\docs\ACTIVAR-GITLAB-PAGES.md)
+- [Activar GitHub Pages](C:\Users\Usuario\Documents\Proyectos\App de Costos\sistema-costeo-bionegocios\docs\ACTIVAR-GITHUB-PAGES.md)
+- [Publicar en GitHub](C:\Users\Usuario\Documents\Proyectos\App de Costos\sistema-costeo-bionegocios\docs\PUBLICAR-EN-GITHUB.md)
 - [Ruta de soporte remoto](C:\Users\Usuario\Documents\Proyectos\App de Costos\sistema-costeo-bionegocios\docs\RUTA-DE-SOPORTE-REMOTO.md)

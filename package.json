@@ -13,6 +13,7 @@
     "client:prepare": "powershell -ExecutionPolicy Bypass -File scripts\\preparar-entrega-cliente.ps1",
     "update:publish": "powershell -ExecutionPolicy Bypass -File scripts\\publicar-manifiesto-actualizacion.ps1",
     "site:prepare": "powershell -ExecutionPolicy Bypass -File scripts\\preparar-public-web.ps1 -OutputDir public",
+    "github:push": "powershell -ExecutionPolicy Bypass -File scripts\\publicar-github.ps1",
     "support:check": "powershell -ExecutionPolicy Bypass -File scripts\\verificar-entorno.ps1",
     "support:update": "powershell -ExecutionPolicy Bypass -File scripts\\actualizar-matriz.ps1",
     "dev": "node dev-server.mjs",
