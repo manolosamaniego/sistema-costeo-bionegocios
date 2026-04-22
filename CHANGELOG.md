@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.3 - 2026-04-22
+
+- Corrección del flujo de actualización para abrir el instalador con el navegador del sistema desde la app de escritorio.
+- Mensaje de respaldo con enlace visible si el sistema no permite abrir la descarga automáticamente.
+- Registro técnico del error cuando la apertura externa falla.
+
 ## 1.0.2 - 2026-04-21
 
 - Mejora visual de la firma Jungle Lab en la cabecera.

@@ -7,6 +7,7 @@ use base64::Engine;
 use reqwest::blocking::Client;
 use tauri::{AppHandle, Manager};
 use tauri_plugin_dialog::{DialogExt, FilePath};
+use tauri_plugin_opener::OpenerExt;
 
 fn branding_file_path(app: &AppHandle) -> Result<PathBuf, String> {
     let app_data_dir = app
@@ -208,6 +209,21 @@ fn fetch_remote_text(url: String) -> Result<String, String> {
         .map_err(|e| format!("No fue posible leer la respuesta remota. {e}"))
 }
 
+#[tauri::command]
+fn open_external_url(app: AppHandle, url: String) -> Result<(), String> {
+    let trimmed = url.trim();
+    let parsed = reqwest::Url::parse(trimmed)
+        .map_err(|e| format!("El enlace de actualización no es válido: {e}"))?;
+
+    match parsed.scheme() {
+        "http" | "https" => app
+            .opener()
+            .open_url(trimmed, None::<&str>)
+            .map_err(|e| format!("No se pudo abrir el enlace de actualización: {e}")),
+        _ => Err("Solo se permiten enlaces de actualización http o https.".to_string()),
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -223,7 +239,8 @@ pub fn run() {
             append_diagnostic_log,
             export_diagnostic_log,
             clear_diagnostic_log,
-            fetch_remote_text
+            fetch_remote_text,
+            open_external_url
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
