@@ -33,7 +33,10 @@ target
 *.msi
 *.exe
 *.zip
-releases/**/paquete/
+!releases/**/
+!releases/**/paquete/
+!releases/**/paquete/*.exe
+!releases/**/paquete/*.json
 public/
 
 # Local client data and temporary exports
