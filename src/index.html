@@ -1080,6 +1080,18 @@
       color:#344054 !important;
       background:linear-gradient(135deg,#ffffff 0%, #f7faf2 100%);
     }
+    body.screen-a4-preview #tab-report.panel.active {
+      max-width: 210mm;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 10mm;
+      background: #fff;
+      box-shadow: 0 18px 50px rgba(15, 23, 42, .16);
+    }
+    body.screen-a4-preview #tab-report.panel.active .report {
+      border-radius: 0;
+      box-shadow: none;
+    }
     @media (max-width: 900px) {
       .report-hero,
       .report-two-col,
@@ -1100,49 +1112,75 @@
       .panel { display: none !important; }
       #tab-report.panel { display: none !important; }
       #report-print-only { display: block !important; }
-      @page { size: A4 portrait; margin: 5mm; }
-      html, body { width: auto; min-height: 287mm; }
+      @page { size: A4 portrait; margin: 5mm 6mm; }
+      html, body {
+        width: auto;
+        height: auto;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
       #report-print-only {
-        width: 200mm;
-        min-height: 287mm;
+        width: 226mm;
         margin: 0 auto;
+        zoom: .86;
+        overflow: visible;
+        box-sizing: border-box;
       }
       .report, #report-print-only .report {
         width: 100%;
-        min-height: 287mm;
+        height: auto;
         border: none;
         box-shadow: none;
         border-radius: 0;
         overflow: visible;
+        box-sizing: border-box;
       }
-      .report-section { padding: 13px 16px; }
-      .report-title-block h1 { font-size: 25px; }
-      .report-title-block .report-product-line { font-size: 12px; }
-      .report-title-block .left { display:flex; align-items:flex-start; gap:10px; }
-      .report-title-block .left img { height: 18px; max-width: 92px; }
-      .report-hero { grid-template-columns: 1fr !important; gap: 10px; }
-      .report-meta-grid { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; gap: 10px; }
-      .report-kpi-strip { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; gap: 10px; }
-      .report-two-col { grid-template-columns: 1.05fr .95fr !important; gap: 12px; }
-      .report-final-grid { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 10px; }
+      .report-section { padding: 5px 8px; }
+      .report-title-block h1 { font-size: 17px; }
+      .report-title-block .report-product-line { margin-top: 3px; font-size: 9px; gap: 1px; }
+      .report-title-block .report-subline { margin-top: 2px; font-size: 8px; }
+      .report-title-block .left { display:flex; align-items:flex-start; gap:6px; }
+      .report-title-block .left img { height: 12px; max-width: 66px; }
+      .report-hero { grid-template-columns: 1fr !important; gap: 5px; }
+      .report-meta-grid { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; gap: 5px; margin-top: 5px; }
+      .report-kpi-strip { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; gap: 5px; }
+      .report-two-col { grid-template-columns: 1.05fr .95fr !important; gap: 6px; }
+      .report-final-grid { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 5px; }
       .market-hero-top { grid-template-columns: 1fr 1fr !important; gap: 8px; }
-      .report-kpi .v { font-size: 23px; }
-      .report-summary-box .text { font-size: 14px; }
-      .report-panel h3 { font-size: 18px; }
-      .report-final-card h4 { font-size: 17px; }
-      .report-final-card p, .report-note, .market-box .s, .report-kpi .s, .report-panel .intro { font-size: 11px; line-height: 1.38; }
-      .report-comp-head .money, .market-box .v { font-size: 20px; }
-      .report-final-card { padding: 14px; }
-      .report-meta { padding: 10px 12px; }
-      .report-kpi { padding: 12px 13px; }
-      .report-panel { padding: 13px 14px; }
-      .report-comp-item { padding: 10px 11px; }
-      .report-note-strip { gap: 7px; margin-top: 10px; }
-      .report-note { padding: 7px 9px; }
-      .report-signature { margin-left:auto; min-width:240px; }
-      .report-header, .report-section, .finding, .mini, .kpi, .card, table, tr, td {
+      .report-meta { padding: 4px 6px; border-radius: 8px; }
+      .report-meta .k { font-size: 6.5px; }
+      .report-meta .v { margin-top: 1px; font-size: 10px; }
+      .report-kpi { padding: 5px 7px; border-radius: 9px; }
+      .report-kpi .k { font-size: 6.5px; }
+      .report-kpi .v { margin-top: 3px; font-size: 14px; }
+      .report-kpi .s { margin-top: 3px; font-size: 7px; line-height: 1.18; }
+      .report-summary-box { padding: 5px 8px; border-radius: 9px; }
+      .report-summary-box .eyebrow { font-size: 6.5px; }
+      .report-summary-box .text { margin-top: 3px; font-size: 8.8px; line-height: 1.25; }
+      .report-panel { padding: 6px 7px; border-radius: 9px; }
+      .report-panel h3 { margin-bottom: 3px; font-size: 11px; }
+      .report-panel .intro { margin-bottom: 4px; font-size: 7px; line-height: 1.18; }
+      .report-comp-list { gap: 4px; }
+      .report-comp-item { padding: 5px 6px; border-radius: 8px; }
+      .report-comp-head { gap: 4px; }
+      .report-comp-head .label { font-size: 8px; }
+      .report-comp-head .money, .market-box .v { font-size: 12px; }
+      .report-comp-head .pct { font-size: 7px; padding: 1px 4px; }
+      .report-progress { height: 7px; margin-top: 3px; }
+      .market-box { padding: 6px 7px; border-radius: 8px; }
+      .market-box .k { font-size: 7px; }
+      .market-box .s { font-size: 7px; line-height: 1.18; }
+      .report-signal { margin-top: 4px; padding: 3px 6px; font-size: 7px; }
+      .report-final-card { padding: 6px 7px; border-radius: 9px; }
+      .report-final-card h4 { margin-bottom: 3px; font-size: 10px; }
+      .report-final-card p, .report-note { font-size: 7px; line-height: 1.18; }
+      .report-note-strip { gap: 3px; margin-top: 4px !important; }
+      .report-note { padding: 3px 5px; border-radius: 7px; }
+      .report-signature { margin-left:auto; min-width:150px; }
+      .report-header, .finding, .mini, .kpi, .card, table, tr, td {
         break-inside: avoid; page-break-inside: avoid;
       }
+      .report-section { break-inside: auto; page-break-inside: auto; }
       table { min-width: 0; }
     }
   </style>
@@ -1167,6 +1205,7 @@
           <button class="secondary admin-only admin-inline" id="btnDiagExport" type="button">Exportar diagnóstico</button>
           <button class="secondary admin-only admin-inline" id="btnDiagClear" type="button">Limpiar diagnóstico</button>
           <button class="ghost" id="btnReset" type="button">Reiniciar</button>
+          <button class="secondary" id="btnPreviewPrint" type="button">Vista A4</button>
           <button id="btnPrint" type="button">Imprimir / PDF</button>
           <input id="fileLoader" type="file" accept=".json" style="display:none">
           <input id="brandLoader" type="file" accept=".json" style="display:none">
@@ -1448,7 +1487,7 @@
       slogan: 'Ordenamos el caos con tecnología.',
       edition: 'Comercial',
       channel: 'offline-ready',
-      version: '1.0.4',
+      version: '1.0.5',
       dataSchema: '2026-04',
       supportEmail: 'soporte@junglelabsas.com',
       supportPhone: '',
@@ -1465,7 +1504,7 @@
     };
     const LICENSE_CONFIG = window.APP_LICENSE_CONFIG || {
       mode: 'matriz',
-      licenseId: 'MATRIZ-INTERNA-1.0.4',
+      licenseId: 'MATRIZ-INTERNA-1.0.5',
       clientId: 'junglelabs-matriz',
       clientName: 'Jungle Lab S.A.S.',
       editionProfile: 'matriz',
@@ -3325,6 +3364,7 @@ const html = `<div class="report"><div class="report-section"><div class="report
     }
 
     document.querySelectorAll('.tab-btn').forEach(btn => btn.onclick = () => {
+      document.body.classList.remove('screen-a4-preview');
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
@@ -3518,12 +3558,22 @@ const html = `<div class="report"><div class="report-section"><div class="report
       Object.assign(state, { direct:[], indirect:[], commercial:[], equipLibrary:persistedEquipLibrary, equipUse:[], outputs:[], market:[] });
       initRows(); syncTransformMode();
     };
-    btnPrint.onclick = () => {
+    function showReportPreview(asSheet = false) {
       document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
       document.getElementById('tab-report').classList.add('active');
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       document.querySelector('[data-tab="tab-report"]').classList.add('active');
+      document.body.classList.toggle('screen-a4-preview', asSheet);
       calcAll();
+    }
+    btnPreviewPrint.onclick = () => {
+      showReportPreview(true);
+      logDiagnostic('info', 'a4_preview_requested', {
+        snapshot: buildSupportSnapshot()
+      });
+    };
+    btnPrint.onclick = () => {
+      showReportPreview(true);
       logDiagnostic('info', 'print_requested', {
         snapshot: buildSupportSnapshot()
       });

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.5 - 2026-04-22
+
+- Corrección del informe imprimible para que el resumen ejecutivo cierre en una sola hoja A4.
+- Nueva vista previa A4 antes de imprimir para revisar el informe sin abrir el diálogo de impresión.
+- Ajuste compacto de conclusiones, lectura de mercado y firma Jungle Lab para evitar saltos a segunda página.
+
 ## 1.0.4 - 2026-04-22
 
 - Refuerzo del boton Verificar actualizacion con estado visible en pantalla.
