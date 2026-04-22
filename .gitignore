@@ -37,6 +37,8 @@ target
 !releases/**/paquete/
 !releases/**/paquete/*.exe
 !releases/**/paquete/*.json
+releases/1.0.0/**/paquete/
+releases/1.0.1/**/paquete/
 public/
 
 # Local client data and temporary exports
