@@ -3,7 +3,7 @@ param(
   [string]$ClientId,
   [Parameter(Mandatory = $true)]
   [string]$ClientName,
-  [string]$Version = "1.0.0",
+  [string]$Version = "1.0.1",
   [string]$SupportUntil = "2027-12-31",
   [string]$UpdatesUntil = "",
   [string]$SupportLevel = "comercial",

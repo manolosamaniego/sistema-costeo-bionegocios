@@ -50,4 +50,4 @@ Cuando GitLab Pages esté activo:
 
 - la app podrá usar `Verificar actualización`
 - cada cliente podrá consultar su canal
-- Smart Reality podrá publicar nuevas versiones sin reenviar archivos manualmente cada vez
+- Jungle Lab podrá publicar nuevas versiones sin reenviar archivos manualmente cada vez

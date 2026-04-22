@@ -3,12 +3,12 @@ param(
   [string]$Mode = "matriz",
   [string]$ClientId = "",
   [string]$ClientName = "",
-  [string]$Version = "1.0.0",
+  [string]$Version = "1.0.1",
   [string]$SupportUntil = "2099-12-31",
   [string]$PublicBaseUrl = "https://manolosamaniego.github.io/sistema-costeo-bionegocios",
   [string]$InstallerUrl = "",
   [string]$ReleaseNotesUrl = "",
-  [string]$PublishedBy = "Smart Reality S.A.S."
+  [string]$PublishedBy = "Jungle Lab S.A.S."
 )
 
 $ErrorActionPreference = "Stop"
@@ -56,6 +56,10 @@ $manifestPath = Join-Path $manifestDir "manifest.json"
 
 if ([string]::IsNullOrWhiteSpace($ReleaseNotesUrl)) {
   $ReleaseNotesUrl = "$PublicBaseUrl/releases/$Version/$clientSlug/NOTA-DE-ENTREGA.md"
+}
+
+if ([string]::IsNullOrWhiteSpace($InstallerUrl)) {
+  $InstallerUrl = "$PublicBaseUrl/releases/$Version/$clientSlug/paquete/Sistema Comercial de Costeo para Bionegocios_${Version}_x64-setup.exe"
 }
 
 $payload = [ordered]@{

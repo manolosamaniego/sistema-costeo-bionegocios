@@ -20,15 +20,7 @@ if (Test-Path $updatesSource) {
 }
 
 if (Test-Path $releasesSource) {
-  Get-ChildItem -LiteralPath $releasesSource -Recurse -Filter "NOTA-DE-ENTREGA.md" | ForEach-Object {
-    $relative = $_.FullName.Substring($repoRoot.Length + 1)
-    $destination = Join-Path $targetRoot $relative
-    $destinationDir = Split-Path -Parent $destination
-    if (!(Test-Path $destinationDir)) {
-      New-Item -ItemType Directory -Path $destinationDir -Force | Out-Null
-    }
-    Copy-Item -LiteralPath $_.FullName -Destination $destination -Force
-  }
+  Copy-Item -LiteralPath $releasesSource -Destination (Join-Path $targetRoot "releases") -Recurse -Force
 }
 
 $indexPath = Join-Path $targetRoot "index.html"
@@ -58,7 +50,7 @@ $indexHtml = @"
         <li><a href="./updates/matriz/manifest.json">Canal matriz</a></li>
         <li><a href="./updates/clientes/aliados/manifest.json">Canal cliente Aliados</a></li>
       </ul>
-      <p>Publicacion generada desde la matriz de Smart Reality S.A.S.</p>
+      <p>Publicacion generada desde la matriz de Jungle Lab S.A.S.</p>
     </div>
   </main>
 </body>

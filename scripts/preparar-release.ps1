@@ -59,4 +59,3 @@ Write-Host "Release preparada correctamente." -ForegroundColor Green
 Write-Host "Ruta: $releaseRoot"
 Write-Host "Paquete: $packageDir"
 Write-Host "Nota: $notesPath"
-

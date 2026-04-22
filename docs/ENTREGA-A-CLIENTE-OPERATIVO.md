@@ -40,7 +40,7 @@ La entrega a cliente debe salir en edición operativa.
 
 La edición matriz se conserva solo para:
 
-- Smart Reality
+- Jungle Lab
 - soporte
 - correcciones
 - branding institucional

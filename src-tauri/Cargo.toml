@@ -1,8 +1,8 @@
 [package]
 name = "sistema-costeo-bionegocios"
-version = "1.0.0"
+version = "1.0.1"
 description = "Sistema Comercial de Costeo para Bionegocios"
-authors = ["Smart Reality S.A.S."]
+authors = ["Jungle Lab S.A.S."]
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

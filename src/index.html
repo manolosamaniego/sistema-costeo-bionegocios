@@ -39,7 +39,43 @@
     .brand-box img { height: 42px; width: auto; object-fit: contain; }
     .brand-title { font-size: 28px; font-weight: 800; }
     .brand-sub { font-size: 13px; color: var(--muted); }
-    .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .actions-stack {
+      display: grid;
+      gap: 8px;
+      justify-items: end;
+    }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+    .vendor-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border: 1px solid #d7e1d2;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #f7fbf4 0%, #eef5e8 100%);
+      box-shadow: 0 6px 18px rgba(24, 58, 44, 0.08);
+      min-width: 280px;
+    }
+    .vendor-chip img {
+      width: 34px;
+      height: 34px;
+      object-fit: contain;
+      flex: 0 0 auto;
+    }
+    .vendor-chip .k {
+      display: block;
+      font-size: 12px;
+      font-weight: 800;
+      color: #1c4337;
+      letter-spacing: 0.02em;
+    }
+    .vendor-chip .s {
+      display: block;
+      margin-top: 2px;
+      font-size: 11px;
+      line-height: 1.35;
+      color: #4d635b;
+    }
     button {
       border: none; background: var(--brand); color: #fff;
       padding: 10px 14px; border-radius: 12px; cursor: pointer; font-weight: 700;
@@ -68,6 +104,9 @@
       .g3, .g4 { grid-template-columns: 1fr; }
       .brand-title { font-size: 22px; }
       .header-inner { flex-direction: column; align-items: flex-start; }
+      .actions-stack { justify-items: stretch; width: 100%; }
+      .actions { justify-content: flex-start; }
+      .vendor-chip { min-width: 0; width: 100%; }
     }
     .field label {
       display: block; font-size: 12px; font-weight: 800; text-transform: uppercase;
@@ -1055,21 +1094,30 @@
         <img id="brandHeaderLogo" src="Logo_Aliados.jpeg" alt="Aliados">
         <div>
           <div class="brand-title" id="brandHeaderTitle">Sistema Comercial de Costeo para Bionegocios</div>
-    <div class="brand-sub" id="brandHeaderSub">Creado por Smart Reality S.A.S.<br>"Diseñamos soluciones que impulsan el futuro."</div>
+    <div class="brand-sub" id="brandHeaderSub">Creado por Jungle Lab S.A.S.<br>"Ordenamos el caos con tecnología."</div>
         </div>
       </div>
-      <div class="actions">
-        <button class="secondary" id="btnSave" type="button">Guardar archivo</button>
-        <button class="secondary" id="btnLoad" type="button">Cargar archivo</button>
-        <button class="secondary admin-only admin-inline" id="btnBrandExport" type="button">Exportar marca</button>
-        <button class="secondary admin-only admin-inline" id="btnBrandLoad" type="button">Cargar marca</button>
-        <button class="secondary" id="btnCheckUpdates" type="button">Verificar actualización</button>
-        <button class="secondary admin-only admin-inline" id="btnDiagExport" type="button">Exportar diagnóstico</button>
-        <button class="secondary admin-only admin-inline" id="btnDiagClear" type="button">Limpiar diagnóstico</button>
-        <button class="ghost" id="btnReset" type="button">Reiniciar</button>
-        <button id="btnPrint" type="button">Imprimir / PDF</button>
-        <input id="fileLoader" type="file" accept=".json" style="display:none">
-        <input id="brandLoader" type="file" accept=".json" style="display:none">
+      <div class="actions-stack">
+        <div class="actions">
+          <button class="secondary" id="btnSave" type="button">Guardar archivo</button>
+          <button class="secondary" id="btnLoad" type="button">Cargar archivo</button>
+          <button class="secondary admin-only admin-inline" id="btnBrandExport" type="button">Exportar marca</button>
+          <button class="secondary admin-only admin-inline" id="btnBrandLoad" type="button">Cargar marca</button>
+          <button class="secondary" id="btnCheckUpdates" type="button">Verificar actualización</button>
+          <button class="secondary admin-only admin-inline" id="btnDiagExport" type="button">Exportar diagnóstico</button>
+          <button class="secondary admin-only admin-inline" id="btnDiagClear" type="button">Limpiar diagnóstico</button>
+          <button class="ghost" id="btnReset" type="button">Reiniciar</button>
+          <button id="btnPrint" type="button">Imprimir / PDF</button>
+          <input id="fileLoader" type="file" accept=".json" style="display:none">
+          <input id="brandLoader" type="file" accept=".json" style="display:none">
+        </div>
+        <div class="vendor-chip" aria-label="Firma tecnológica Jungle Lab">
+          <img src="assets/jungle-lab-mark.svg" alt="Jungle Lab">
+          <div>
+            <span class="k">Jungle Lab S.A.S.</span>
+            <span class="s">Ordenamos el caos con tecnología.</span>
+          </div>
+        </div>
       </div>
     </div>
     <nav class="tabs">
@@ -1335,13 +1383,13 @@
     const APP_PRODUCT = {
       code: 'SRC-BIO-COSTEO',
       name: 'Sistema Comercial de Costeo para Bionegocios',
-      vendor: 'Smart Reality S.A.S.',
-      slogan: 'Diseñamos soluciones que impulsan el futuro.',
+      vendor: 'Jungle Lab S.A.S.',
+      slogan: 'Ordenamos el caos con tecnología.',
       edition: 'Comercial',
       channel: 'offline-ready',
-      version: '1.0.0',
+      version: '1.0.1',
       dataSchema: '2026-04',
-      supportEmail: 'soporte@smartrealitysas.com',
+      supportEmail: 'soporte@junglelabsas.com',
       supportPhone: '',
       updateEndpoint: 'https://manolosamaniego.github.io/sistema-costeo-bionegocios',
       licenseEndpoint: '',
@@ -1356,9 +1404,9 @@
     };
     const LICENSE_CONFIG = window.APP_LICENSE_CONFIG || {
       mode: 'matriz',
-      licenseId: 'MATRIZ-INTERNA-1.0.0',
-      clientId: 'smartreality-matriz',
-      clientName: 'Smart Reality S.A.S.',
+      licenseId: 'MATRIZ-INTERNA-1.0.1',
+      clientId: 'junglelabs-matriz',
+      clientName: 'Jungle Lab S.A.S.',
       editionProfile: 'matriz',
       currentVersion: APP_PRODUCT.version,
       updateChannel: 'matriz/estable',
@@ -1379,14 +1427,14 @@
       logoAlt: 'Logo institucional',
       primaryColor: '#d94a1f',
       secondaryColor: '#6f9915',
-      headerLine1: 'Creado por Smart Reality S.A.S.',
-      headerLine2: '"Diseñamos soluciones que impulsan el futuro."',
-      reportFooterLine1: 'Smart Reality S.A.S.',
-      reportFooterLine2: '"Diseñamos soluciones que impulsan el futuro."'
+      headerLine1: 'Creado por Jungle Lab S.A.S.',
+      headerLine2: '"Ordenamos el caos con tecnología."',
+      reportFooterLine1: 'Jungle Lab S.A.S.',
+      reportFooterLine2: '"Ordenamos el caos con tecnología."'
     };
-    const BRANDING_STORAGE_KEY = 'smart_branding_config';
-    const ADMIN_MODE_STORAGE_KEY = 'smart_admin_mode';
-    const ADMIN_ACCESS_CODE = 'SR-ADMIN-2026';
+    const BRANDING_STORAGE_KEY = 'junglelab_branding_config';
+    const ADMIN_MODE_STORAGE_KEY = 'junglelab_admin_mode';
+    const ADMIN_ACCESS_CODE = 'JL-ADMIN-2026';
 
     const units = ["Año","Bidon","Bidones","Bolsa","Bolsas","Botella","Botellas","Caja","Cajas","Caneca","Canecas","Dia","Frasco","Frascos","Funda","Fundas","Galon","Galón","g","Hora","Horas","Jornada","Kg","kWh","Lb","Libra","Litro","Lote","m2","m3","Mes","Minuto","mL","Onza","Paquete","Paquetes","Par","Pares","Pote","Potes","Semana","Sobre","Sobres","Tarra","Tarras","Tubo","Tubos","Unidad"];
     const behaviorOpts = ["Variable","Fijo"];
@@ -1465,7 +1513,7 @@
         });
         return;
       }
-      const code = window.prompt('Ingresa el código de administrador de Smart Reality para editar la identidad institucional.');
+      const code = window.prompt('Ingresa el código de administrador de Jungle Lab para editar la identidad institucional.');
       if (code === null) {
         logDiagnostic('info', 'admin_access_cancelled', {
           editionProfile: EDITION_CONFIG.profile
@@ -1626,7 +1674,7 @@
         const currentVersion = String(LICENSE_CONFIG.currentVersion || APP_PRODUCT.version || '0.0.0');
         const remoteVersion = String(manifest.currentVersion || currentVersion);
         const releaseNotesUrl = resolvePublicAssetUrl(manifest.releaseNotesUrl || manifest.releaseNotes || '');
-        const installerUrl = String(manifest.installerUrl || '');
+          const installerUrl = resolvePublicAssetUrl(manifest.installerUrl || manifest.installer || '');
         const compare = compareVersions(remoteVersion, currentVersion);
 
         updateStatus.lastCheckAt = new Date().toISOString();

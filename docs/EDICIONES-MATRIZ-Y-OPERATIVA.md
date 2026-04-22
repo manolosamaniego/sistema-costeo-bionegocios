@@ -72,5 +72,4 @@ npm run tauri build
 ## Regla clave
 
 No entregar al cliente una compilación en edición matriz.
-La edición matriz debe quedarse solo para Smart Reality y administración central.
-
+La edición matriz debe quedarse solo para Jungle Lab y administración central.
