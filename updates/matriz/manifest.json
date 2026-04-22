@@ -3,12 +3,12 @@
     "channel":  "matriz/estable",
     "manifestUrl":  "https://manolosamaniego.github.io/sistema-costeo-bionegocios/updates/matriz/manifest.json",
     "editionProfile":  "matriz",
-    "currentVersion":  "1.0.3",
-    "minimumSupportedVersion":  "1.0.3",
-    "publishedAt":  "2026-04-22T09:27:28-05:00",
+    "currentVersion":  "1.0.4",
+    "minimumSupportedVersion":  "1.0.4",
+    "publishedAt":  "2026-04-22T11:19:27-05:00",
     "supportUntil":  "2099-12-31",
-    "releaseNotesUrl":  "https://manolosamaniego.github.io/sistema-costeo-bionegocios/releases/1.0.3/aliados/NOTA-DE-ENTREGA.md",
-    "installerUrl":  "https://manolosamaniego.github.io/sistema-costeo-bionegocios/releases/1.0.3/aliados/paquete/Sistema Comercial de Costeo para Bionegocios_1.0.3_x64-setup.exe",
+    "releaseNotesUrl":  "https://manolosamaniego.github.io/sistema-costeo-bionegocios/releases/1.0.4/aliados/NOTA-DE-ENTREGA.md",
+    "installerUrl":  "https://manolosamaniego.github.io/sistema-costeo-bionegocios/releases/1.0.4/aliados/paquete/Sistema Comercial de Costeo para Bionegocios_1.0.4_x64-setup.exe",
     "publishedBy":  "Jungle Lab S.A.S.",
     "notes":  "Canal base de la matriz interna para desarrollo, soporte y liberacion."
 }

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.4 - 2026-04-22
+
+- Refuerzo del boton Verificar actualizacion con estado visible en pantalla.
+- Enlace manual de respaldo cuando el sistema no abre automaticamente el instalador.
+- Bloqueo temporal del boton mientras consulta para evitar dobles clics o acciones silenciosas.
+
 ## 1.0.3 - 2026-04-22
 
 - Corrección del flujo de actualización para abrir el instalador con el navegador del sistema desde la app de escritorio.

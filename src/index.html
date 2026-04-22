@@ -45,6 +45,35 @@
       justify-items: end;
     }
     .actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+    .update-status-line {
+      display: none;
+      width: 100%;
+      max-width: 560px;
+      padding: 8px 12px;
+      border: 1px solid #d9e4ce;
+      border-radius: 14px;
+      background: #f4f8ec;
+      color: #304338;
+      font-size: 13px;
+      line-height: 1.35;
+      text-align: left;
+    }
+    .update-status-line.visible { display: block; }
+    .update-status-line.error {
+      border-color: #efc7a1;
+      background: #fff5eb;
+      color: #7a3f12;
+    }
+    .update-status-line.success {
+      border-color: #c9dfbd;
+      background: #eef8ed;
+      color: #274820;
+    }
+    .update-status-line a {
+      color: var(--brand);
+      font-weight: 800;
+      text-decoration: underline;
+    }
     .vendor-chip {
       display: inline-flex;
       align-items: center;
@@ -107,6 +136,7 @@
       .header-inner { flex-direction: column; align-items: flex-start; }
       .actions-stack { justify-items: stretch; width: 100%; }
       .actions { justify-content: flex-start; }
+      .update-status-line { max-width: none; }
       .vendor-chip { min-width: 0; width: 100%; }
     }
     .field label {
@@ -1141,6 +1171,7 @@
           <input id="fileLoader" type="file" accept=".json" style="display:none">
           <input id="brandLoader" type="file" accept=".json" style="display:none">
         </div>
+        <div class="update-status-line" id="updateStatusLine" role="status" aria-live="polite"></div>
         <div class="vendor-chip" aria-label="Firma tecnológica Jungle Lab">
           <img src="assets/jungle-lab-mark.svg" alt="Jungle Lab">
           <div>
@@ -1417,7 +1448,7 @@
       slogan: 'Ordenamos el caos con tecnología.',
       edition: 'Comercial',
       channel: 'offline-ready',
-      version: '1.0.3',
+      version: '1.0.4',
       dataSchema: '2026-04',
       supportEmail: 'soporte@junglelabsas.com',
       supportPhone: '',
@@ -1434,7 +1465,7 @@
     };
     const LICENSE_CONFIG = window.APP_LICENSE_CONFIG || {
       mode: 'matriz',
-      licenseId: 'MATRIZ-INTERNA-1.0.3',
+      licenseId: 'MATRIZ-INTERNA-1.0.4',
       clientId: 'junglelabs-matriz',
       clientName: 'Jungle Lab S.A.S.',
       editionProfile: 'matriz',
@@ -1673,6 +1704,29 @@
       if (!base) return String(value);
       return `${base}/${String(value).replace(/^\/+/, '')}`;
     }
+    function setUpdateInlineStatus(message, type = 'info', linkUrl = '') {
+      const el = document.getElementById('updateStatusLine');
+      if (!el) return;
+      el.className = `update-status-line visible ${type === 'error' ? 'error' : type === 'success' ? 'success' : ''}`.trim();
+      el.replaceChildren();
+      el.append(document.createTextNode(String(message || '')));
+      const safeUrl = String(linkUrl || '').trim();
+      if (safeUrl) {
+        el.append(document.createTextNode(' '));
+        const link = document.createElement('a');
+        link.href = encodeURI(safeUrl);
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.textContent = 'Abrir enlace';
+        el.append(link);
+      }
+    }
+    function clearUpdateInlineStatus() {
+      const el = document.getElementById('updateStatusLine');
+      if (!el) return;
+      el.className = 'update-status-line';
+      el.replaceChildren();
+    }
     async function openExternalReference(url) {
       const safeUrl = encodeURI(String(url || '').trim());
       if (!safeUrl) return false;
@@ -1710,6 +1764,9 @@
     async function checkForUpdates({ silent = false } = {}) {
       const manifestUrl = resolveManifestUrl();
       updateStatus.manifestUrl = manifestUrl;
+      if (!silent) {
+        setUpdateInlineStatus('Consultando canal de actualización...', 'info');
+      }
       if (!manifestUrl) {
         updateStatus.status = 'sin_canal';
         updateStatus.message = 'Esta instalación no tiene un canal de actualización configurado.';
@@ -1718,6 +1775,7 @@
           manifestUrl
         });
         if (!silent) {
+          setUpdateInlineStatus('Esta instalación no tiene un canal remoto de actualización configurado.', 'error');
           alert('Esta instalación no tiene un canal remoto de actualización configurado.');
         }
         return null;
@@ -1749,6 +1807,9 @@
         if (compare > 0) {
           updateStatus.status = 'disponible';
           updateStatus.message = `Hay una actualización disponible: ${remoteVersion}.`;
+          if (!silent) {
+            setUpdateInlineStatus(`Actualización ${remoteVersion} disponible.`, 'success', installerUrl || releaseNotesUrl);
+          }
           await logDiagnostic('info', 'update_available', {
             currentVersion,
             remoteVersion,
@@ -1767,11 +1828,15 @@
               if (shouldOpen && openUrl) {
                 const opened = await openExternalReference(openUrl);
                 if (!opened) {
+                  setUpdateInlineStatus('No se pudo abrir automáticamente. Usa este enlace para descargar la actualización:', 'error', openUrl);
                   alert(`${message}\n\nNo fue posible abrir el enlace automáticamente. Copia y abre este enlace en el navegador:\n${openUrl}`);
+                } else {
+                  setUpdateInlineStatus('Se abrió la referencia de actualización. Si no aparece, usa este enlace:', 'success', openUrl);
                 }
               }
             } else {
               message += '\n\nNo hay enlace público de descarga en este canal. Solicita el instalador a soporte.';
+              setUpdateInlineStatus('Hay actualización, pero este canal no tiene enlace público de descarga. Solicita el instalador a soporte.', 'error');
               alert(message);
             }
           }
@@ -1785,6 +1850,7 @@
             manifestUrl
           });
           if (!silent) {
+            setUpdateInlineStatus(`Esta instalación ya está al día. Versión actual: ${currentVersion}.`, 'success');
             alert(`Esta instalación ya está al día.\n\nVersión actual: ${currentVersion}`);
           }
         }
@@ -1799,6 +1865,7 @@
           error: String(err || '')
         });
         if (!silent) {
+          setUpdateInlineStatus(`No fue posible consultar actualizaciones remotas. ${String(err || '')}`, 'error');
           alert(`No fue posible consultar actualizaciones remotas.\n${err}`);
         }
         return null;
@@ -3371,7 +3438,21 @@ const html = `<div class="report"><div class="report-section"><div class="report
       logDiagnostic('info', 'branding_reset_to_default', {});
       alert('Se restauró la identidad base del producto.');
     };
-    btnCheckUpdates.onclick = () => checkForUpdates();
+    const btnCheckUpdatesEl = document.getElementById('btnCheckUpdates');
+    if (btnCheckUpdatesEl) {
+      btnCheckUpdatesEl.addEventListener('click', async () => {
+        const originalText = btnCheckUpdatesEl.textContent || 'Verificar actualización';
+        btnCheckUpdatesEl.disabled = true;
+        btnCheckUpdatesEl.textContent = 'Verificando...';
+        setUpdateInlineStatus('Consultando canal de actualización...', 'info');
+        try {
+          await checkForUpdates();
+        } finally {
+          btnCheckUpdatesEl.disabled = false;
+          btnCheckUpdatesEl.textContent = originalText;
+        }
+      });
+    }
     btnAdminExit.onclick = () => {
       setAdminMode(false);
       alert('Modo administrador desactivado.');
