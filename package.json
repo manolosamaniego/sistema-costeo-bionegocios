@@ -1,7 +1,7 @@
 {
   "name": "sistema-costeo-bionegocios",
   "private": true,
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "scripts": {
     "edition:matriz": "powershell -ExecutionPolicy Bypass -File scripts\\activar-edicion.ps1 -Edition matriz",
@@ -9,7 +9,7 @@
     "license:matriz": "powershell -ExecutionPolicy Bypass -File scripts\\activar-licencia-cliente.ps1 -Mode matriz",
     "license:client": "powershell -ExecutionPolicy Bypass -File scripts\\activar-licencia-cliente.ps1 -Mode cliente",
     "license:generate": "powershell -ExecutionPolicy Bypass -File scripts\\generar-licencia-cliente.ps1",
-    "release:prepare": "powershell -ExecutionPolicy Bypass -File scripts\\preparar-release.ps1 -Version 1.0.1",
+    "release:prepare": "powershell -ExecutionPolicy Bypass -File scripts\\preparar-release.ps1 -Version 1.0.2",
     "client:prepare": "powershell -ExecutionPolicy Bypass -File scripts\\preparar-entrega-cliente.ps1",
     "update:publish": "powershell -ExecutionPolicy Bypass -File scripts\\publicar-manifiesto-actualizacion.ps1",
     "site:prepare": "powershell -ExecutionPolicy Bypass -File scripts\\preparar-public-web.ps1 -OutputDir public",

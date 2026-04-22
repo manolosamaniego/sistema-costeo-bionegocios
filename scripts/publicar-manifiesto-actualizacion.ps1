@@ -1,9 +1,9 @@
-param(
+﻿param(
   [ValidateSet("matriz", "cliente")]
   [string]$Mode = "matriz",
   [string]$ClientId = "",
   [string]$ClientName = "",
-  [string]$Version = "1.0.1",
+  [string]$Version = "1.0.2",
   [string]$SupportUntil = "2099-12-31",
   [string]$PublicBaseUrl = "https://manolosamaniego.github.io/sistema-costeo-bionegocios",
   [string]$InstallerUrl = "",
@@ -33,7 +33,7 @@ if ($Mode -eq "matriz") {
     releaseNotesUrl = $ReleaseNotesUrl
     installerUrl = $InstallerUrl
     publishedBy = $PublishedBy
-    notes = "Canal base de la matriz interna para desarrollo, soporte y liberación."
+    notes = "Canal base de la matriz interna para desarrollo, soporte y liberacion."
   }
 
   $payload | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath $manifestPath -Encoding UTF8
@@ -83,3 +83,4 @@ $payload = [ordered]@{
 
 $payload | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath $manifestPath -Encoding UTF8
 Write-Host "Manifiesto cliente actualizado en: $manifestPath"
+

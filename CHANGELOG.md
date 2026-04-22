@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2 - 2026-04-21
+
+- Mejora visual de la firma Jungle Lab en la cabecera.
+- Ajuste de impresión A4 para que el informe use mejor el espacio de la hoja.
+- Pie de informe alineado a la derecha con estilo ejecutivo.
+
 ## 1.0.1 - 2026-04-20
 
 - Cambio de marca técnica a Jungle Lab S.A.S.
