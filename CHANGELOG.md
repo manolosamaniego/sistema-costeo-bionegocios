@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.10 - 2026-04-23
+
+- El encabezado del informe alinea mejor el logo institucional con el bloque del titulo.
+- La firma del informe y de la identidad interna elimina remanentes de Smart Reality y consolida Jungle Lab S.A.S.
+
 ## 1.0.9 - 2026-04-23
 
 - El informe PDF incrusta el logo institucional antes de generar el archivo A4, evitando rutas rotas en el PDF final.
