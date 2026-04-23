@@ -1,6 +1,6 @@
 [package]
 name = "sistema-costeo-bionegocios"
-version = "1.0.5"
+version = "1.0.6"
 description = "Sistema Comercial de Costeo para Bionegocios"
 authors = ["Jungle Lab S.A.S."]
 edition = "2021"

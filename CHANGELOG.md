@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.6 - 2026-04-22
+
+- Eliminacion del boton Vista A4.
+- Ajuste del informe imprimible para salir en una sola hoja A4 real.
+- Correccion de escala para que el informe ocupe mejor la hoja sin generar segunda pagina.
+
 ## 1.0.5 - 2026-04-22
 
 - Corrección del informe imprimible para que el resumen ejecutivo cierre en una sola hoja A4.
