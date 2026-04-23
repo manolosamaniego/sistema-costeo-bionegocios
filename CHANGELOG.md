@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.9 - 2026-04-23
+
+- El informe PDF incrusta el logo institucional antes de generar el archivo A4, evitando rutas rotas en el PDF final.
+- El boton de salida se renombra a PDF porque ahora genera directamente el archivo.
+
 ## 1.0.8 - 2026-04-23
 
 - El boton Imprimir / PDF ahora genera un PDF A4 directo desde la app de escritorio, sin depender del tamano de papel del controlador de impresora.

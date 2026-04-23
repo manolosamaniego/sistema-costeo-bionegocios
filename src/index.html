@@ -1215,7 +1215,7 @@
           <button class="secondary admin-only admin-inline" id="btnDiagExport" type="button">Exportar diagnóstico</button>
           <button class="secondary admin-only admin-inline" id="btnDiagClear" type="button">Limpiar diagnóstico</button>
           <button class="ghost" id="btnReset" type="button">Reiniciar</button>
-          <button id="btnPrint" type="button">Imprimir / PDF</button>
+          <button id="btnPrint" type="button">PDF</button>
           <input id="fileLoader" type="file" accept=".json" style="display:none">
           <input id="brandLoader" type="file" accept=".json" style="display:none">
         </div>
@@ -1496,7 +1496,7 @@
       slogan: 'Ordenamos el caos con tecnología.',
       edition: 'Comercial',
       channel: 'offline-ready',
-      version: '1.0.8',
+      version: '1.0.9',
       dataSchema: '2026-04',
       supportEmail: 'soporte@junglelabsas.com',
       supportPhone: '',
@@ -1513,7 +1513,7 @@
     };
     const LICENSE_CONFIG = window.APP_LICENSE_CONFIG || {
       mode: 'matriz',
-      licenseId: 'MATRIZ-INTERNA-1.0.8',
+      licenseId: 'MATRIZ-INTERNA-1.0.9',
       clientId: 'junglelabs-matriz',
       clientName: 'Jungle Lab S.A.S.',
       editionProfile: 'matriz',
@@ -2151,8 +2151,34 @@
       ].filter(Boolean);
       return parts.length ? parts.join('_') : 'informe_costeo_a4';
     }
-    function buildPrintableReportDocument() {
+    function blobToDataUrl(blob) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(reader.error || new Error('No se pudo leer la imagen.'));
+        reader.readAsDataURL(blob);
+      });
+    }
+    async function inlineReportImages(container) {
+      const images = Array.from(container.querySelectorAll('img'));
+      await Promise.all(images.map(async (img) => {
+        const source = img.getAttribute('src') || '';
+        if (!source || source.startsWith('data:')) return;
+        try {
+          const absoluteSource = new URL(img.currentSrc || source, document.baseURI).href;
+          const response = await fetch(absoluteSource);
+          if (!response.ok) throw new Error(`Estado ${response.status}`);
+          const blob = await response.blob();
+          img.setAttribute('src', await blobToDataUrl(blob));
+        } catch (err) {
+          console.warn('No se pudo incrustar imagen en el PDF.', source, err);
+        }
+      }));
+    }
+    async function buildPrintableReportDocument() {
       const reportNode = document.getElementById('report-print-only');
+      const printableClone = reportNode.cloneNode(true);
+      await inlineReportImages(printableClone);
       const styles = Array.from(document.querySelectorAll('style'))
         .map((style) => style.textContent || '')
         .join('\n');
@@ -2164,7 +2190,7 @@
   <style>${styles}</style>
 </head>
 <body>
-  <section id="report-print-only" class="only-report-print">${reportNode.innerHTML}</section>
+  <section id="report-print-only" class="only-report-print">${printableClone.innerHTML}</section>
 </body>
 </html>`;
     }
@@ -3608,7 +3634,7 @@ const html = `<div class="report"><div class="report-section"><div class="report
       if (window.__TAURI__?.core?.invoke) {
         try {
           const savedPath = await tauriInvoke('export_report_pdf_a4', {
-            html: buildPrintableReportDocument(),
+            html: await buildPrintableReportDocument(),
             suggestedName: buildReportSuggestedName()
           });
           await logDiagnostic('info', 'report_pdf_a4_exported', {
