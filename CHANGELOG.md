@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.7 - 2026-04-22
+
+- Ajuste final del lienzo de impresion para que el informe ocupe mejor una hoja A4.
+- Fijacion del informe al area imprimible completa sin agregar controles visibles.
+
 ## 1.0.6 - 2026-04-22
 
 - Eliminacion del boton Vista A4.

@@ -1100,17 +1100,21 @@
       .panel { display: none !important; }
       #tab-report.panel { display: none !important; }
       #report-print-only { display: block !important; }
-      @page { size: A4 portrait; margin: 5mm; }
+      @page { size: A4 portrait; margin: 0; }
       html, body {
-        width: auto;
-        height: auto;
+        width: 210mm;
+        height: 297mm;
         margin: 0 !important;
         padding: 0 !important;
+        overflow: hidden !important;
       }
       #report-print-only {
-        width: 200mm;
-        height: 287mm;
-        margin: 0 auto;
+        position: fixed;
+        inset: 0;
+        width: 210mm;
+        height: 297mm;
+        margin: 0;
+        padding: 5mm 6mm 4mm;
         overflow: hidden;
         box-sizing: border-box;
       }
@@ -1125,13 +1129,13 @@
         overflow: hidden;
         box-sizing: border-box;
       }
-      .report-section { padding: 10px 13px; }
-      .report-section:nth-child(3) { flex: 1 1 auto; min-height: 0; }
-      .report-title-block h1 { font-size: 24px; }
-      .report-title-block .report-product-line { margin-top: 5px; font-size: 11px; gap: 2px; }
-      .report-title-block .report-subline { margin-top: 4px; font-size: 9px; }
+      .report-section { padding: 10px 14px; }
+      .report-section:nth-child(3) { flex: 1 1 0; min-height: 0; }
+      .report-title-block h1 { font-size: 27px; }
+      .report-title-block .report-product-line { margin-top: 5px; font-size: 12px; gap: 2px; }
+      .report-title-block .report-subline { margin-top: 4px; font-size: 9.5px; }
       .report-title-block .left { display:flex; align-items:flex-start; gap:9px; }
-      .report-title-block .left img { height: 17px; max-width: 90px; }
+      .report-title-block .left img { height: 19px; max-width: 98px; }
       .report-hero { grid-template-columns: 1fr !important; gap: 8px; }
       .report-meta-grid { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; gap: 8px; margin-top: 8px; }
       .report-kpi-strip { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; gap: 8px; }
@@ -1140,16 +1144,16 @@
       .market-hero-top { grid-template-columns: 1fr 1fr !important; gap: 8px; }
       .report-meta { padding: 8px 10px; border-radius: 11px; }
       .report-meta .k { font-size: 8px; }
-      .report-meta .v { margin-top: 2px; font-size: 14px; }
+      .report-meta .v { margin-top: 2px; font-size: 15px; }
       .report-kpi { padding: 9px 10px; border-radius: 12px; }
       .report-kpi .k { font-size: 8px; }
-      .report-kpi .v { margin-top: 5px; font-size: 21px; }
+      .report-kpi .v { margin-top: 5px; font-size: 23px; }
       .report-kpi .s { margin-top: 5px; font-size: 8.8px; line-height: 1.28; }
       .report-summary-box { padding: 9px 11px; border-radius: 12px; }
       .report-summary-box .eyebrow { font-size: 8px; }
-      .report-summary-box .text { margin-top: 5px; font-size: 11.5px; line-height: 1.34; }
+      .report-summary-box .text { margin-top: 5px; font-size: 12px; line-height: 1.34; }
       .report-panel { padding: 11px 12px; border-radius: 13px; min-height: 0; }
-      .report-panel h3 { margin-bottom: 5px; font-size: 16px; }
+      .report-panel h3 { margin-bottom: 5px; font-size: 17px; }
       .report-panel .intro { margin-bottom: 8px; font-size: 9px; line-height: 1.28; }
       .report-comp-list { gap: 7px; }
       .report-comp-item { padding: 9px 10px; border-radius: 11px; }
@@ -1477,7 +1481,7 @@
       slogan: 'Ordenamos el caos con tecnología.',
       edition: 'Comercial',
       channel: 'offline-ready',
-      version: '1.0.6',
+      version: '1.0.7',
       dataSchema: '2026-04',
       supportEmail: 'soporte@junglelabsas.com',
       supportPhone: '',
@@ -1494,7 +1498,7 @@
     };
     const LICENSE_CONFIG = window.APP_LICENSE_CONFIG || {
       mode: 'matriz',
-      licenseId: 'MATRIZ-INTERNA-1.0.6',
+      licenseId: 'MATRIZ-INTERNA-1.0.7',
       clientId: 'junglelabs-matriz',
       clientName: 'Jungle Lab S.A.S.',
       editionProfile: 'matriz',
