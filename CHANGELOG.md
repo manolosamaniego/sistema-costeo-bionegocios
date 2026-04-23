@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.8 - 2026-04-23
+
+- El boton Imprimir / PDF ahora genera un PDF A4 directo desde la app de escritorio, sin depender del tamano de papel del controlador de impresora.
+- Se mantiene el informe en una sola hoja A4 para archivo ejecutivo.
+
 ## 1.0.7 - 2026-04-22
 
 - Ajuste final del lienzo de impresion para que el informe ocupe mejor una hoja A4.

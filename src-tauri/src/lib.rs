@@ -2,6 +2,8 @@ use std::fs;
 use std::fs::OpenOptions;
 use std::io::Write;
 use std::path::PathBuf;
+use std::process::Command;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 use base64::Engine;
 use reqwest::blocking::Client;
@@ -33,6 +35,38 @@ fn file_path_to_pathbuf(file_path: Option<FilePath>, empty_message: &str) -> Res
     let path = file_path.ok_or_else(|| empty_message.to_string())?;
     path.into_path()
         .map_err(|_| "La ruta seleccionada no es un archivo local compatible.".to_string())
+}
+
+fn edge_executable_path() -> Result<PathBuf, String> {
+    let candidates = [
+        r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
+        r"C:\Program Files\Microsoft\Edge\Application\msedge.exe",
+        r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+        r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+    ];
+
+    candidates
+        .iter()
+        .map(PathBuf::from)
+        .find(|path| path.exists())
+        .ok_or_else(|| {
+            "No se encontró Microsoft Edge o Google Chrome para generar el PDF A4 automático."
+                .to_string()
+        })
+}
+
+fn ensure_pdf_extension(mut path: PathBuf) -> PathBuf {
+    if path
+        .extension()
+        .and_then(|value| value.to_str())
+        .map(|value| value.eq_ignore_ascii_case("pdf"))
+        .unwrap_or(false)
+    {
+        return path;
+    }
+
+    path.set_extension("pdf");
+    path
 }
 
 #[tauri::command]
@@ -107,6 +141,67 @@ fn import_costeo_file(app: AppHandle) -> Result<String, String> {
 
     let path = file_path_to_pathbuf(file_path, "No se seleccionó un archivo de costeo.")?;
     fs::read_to_string(&path).map_err(|e| format!("No se pudo leer el respaldo de costeo: {e}"))
+}
+
+#[tauri::command]
+fn export_report_pdf_a4(app: AppHandle, html: String, suggested_name: String) -> Result<String, String> {
+    let safe_name = if suggested_name.trim().is_empty() {
+        "informe_costeo_a4".to_string()
+    } else {
+        suggested_name
+            .chars()
+            .map(|c| if c.is_ascii_alphanumeric() || c == '_' || c == '-' { c } else { '_' })
+            .collect::<String>()
+    };
+
+    let file_path = app
+        .dialog()
+        .file()
+        .add_filter("PDF", &["pdf"])
+        .set_file_name(format!("{safe_name}.pdf"))
+        .blocking_save_file();
+
+    let target_path = ensure_pdf_extension(file_path_to_pathbuf(
+        file_path,
+        "No se seleccionó una ruta para guardar el informe PDF.",
+    )?);
+
+    let millis = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map_err(|e| format!("No se pudo generar el nombre temporal: {e}"))?
+        .as_millis();
+    let temp_path = std::env::temp_dir().join(format!("informe_costeo_a4_{millis}.html"));
+
+    fs::write(&temp_path, html)
+        .map_err(|e| format!("No se pudo preparar el informe temporal: {e}"))?;
+
+    let browser_path = edge_executable_path()?;
+    let pdf_arg = format!("--print-to-pdf={}", target_path.display());
+    let status = Command::new(browser_path)
+        .arg("--headless=new")
+        .arg("--disable-gpu")
+        .arg("--disable-crash-reporter")
+        .arg("--disable-features=Crashpad")
+        .arg("--no-pdf-header-footer")
+        .arg(pdf_arg)
+        .arg(&temp_path)
+        .status()
+        .map_err(|e| format!("No se pudo ejecutar el generador PDF A4: {e}"))?;
+
+    let _ = fs::remove_file(&temp_path);
+
+    if !status.success() {
+        return Err(format!(
+            "No se pudo generar el PDF A4. Código de salida: {:?}.",
+            status.code()
+        ));
+    }
+
+    if !target_path.exists() {
+        return Err("El generador terminó, pero no se encontró el PDF A4 creado.".to_string());
+    }
+
+    Ok(target_path.display().to_string())
 }
 
 #[tauri::command]
@@ -235,6 +330,7 @@ pub fn run() {
             export_branding_file,
             export_costeo_file,
             import_costeo_file,
+            export_report_pdf_a4,
             import_logo_file,
             append_diagnostic_log,
             export_diagnostic_log,

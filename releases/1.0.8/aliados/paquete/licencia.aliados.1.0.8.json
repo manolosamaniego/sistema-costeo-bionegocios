@@ -1,0 +1,15 @@
+﻿{
+    "licenseId":  "ALIADOS-1.0.8",
+    "clientId":  "aliados",
+    "clientName":  "Fundacion Aliados",
+    "editionProfile":  "operativa",
+    "currentVersion":  "1.0.8",
+    "updateChannel":  "clientes/aliados/estable",
+    "manifestUrl":  "https://manolosamaniego.github.io/sistema-costeo-bionegocios/updates/clientes/aliados/manifest.json",
+    "supportLevel":  "comercial",
+    "supportUntil":  "2027-04-19",
+    "updatesUntil":  "2027-04-19",
+    "allowBranding":  false,
+    "allowAdminAccess":  false,
+    "notes":  "Licencia operativa para Fundacion Aliados."
+}

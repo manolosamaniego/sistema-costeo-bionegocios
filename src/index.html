@@ -1102,17 +1102,32 @@
       #report-print-only { display: block !important; }
       @page { size: A4 portrait; margin: 0; }
       html, body {
-        width: 210mm;
-        height: 297mm;
+        width: 210mm !important;
+        min-width: 210mm !important;
+        max-width: 210mm !important;
+        height: 297mm !important;
+        min-height: 297mm !important;
+        max-height: 297mm !important;
         margin: 0 !important;
         padding: 0 !important;
         overflow: hidden !important;
       }
+      body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
       #report-print-only {
         position: fixed;
-        inset: 0;
-        width: 210mm;
-        height: 297mm;
+        left: 0;
+        top: 0;
+        right: auto;
+        bottom: auto;
+        width: 210mm !important;
+        min-width: 210mm !important;
+        max-width: 210mm !important;
+        height: 297mm !important;
+        min-height: 297mm !important;
+        max-height: 297mm !important;
         margin: 0;
         padding: 5mm 6mm 4mm;
         overflow: hidden;
@@ -1481,7 +1496,7 @@
       slogan: 'Ordenamos el caos con tecnología.',
       edition: 'Comercial',
       channel: 'offline-ready',
-      version: '1.0.7',
+      version: '1.0.8',
       dataSchema: '2026-04',
       supportEmail: 'soporte@junglelabsas.com',
       supportPhone: '',
@@ -1498,7 +1513,7 @@
     };
     const LICENSE_CONFIG = window.APP_LICENSE_CONFIG || {
       mode: 'matriz',
-      licenseId: 'MATRIZ-INTERNA-1.0.7',
+      licenseId: 'MATRIZ-INTERNA-1.0.8',
       clientId: 'junglelabs-matriz',
       clientName: 'Jungle Lab S.A.S.',
       editionProfile: 'matriz',
@@ -2125,6 +2140,33 @@
         slugPart(g.documentId)
       ].filter(Boolean);
       return parts.length ? parts.join('_') : 'costeo_bionegocios';
+    }
+    function buildReportSuggestedName() {
+      const g = getGeneral();
+      const parts = [
+        'Informe',
+        slugPart(g.orgName || branding.organizationName),
+        slugPart(g.productName),
+        slugPart(g.documentId)
+      ].filter(Boolean);
+      return parts.length ? parts.join('_') : 'informe_costeo_a4';
+    }
+    function buildPrintableReportDocument() {
+      const reportNode = document.getElementById('report-print-only');
+      const styles = Array.from(document.querySelectorAll('style'))
+        .map((style) => style.textContent || '')
+        .join('\n');
+      return `<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>${esc(branding.productDisplayName || APP_PRODUCT.name)} - Informe A4</title>
+  <style>${styles}</style>
+</head>
+<body>
+  <section id="report-print-only" class="only-report-print">${reportNode.innerHTML}</section>
+</body>
+</html>`;
     }
     function collectBrandingFormValues() {
       return {
@@ -3558,11 +3600,32 @@ const html = `<div class="report"><div class="report-section"><div class="report
       document.querySelector('[data-tab="tab-report"]').classList.add('active');
       calcAll();
     }
-    btnPrint.onclick = () => {
+    btnPrint.onclick = async () => {
       showReportPreview();
-      logDiagnostic('info', 'print_requested', {
+      await logDiagnostic('info', 'print_requested', {
         snapshot: buildSupportSnapshot()
       });
+      if (window.__TAURI__?.core?.invoke) {
+        try {
+          const savedPath = await tauriInvoke('export_report_pdf_a4', {
+            html: buildPrintableReportDocument(),
+            suggestedName: buildReportSuggestedName()
+          });
+          await logDiagnostic('info', 'report_pdf_a4_exported', {
+            path: savedPath,
+            snapshot: buildSupportSnapshot()
+          });
+          alert(`Informe PDF A4 generado correctamente en:\n${savedPath}`);
+          return;
+        } catch (err) {
+          await logDiagnostic('error', 'report_pdf_a4_export_failed', {
+            error: String(err || ''),
+            snapshot: buildSupportSnapshot()
+          });
+          alert(`No fue posible generar el PDF A4 automático.\n${err}`);
+          return;
+        }
+      }
       setTimeout(() => window.print(), 150);
     };
 
