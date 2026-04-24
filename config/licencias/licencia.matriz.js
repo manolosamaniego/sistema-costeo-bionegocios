@@ -1,10 +1,10 @@
 window.APP_LICENSE_CONFIG = {
   mode: 'matriz',
-  licenseId: 'MATRIZ-INTERNA-1.0.10',
+  licenseId: 'MATRIZ-INTERNA-1.0.11',
   clientId: 'junglelabs-matriz',
   clientName: 'Jungle Lab S.A.S.',
   editionProfile: 'matriz',
-  currentVersion: '1.0.10',
+  currentVersion: '1.0.11',
   updateChannel: 'matriz/estable',
   manifestUrl: 'https://manolosamaniego.github.io/sistema-costeo-bionegocios/updates/matriz/manifest.json',
   supportLevel: 'interno',

@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.11 - 2026-04-23
+
+- El generador PDF A4 ahora espera el archivo final antes de validar la salida, evitando falsos errores cuando el navegador tarda un poco en escribir el PDF.
+- El informe temporal se abre como URL local valida y el error tecnico devuelve mas detalle si el motor de PDF falla.
+
 ## 1.0.10 - 2026-04-23
 
 - El encabezado del informe alinea mejor el logo institucional con el bloque del titulo.

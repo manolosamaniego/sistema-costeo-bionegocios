@@ -3,6 +3,8 @@ use std::fs::OpenOptions;
 use std::io::Write;
 use std::path::PathBuf;
 use std::process::Command;
+use std::thread::sleep;
+use std::time::Duration;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use base64::Engine;
@@ -67,6 +69,15 @@ fn ensure_pdf_extension(mut path: PathBuf) -> PathBuf {
 
     path.set_extension("pdf");
     path
+}
+
+fn path_to_file_url(path: &PathBuf) -> Result<String, String> {
+    let canonical = path
+        .canonicalize()
+        .map_err(|e| format!("No se pudo resolver el archivo temporal del informe: {e}"))?;
+    let url = reqwest::Url::from_file_path(&canonical)
+        .map_err(|_| "No se pudo convertir el informe temporal a una URL local válida.".to_string())?;
+    Ok(url.to_string())
 }
 
 #[tauri::command]
@@ -166,6 +177,11 @@ fn export_report_pdf_a4(app: AppHandle, html: String, suggested_name: String) ->
         "No se seleccionó una ruta para guardar el informe PDF.",
     )?);
 
+    if target_path.exists() {
+        fs::remove_file(&target_path)
+            .map_err(|e| format!("No se pudo reemplazar el PDF anterior en la ruta elegida: {e}"))?;
+    }
+
     let millis = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .map_err(|e| format!("No se pudo generar el nombre temporal: {e}"))?
@@ -174,34 +190,59 @@ fn export_report_pdf_a4(app: AppHandle, html: String, suggested_name: String) ->
 
     fs::write(&temp_path, html)
         .map_err(|e| format!("No se pudo preparar el informe temporal: {e}"))?;
+    let temp_url = path_to_file_url(&temp_path)?;
 
     let browser_path = edge_executable_path()?;
     let pdf_arg = format!("--print-to-pdf={}", target_path.display());
-    let status = Command::new(browser_path)
+    let output = Command::new(browser_path)
         .arg("--headless=new")
         .arg("--disable-gpu")
         .arg("--disable-crash-reporter")
         .arg("--disable-features=Crashpad")
         .arg("--no-pdf-header-footer")
         .arg(pdf_arg)
-        .arg(&temp_path)
-        .status()
+        .arg(temp_url)
+        .output()
         .map_err(|e| format!("No se pudo ejecutar el generador PDF A4: {e}"))?;
 
     let _ = fs::remove_file(&temp_path);
 
-    if !status.success() {
+    if !output.status.success() {
+        let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
         return Err(format!(
-            "No se pudo generar el PDF A4. Código de salida: {:?}.",
-            status.code()
+            "No se pudo generar el PDF A4. Código de salida: {:?}. {}",
+            output.status.code(),
+            if stderr.is_empty() {
+                "El navegador no devolvió detalle adicional.".to_string()
+            } else {
+                format!("Detalle técnico: {stderr}")
+            }
         ));
     }
 
-    if !target_path.exists() {
-        return Err("El generador terminó, pero no se encontró el PDF A4 creado.".to_string());
+    for _ in 0..40 {
+        if target_path.exists() {
+            return Ok(target_path.display().to_string());
+        }
+        sleep(Duration::from_millis(200));
     }
 
-    Ok(target_path.display().to_string())
+    let stdout = String::from_utf8_lossy(&output.stdout).trim().to_string();
+    let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
+    Err(format!(
+        "El generador terminó, pero no se encontró el PDF A4 creado en la ruta esperada. Ruta esperada: {}. {} {}",
+        target_path.display(),
+        if stderr.is_empty() {
+            String::new()
+        } else {
+            format!("Detalle técnico stderr: {stderr}.")
+        },
+        if stdout.is_empty() {
+            String::new()
+        } else {
+            format!("Salida del generador: {stdout}.")
+        }
+    ))
 }
 
 #[tauri::command]
@@ -276,8 +317,7 @@ fn export_diagnostic_log(app: AppHandle) -> Result<String, String> {
 #[tauri::command]
 fn clear_diagnostic_log(app: AppHandle) -> Result<String, String> {
     let path = diagnostics_file_path(&app)?;
-    fs::write(&path, "")
-        .map_err(|e| format!("No se pudo limpiar el log de diagnóstico: {e}"))?;
+    fs::write(&path, "").map_err(|e| format!("No se pudo limpiar el log de diagnóstico: {e}"))?;
     Ok(path.display().to_string())
 }
 
