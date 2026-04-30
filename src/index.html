@@ -34,6 +34,7 @@
     .header-inner {
       max-width: 1280px; margin: 0 auto; padding: 10px 16px;
       display: flex; gap: 14px; align-items: center; justify-content: space-between;
+      position: relative;
     }
     .brand-box { display: flex; align-items: center; gap: 12px; }
     .brand-box img { height: 42px; width: auto; object-fit: contain; }
@@ -43,8 +44,20 @@
       display: grid;
       gap: 8px;
       justify-items: end;
+      position: relative;
+      z-index: 1;
+      padding-bottom: 74px;
     }
-    .actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+      align-items: flex-start;
+      align-self: start;
+      position: relative;
+      z-index: 2;
+    }
     .update-status-line {
       display: none;
       width: 100%;
@@ -57,6 +70,8 @@
       font-size: 13px;
       line-height: 1.35;
       text-align: left;
+      position: relative;
+      z-index: 3;
     }
     .update-status-line.visible { display: block; }
     .update-status-line.error {
@@ -74,38 +89,30 @@
       font-weight: 800;
       text-decoration: underline;
     }
-    .vendor-chip {
-      display: inline-flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 9px;
-      padding: 7px 10px;
-      border: 1px solid #dfe8d8;
-      border-radius: 999px;
-      background: linear-gradient(135deg, #fbfdf8 0%, #f0f6ea 100%);
-      box-shadow: 0 5px 16px rgba(24, 58, 44, 0.07);
-      min-width: 252px;
+    .vendor-leaf {
+      position: absolute;
+      top: 56px;
+      left: 122px;
+      width: 92px;
+      display: block;
+      pointer-events: none;
+      z-index: 1;
     }
-    .vendor-chip img {
-      width: 28px;
-      height: 28px;
+    .vendor-leaf img {
+      width: 100%;
+      height: auto;
       object-fit: contain;
-      flex: 0 0 auto;
-    }
-    .vendor-chip .k {
+      transform: rotate(11deg);
+      image-rendering: -webkit-optimize-contrast;
       display: block;
-      font-size: 12px;
-      font-weight: 800;
-      color: #1c4337;
-      letter-spacing: 0.03em;
+      user-select: none;
+      -webkit-user-drag: none;
+      filter: none;
+      box-shadow: none;
+      opacity: 1;
+      background: transparent;
     }
-    .vendor-chip .s {
-      display: block;
-      margin-top: 1px;
-      font-size: 10.5px;
-      line-height: 1.35;
-      color: #4d635b;
-    }
+    .update-status-line.visible + .vendor-leaf { display: none; }
     button {
       border: none; background: var(--brand); color: #fff;
       padding: 10px 14px; border-radius: 12px; cursor: pointer; font-weight: 700;
@@ -134,10 +141,10 @@
       .g3, .g4 { grid-template-columns: 1fr; }
       .brand-title { font-size: 22px; }
       .header-inner { flex-direction: column; align-items: flex-start; }
-      .actions-stack { justify-items: stretch; width: 100%; }
+      .actions-stack { justify-items: stretch; width: 100%; padding-bottom: 0; }
       .actions { justify-content: flex-start; }
       .update-status-line { max-width: none; }
-      .vendor-chip { min-width: 0; width: 100%; }
+      .vendor-leaf { display: none; }
     }
     .field label {
       display: block; font-size: 12px; font-weight: 800; text-transform: uppercase;
@@ -802,9 +809,10 @@
     }
     .report-title-block h1 {
       margin:0;
-      font-size:22px;
-      line-height:1.1;
+      font-size:24px;
+      line-height:1.04;
       color:#1f2937;
+      letter-spacing:-.03em;
     }
     .report-title-block .report-subline {
       margin-top:6px;
@@ -813,11 +821,21 @@
     }
     .report-title-block .report-product-line {
       margin-top:8px;
-      display:grid;
-      gap:3px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px 16px;
       font-size:13px;
       line-height:1.35;
       color:#344054;
+    }
+    .report-product-pill {
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:4px 10px;
+      border:1px solid #dfe7d4;
+      border-radius:999px;
+      background:#fbfcf8;
     }
     .report-meta-grid {
       display:grid;
@@ -903,8 +921,8 @@
     }
     .report-summary-box .text {
       margin-top:8px;
-      font-size:15px;
-      line-height:1.55;
+      font-size:14px;
+      line-height:1.52;
       color:#1f2937;
       font-weight:600;
     }
@@ -921,7 +939,7 @@
     }
     .report-panel h3 {
       margin:0 0 10px 0;
-      font-size:18px;
+      font-size:19px;
       line-height:1.1;
       color:#1f2937;
     }
@@ -1050,6 +1068,14 @@
       background:linear-gradient(135deg,#fff0e1 0%, #fff9f4 100%);
       border-color:#efc49e;
     }
+    .report-final-card.primary h4 {
+      color:#b54708;
+    }
+    .report-final-card.primary p {
+      font-size:14px;
+      font-weight:700;
+      color:#7a2e0a;
+    }
     .report-note-strip {
       display:grid;
       gap:8px;
@@ -1147,7 +1173,8 @@
       .report-section { padding: 10px 14px; }
       .report-section:nth-child(3) { flex: 1 1 0; min-height: 0; }
       .report-title-block h1 { font-size: 27px; }
-      .report-title-block .report-product-line { margin-top: 5px; font-size: 12px; gap: 2px; }
+      .report-title-block .report-product-line { margin-top: 5px; font-size: 11px; gap: 4px 8px; }
+      .report-product-pill { padding: 3px 8px; }
       .report-title-block .report-subline { margin-top: 4px; font-size: 9.5px; }
       .report-title-block .left { display:flex; align-items:center; gap:9px; }
       .report-title-block .left img { height: 19px; max-width: 98px; }
@@ -1166,7 +1193,7 @@
       .report-kpi .s { margin-top: 5px; font-size: 8.8px; line-height: 1.28; }
       .report-summary-box { padding: 9px 11px; border-radius: 12px; }
       .report-summary-box .eyebrow { font-size: 8px; }
-      .report-summary-box .text { margin-top: 5px; font-size: 12px; line-height: 1.34; }
+      .report-summary-box .text { margin-top: 5px; font-size: 11px; line-height: 1.34; }
       .report-panel { padding: 11px 12px; border-radius: 13px; min-height: 0; }
       .report-panel h3 { margin-bottom: 5px; font-size: 17px; }
       .report-panel .intro { margin-bottom: 8px; font-size: 9px; line-height: 1.28; }
@@ -1184,6 +1211,7 @@
       .report-final-card { padding: 10px 11px; border-radius: 12px; }
       .report-final-card h4 { margin-bottom: 6px; font-size: 14px; }
       .report-final-card p, .report-note { font-size: 9px; line-height: 1.28; }
+      .report-final-card.primary p { font-size: 9.4px; }
       .report-note-strip { gap: 5px; margin-top: 7px !important; }
       .report-note { padding: 5px 7px; border-radius: 9px; }
       .report-signature { margin-left:auto; min-width:190px; }
@@ -1220,12 +1248,8 @@
           <input id="brandLoader" type="file" accept=".json" style="display:none">
         </div>
         <div class="update-status-line" id="updateStatusLine" role="status" aria-live="polite"></div>
-        <div class="vendor-chip" aria-label="Firma tecnológica Jungle Lab">
-          <img src="assets/jungle-lab-mark.svg" alt="Jungle Lab">
-          <div>
-            <span class="k">Jungle Lab S.A.S.</span>
-            <span class="s">Ordenamos el caos con tecnología.</span>
-          </div>
+        <div class="vendor-leaf" aria-hidden="true">
+          <img src="assets/jungle-lab-leaf-clean.png" alt="">
         </div>
       </div>
     </div>
@@ -3087,13 +3111,23 @@
       return alerts;
     }
 
+    function componentsLabel(label='') {
+      const value = String(label || '').trim().toLowerCase();
+      if (value.includes('direct')) return 'costos directos';
+      if (value.includes('indirect')) return 'costos indirectos';
+      if (value.includes('comercial')) return 'comercialización';
+      if (value.includes('equipo')) return 'equipos';
+      return label || 'costos directos';
+    }
+
     function renderReport(v) {
       const p = v.primary || {};
       const unitCostTotal = num(p.qtyOut) > 0 ? (v.totalCost * (num(p.costPct) / 100)) / num(p.qtyOut) : 0;
       const wholesale = unitCostTotal * (1 + num(v.g.wholesaleMarginPct) / 100);
+      const dominantComponent = componentsLabel(v.mainPressure);
       const summary = !v.marketAvg
-        ? `${v.g.productName || 'El producto'} presenta un costo unitario total de ${money(unitCostTotal)}, un PVP sugerido de ${money(p._suggestNoVat || 0)} y un precio mayorista recomendado de ${money(wholesale)}. Aún falta una base suficiente de mercado para validar con mayor seguridad el riesgo comercial.`
-        : `${v.g.productName || 'El producto'} presenta un costo unitario total de ${money(unitCostTotal)}, un PVP sugerido de ${money(p._suggestNoVat || 0)} y un precio mayorista recomendado de ${money(wholesale)}. El punto de equilibrio exige ${(v.breakEvenUnits || 0).toFixed(2)} unidades y la lectura de mercado actual es ${String(v.marketState || 'Sin base suficiente').toLowerCase()}.`;
+        ? `${v.g.productName || 'El producto'} registra un costo unitario total de ${money(unitCostTotal)}, con PVP sugerido de ${money(p._suggestNoVat || 0)} y precio mayorista recomendado de ${money(wholesale)}. La principal presión del costo está en ${dominantComponent.toLowerCase()} y aún falta una base suficiente de mercado para validar el riesgo comercial con mayor certeza.`
+        : `${v.g.productName || 'El producto'} registra un costo unitario total de ${money(unitCostTotal)}, con PVP sugerido de ${money(p._suggestNoVat || 0)} y precio mayorista recomendado de ${money(wholesale)}. La principal presión del costo está en ${dominantComponent.toLowerCase()}, el punto de equilibrio exige ${(v.breakEvenUnits || 0).toFixed(2)} unidades y la lectura de mercado actual es ${String(v.marketState || 'Sin base suficiente').toLowerCase()}.`;
       const components = [
         { label:'Directos', value:v.directTotal, color:'#d94a1f' },
         { label:'Indirectos', value:v.indirectTotal, color:'#6f9915' },
@@ -3115,7 +3149,7 @@
       const gapTone = !v.marketAvg ? 'yellow' : v.gapPct > 12 ? 'red' : v.gapPct > 5 ? 'yellow' : 'green';
       const alerts = auditAlerts(v).slice(0, 3).map(text => `<div class="report-note">${esc(text)}</div>`).join('') || `<div class="report-note" style="background:#eef8ef;color:#25643a;border-color:#cfe6d3">Sin alertas críticas de consistencia en esta revisión.</div>`;
       const presentationLabel = `${num(p.qtyOut || 0).toFixed(2)} x ${num(p.size || 0).toFixed(2)} ${esc(p.unit || v.g.baseUnit || '-')}`;
-const html = `<div class="report"><div class="report-section"><div class="report-shell"><div class="report-hero"><div class="report-title-block"><div class="left"><img src="${branding.logoPath || DEFAULT_BRANDING.logoPath}" alt="${esc(branding.logoAlt || branding.organizationName || 'Logo institucional')}"><div><h1>Informe de costeo de ${esc(v.g.orgName || branding.organizationName || 'la organización')}</h1><div class="report-product-line"><div><b>Producto:</b> ${esc(v.g.productName || '-')}</div><div><b>Presentación:</b> ${presentationLabel}</div></div><div class="report-subline">Documento ${esc(v.g.documentId || '-')} · ${new Date().toLocaleDateString('es-EC')}</div></div></div><div class="report-meta-grid"><div class="report-meta"><div class="k">Responsable</div><div class="v">${esc(v.g.responsible || '-')}</div></div><div class="report-meta"><div class="k">Cargo</div><div class="v">${esc(v.g.responsibleRole || '-')}</div></div><div class="report-meta"><div class="k">Periodo</div><div class="v">${esc(v.g.period || '-')}</div></div><div class="report-meta"><div class="k">Unidad base</div><div class="v">${esc(v.g.baseUnit || '-')}</div></div></div></div><div class="report-summary-box"><div class="eyebrow">Resumen ejecutivo</div><div class="text">${esc(summary)}</div></div></div></div></div><div class="report-section"><div class="report-kpi-strip"><div class="report-kpi"><div class="k">Costo unitario total</div><div class="v">${money(unitCostTotal)}</div><div class="s">Costo real por unidad o presentación base.</div></div><div class="report-kpi"><div class="k">PVP sugerido</div><div class="v">${money(p._suggestNoVat || 0)}</div><div class="s">Referencia principal para venta al público.</div></div><div class="report-kpi"><div class="k">Precio mayorista</div><div class="v">${money(wholesale)}</div><div class="s">Referencia desde ${num(v.g.wholesaleMinQty || 0).toFixed(0)} unidades.</div></div><div class="report-kpi"><div class="k">Punto de equilibrio</div><div class="v">${(v.breakEvenUnits || 0).toFixed(2)} und.</div><div class="s">Calculado sobre el PVP sugerido.</div></div><div class="report-kpi alert-${stateTone}"><div class="k">Estado comercial</div><div class="v">${esc(v.marketState || 'Sin base suficiente')}</div><div class="s">${v.marketAvg ? `Brecha: ${money(v.gapMoney)} · ${pct(v.gapPct)}` : 'Faltan comparables útiles para validar el precio.'}</div></div></div></div><div class="report-section"><div class="report-two-col"><div class="report-panel"><h3>Composición del costo</h3><div class="intro">Distribución del costo total por rubro para identificar la principal presión del negocio.</div><div class="report-comp-list">${compHtml}</div><div class="report-note-strip"><div class="report-note"><b>Hallazgo principal:</b> ${esc(findingMain.textContent)}</div></div></div><div class="report-panel"><h3>Lectura frente al mercado</h3><div class="intro">Comparación del precio sugerido frente al benchmark válido cargado.</div><div class="market-hero"><div class="market-hero-top"><div class="market-box"><div class="k">Precio sugerido</div><div class="v">${money(p._suggestNoVat || 0)}</div><div class="s">Promedio mercado: ${v.marketAvg ? money(v.marketAvg) : 'Sin base suficiente'}</div></div><div class="market-box"><div class="k">Brecha frente al mercado</div><div class="v">${v.marketAvg ? money(v.gapMoney) : 'N/D'}</div><div class="s">${v.marketAvg ? pct(v.gapPct) : 'Aún no hay comparables suficientes.'}</div></div></div><div class="report-signal ${gapTone}">${!v.marketAvg ? 'Sin base suficiente' : v.gapPct > 12 ? 'Brecha alta' : v.gapPct > 5 ? 'Brecha media' : v.gapPct < -5 ? 'Competitivo' : 'Alineado'}</div><div class="report-note-strip"><div class="report-note"><b>Riesgo principal:</b> ${esc(findingRisk.textContent)}</div></div></div></div></div></div><div class="report-section"><div class="report-final-grid"><div class="report-final-card"><h4>Hallazgo principal</h4><p>${esc(findingMain.textContent)}</p></div><div class="report-final-card"><h4>Riesgo principal</h4><p>${esc(findingRisk.textContent)}</p></div><div class="report-final-card primary"><h4>Conclusión estratégica</h4><p>${esc(findingOpp.textContent)}</p></div></div><div class="report-note-strip" style="margin-top:14px">${alerts}<div class="report-note" style="display:flex;justify-content:flex-end;align-items:center;text-align:right;font-weight:800;color:#475467;padding-right:12px"><div>${esc(branding.reportFooterLine1 || DEFAULT_BRANDING.reportFooterLine1)}<br>${esc(branding.reportFooterLine2 || DEFAULT_BRANDING.reportFooterLine2)}</div></div></div></div></div>`;
+const html = `<div class="report"><div class="report-section"><div class="report-shell"><div class="report-hero"><div class="report-title-block"><div class="left"><img src="${branding.logoPath || DEFAULT_BRANDING.logoPath}" alt="${esc(branding.logoAlt || branding.organizationName || 'Logo institucional')}"><div><h1>Informe de costeo de ${esc(v.g.orgName || branding.organizationName || 'la organización')}</h1><div class="report-product-line"><div class="report-product-pill"><b>Producto:</b> ${esc(v.g.productName || '-')}</div><div class="report-product-pill"><b>Presentación:</b> ${presentationLabel}</div></div><div class="report-subline">Documento ${esc(v.g.documentId || '-')} · ${new Date().toLocaleDateString('es-EC')}</div></div></div><div class="report-meta-grid"><div class="report-meta"><div class="k">Responsable</div><div class="v">${esc(v.g.responsible || '-')}</div></div><div class="report-meta"><div class="k">Cargo</div><div class="v">${esc(v.g.responsibleRole || '-')}</div></div><div class="report-meta"><div class="k">Periodo</div><div class="v">${esc(v.g.period || '-')}</div></div><div class="report-meta"><div class="k">Unidad base</div><div class="v">${esc(v.g.baseUnit || '-')}</div></div></div></div><div class="report-summary-box"><div class="eyebrow">Resumen ejecutivo</div><div class="text">${esc(summary)}</div></div></div></div></div><div class="report-section"><div class="report-kpi-strip"><div class="report-kpi"><div class="k">Costo unitario total</div><div class="v">${money(unitCostTotal)}</div><div class="s">Costo real por unidad o presentación base.</div></div><div class="report-kpi"><div class="k">PVP sugerido</div><div class="v">${money(p._suggestNoVat || 0)}</div><div class="s">Referencia principal para venta al público.</div></div><div class="report-kpi"><div class="k">Precio mayorista</div><div class="v">${money(wholesale)}</div><div class="s">Referencia desde ${num(v.g.wholesaleMinQty || 0).toFixed(0)} unidades.</div></div><div class="report-kpi"><div class="k">Punto de equilibrio</div><div class="v">${(v.breakEvenUnits || 0).toFixed(2)} und.</div><div class="s">Calculado sobre el PVP sugerido.</div></div><div class="report-kpi alert-${stateTone}"><div class="k">Estado comercial</div><div class="v">${esc(v.marketState || 'Sin base suficiente')}</div><div class="s">${v.marketAvg ? `Brecha: ${money(v.gapMoney)} · ${pct(v.gapPct)}` : 'Faltan comparables útiles para validar el precio.'}</div></div></div></div><div class="report-section"><div class="report-two-col"><div class="report-panel"><h3>Composición del costo</h3><div class="intro">Distribución del costo total por rubro para identificar la principal presión del negocio.</div><div class="report-comp-list">${compHtml}</div><div class="report-note-strip"><div class="report-note"><b>Hallazgo principal:</b> ${esc(findingMain.textContent)}</div></div></div><div class="report-panel"><h3>Lectura frente al mercado</h3><div class="intro">Comparación del precio sugerido frente al benchmark válido cargado.</div><div class="market-hero"><div class="market-hero-top"><div class="market-box"><div class="k">Precio sugerido</div><div class="v">${money(p._suggestNoVat || 0)}</div><div class="s">Promedio mercado: ${v.marketAvg ? money(v.marketAvg) : 'Sin base suficiente'}</div></div><div class="market-box"><div class="k">Brecha frente al mercado</div><div class="v">${v.marketAvg ? money(v.gapMoney) : 'N/D'}</div><div class="s">${v.marketAvg ? pct(v.gapPct) : 'Aún no hay comparables suficientes.'}</div></div></div><div class="report-signal ${gapTone}">${!v.marketAvg ? 'Sin base suficiente' : v.gapPct > 12 ? 'Brecha alta' : v.gapPct > 5 ? 'Brecha media' : v.gapPct < -5 ? 'Competitivo' : 'Alineado'}</div><div class="report-note-strip"><div class="report-note"><b>Riesgo principal:</b> ${esc(findingRisk.textContent)}</div></div></div></div></div></div><div class="report-section"><div class="report-final-grid"><div class="report-final-card"><h4>Hallazgo principal</h4><p>${esc(findingMain.textContent)}</p></div><div class="report-final-card"><h4>Riesgo principal</h4><p>${esc(findingRisk.textContent)}</p></div><div class="report-final-card primary"><h4>Conclusión estratégica</h4><p>${esc(findingOpp.textContent)}</p></div></div><div class="report-note-strip" style="margin-top:14px">${alerts}<div class="report-note report-signature" style="display:flex;justify-content:flex-end;align-items:center;text-align:right;font-weight:800;color:#475467;padding-right:12px"><div>${esc(branding.reportFooterLine1 || DEFAULT_BRANDING.reportFooterLine1)}<br>${esc(branding.reportFooterLine2 || DEFAULT_BRANDING.reportFooterLine2)}</div></div></div></div></div>`;
       reportContent.innerHTML = html;
       document.getElementById('report-print-only').innerHTML = html;
     }

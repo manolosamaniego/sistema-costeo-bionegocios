@@ -1,0 +1,13 @@
+{
+  "clientId": "aliados",
+  "organizationName": "Fundacion Aliados",
+  "productDisplayName": "Sistema Comercial de Costeo para Bionegocios",
+  "logoPath": "Logo_Aliados.jpeg",
+  "logoAlt": "Logo Aliados",
+  "primaryColor": "#d94a1f",
+  "secondaryColor": "#6f9915",
+  "headerLine1": "Creado por Jungle Lab S.A.S.",
+  "headerLine2": "\"Ordenamos el caos con tecnología.\"",
+  "reportFooterLine1": "Jungle Lab S.A.S.",
+  "reportFooterLine2": "\"Ordenamos el caos con tecnología.\""
+}

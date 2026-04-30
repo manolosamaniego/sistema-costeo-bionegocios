@@ -1,6 +1,6 @@
 [package]
 name = "sistema-costeo-bionegocios"
-version = "1.0.11"
+version = "1.0.12"
 description = "Sistema Comercial de Costeo para Bionegocios"
 authors = ["Jungle Lab S.A.S."]
 edition = "2021"
@@ -25,3 +25,4 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 base64 = "0.22"
 reqwest = { version = "0.12", default-features = false, features = ["blocking", "rustls-tls"] }
+tungstenite = "0.24"
