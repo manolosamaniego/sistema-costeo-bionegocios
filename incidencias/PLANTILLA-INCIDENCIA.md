@@ -3,6 +3,7 @@
 - Fecha:
 - Cliente:
 - Versión:
+- Canal:
 - Módulo:
 - Tipo:
 - Reportado por:
@@ -16,6 +17,7 @@ Describe el síntoma real.
 - Captura:
 - JSON:
 - Branding:
+- Diagnóstico exportado:
 
 ## Reproducción
 
@@ -29,6 +31,12 @@ Explica qué pasó.
 
 Indica archivo ajustado y cambio realizado.
 
+## Entrega
+
+- Instalador:
+- Nota de entrega:
+- Manifiesto validado:
+
 ## Versión corregida
 
 - Antes:
@@ -41,4 +49,3 @@ Indica archivo ajustado y cambio realizado.
 - Corregida
 - Entregada
 - Cerrada
-
