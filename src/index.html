@@ -305,6 +305,24 @@
     @media (max-width: 900px) { .info-grid { grid-template-columns: 1fr; } }
     .section-title { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
     .section-title h2 { font-size: 26px; }
+    .section-actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
+    .row-share {
+      font-weight: 800;
+      color: #51604f;
+      white-space: nowrap;
+    }
+    .share-pill {
+      display:inline-flex;
+      align-items:center;
+      padding:4px 8px;
+      border-radius:999px;
+      background:#eef5df;
+      color:#51604f;
+      font-size:12px;
+      font-weight:800;
+      line-height:1;
+      white-space:nowrap;
+    }
     .table-wrap { overflow: auto; border: 1px solid var(--line); border-radius: 14px; }
     table { width: 100%; border-collapse: collapse; min-width: 980px; background: #fff; }
     th, td { border-bottom: 1px solid #e6eadf; padding: 8px; text-align: left; vertical-align: top; }
@@ -1353,25 +1371,26 @@
           <h3>Costos</h3>
           <p>Registra aquí los costos del producto o servicio. Cada módulo te guía para cargar el dato correcto, calcularlo automáticamente y dejar soporte claro para revisión contable y auditoría.</p>
         </div>
-        <div class="card"><div class="section-title"><h2>Costos directos</h2></div><div class="section-intro">Registra aquí solo lo que se puede asociar directamente al producto o servicio.</div><div class="table-wrap"><table id="tblDirect"><thead><tr><th>Cuenta contable</th><th>Descripción del costo</th><th>Unidad de medida</th><th>Cantidad usada</th><th>Valor por unidad</th><th>Tipo</th><th>Total</th><th></th></tr></thead><tbody></tbody></table></div><button class="secondary hide-print" id="addDirect" type="button">Agregar fila</button></div>
+        <div class="card"><div class="section-title"><h2>Costos directos</h2></div><div class="section-intro">Registra aquí solo lo que se puede asociar directamente al producto o servicio.</div><div class="table-wrap"><table id="tblDirect"><thead><tr><th>Cuenta contable</th><th>Descripción del costo</th><th>Unidad de medida</th><th>Cantidad usada</th><th>Valor por unidad</th><th>Tipo</th><th>Total</th><th>% participación</th><th></th></tr></thead><tbody></tbody></table></div><div class="section-actions"><button class="secondary hide-print" id="addDirect" type="button">Agregar fila</button><button class="secondary hide-print" id="sortDirect" type="button">Ordenar de mayor a menor</button></div></div>
       <div class="card">
         <div class="section-title"><h2>Costos indirectos</h2></div>
         <div class="module-intro">Registra aquí los gastos de apoyo del periodo. La app te dirá cómo repartirlos según la cuenta elegida y calculará automáticamente el valor asignado.</div>
         <div id="indirectList" style="margin-top:14px"></div>
-        <button class="secondary hide-print" id="addIndirect" type="button">Agregar costo indirecto</button>
+        <div class="section-actions"><button class="secondary hide-print" id="addIndirect" type="button">Agregar costo indirecto</button><button class="secondary hide-print" id="sortIndirect" type="button">Ordenar de mayor a menor</button></div>
       </div>
-      <div class="card"><div class="section-title"><h2>Comercialización</h2></div><div class="section-intro">Incluye aquí empaque comercial, distribución, promoción, comisiones y costos del canal.</div><div class="table-wrap"><table id="tblCommercial"><thead><tr><th>Cuenta contable</th><th>Descripción del costo</th><th>Unidad de medida</th><th>Cantidad</th><th>Valor por unidad</th><th>Tipo</th><th>Total</th><th></th></tr></thead><tbody></tbody></table></div><button class="secondary hide-print" id="addCommercial" type="button">Agregar fila</button></div>
+      <div class="card"><div class="section-title"><h2>Comercialización</h2></div><div class="section-intro">Incluye aquí empaque comercial, distribución, promoción, comisiones y costos del canal.</div><div class="table-wrap"><table id="tblCommercial"><thead><tr><th>Cuenta contable</th><th>Descripción del costo</th><th>Unidad de medida</th><th>Cantidad</th><th>Valor por unidad</th><th>Tipo</th><th>Total</th><th>% participación</th><th></th></tr></thead><tbody></tbody></table></div><div class="section-actions"><button class="secondary hide-print" id="addCommercial" type="button">Agregar fila</button><button class="secondary hide-print" id="sortCommercial" type="button">Ordenar de mayor a menor</button></div></div>
+      <div class="card"><div class="section-title"><h2>Certificaciones</h2></div><div class="section-intro">Registra aquí certificaciones de planta o acceso a mercado como BPM, HACCP, orgánico, Kosher o similares. La app anualiza el costo y lo reparte según la base elegida para este costeo.</div><div class="table-wrap"><table id="tblCertification"><thead><tr><th>Certificación</th><th>Clase</th><th>Costo anual</th><th>Forma de reparto</th><th>Base de este costeo</th><th>Base anual total</th><th>Tipo</th><th>Costo asignado</th><th>% participación</th><th>Observación</th><th>Responsable</th><th>Soporte</th><th></th></tr></thead><tbody></tbody></table></div><div class="section-actions"><button class="secondary hide-print" id="addCertification" type="button">Agregar certificación</button><button class="secondary hide-print" id="sortCertification" type="button">Ordenar de mayor a menor</button></div></div>
       <div class="card">
         <div class="section-title"><h2>Biblioteca de equipos y depreciación</h2></div>
         <div class="small">Registra aquí tus equipos para reutilizarlos en futuros costeos. La app calcula depreciación mensual y costo por hora en línea recta.</div>
-        <div class="table-wrap" style="margin-top:14px"><table id="tblEquipLibrary"><thead><tr><th>Equipo</th><th>Área</th><th>Valor de compra</th><th>Fecha de compra</th><th>Vida útil</th><th>Unidad</th><th>Horas por mes</th><th>Valor residual</th><th>Método</th><th>Depreciación mensual</th><th>Costo por hora</th><th>Observación</th><th>Responsable</th><th>Soporte</th><th></th></tr></thead><tbody></tbody></table></div>
-        <button class="secondary hide-print" id="addEquipLibrary" type="button">Agregar equipo</button>
+        <div class="table-wrap" style="margin-top:14px"><table id="tblEquipLibrary"><thead><tr><th>Equipo</th><th>Área</th><th>Valor de compra</th><th>Fecha de compra</th><th>Vida útil</th><th>Unidad</th><th>Horas por mes</th><th>Valor residual</th><th>Método</th><th>Depreciación mensual</th><th>Costo por hora</th><th>% participación</th><th>Observación</th><th>Responsable</th><th>Soporte</th><th></th></tr></thead><tbody></tbody></table></div>
+        <div class="section-actions"><button class="secondary hide-print" id="addEquipLibrary" type="button">Agregar equipo</button><button class="secondary hide-print" id="sortEquipLibrary" type="button">Ordenar de mayor a menor</button></div>
       </div>
         <div class="card">
           <div class="section-title"><h2>Asignación del uso de equipos al costeo</h2></div>
           <div class="small">Aquí solo indicas qué equipo usaste y cuántas horas participó en este costeo. El costo por hora sale de la biblioteca.</div>
-          <div class="table-wrap" style="margin-top:14px"><table id="tblEquipUse"><thead><tr><th>Equipo</th><th>Costo por hora</th><th>Horas usadas</th><th>Tipo</th><th>Valor asignado</th><th>Observación</th><th></th></tr></thead><tbody></tbody></table></div>
-          <button class="secondary hide-print" id="addEquipUse" type="button">Agregar uso de equipo</button>
+          <div class="table-wrap" style="margin-top:14px"><table id="tblEquipUse"><thead><tr><th>Equipo</th><th>Costo por hora</th><th>Horas usadas</th><th>Tipo</th><th>Valor asignado</th><th>% participación</th><th>Observación</th><th></th></tr></thead><tbody></tbody></table></div>
+          <div class="section-actions"><button class="secondary hide-print" id="addEquipUse" type="button">Agregar uso de equipo</button><button class="secondary hide-print" id="sortEquipUse" type="button">Ordenar de mayor a menor</button></div>
         </div>
         <div class="audit-banner" id="costAuditBanner">
           <div class="title">Control de auditoría</div>
@@ -1577,9 +1596,12 @@
     const indirectAreas = ["Produccion","Administracion","Comercializacion"];
     const yesNoOpts = ["Si","No"];
     const indirectMethods = ["Horas","Dias","Horas de mano de obra","Horas maquina","Horas ponderadas","Kg procesados","Litros procesados","Unidades producidas","Lotes producidos","m2 usados","kWh reales","Porcentaje justificado"];
+    const certificationCatalog = ["BPM / GMP","HACCP","ISO 22000","FSSC 22000","Orgánico","Kosher","Halal","Comercio justo","Rainforest Alliance","Certificación de exportación","Otra"];
+    const certificationClasses = ["Regulatoria","Inocuidad","Mercado","Exportación"];
+    const certificationMethods = ["Por porcentaje del producto","Por unidades del periodo","Por lotes del periodo","Por Kg del periodo","Por litros del periodo"];
     const lifeUnits = ["años","meses"];
     const depreciationMethods = ["linea recta"];
-    const state = { direct: [], indirect: [], commercial: [], equipLibrary: [], equipUse: [], outputs: [], market: [] };
+    const state = { direct: [], indirect: [], commercial: [], certifications: [], equipLibrary: [], equipUse: [], outputs: [], market: [] };
     const updateStatus = {
       lastCheckAt: '',
       manifestUrl: '',
@@ -2131,6 +2153,7 @@
           direct: state.direct.length,
           indirect: state.indirect.length,
           commercial: state.commercial.length,
+          certifications: state.certifications.length,
           equipmentLibrary: state.equipLibrary.length,
           equipmentUsage: state.equipUse.length,
           outputs: state.outputs.length,
@@ -2253,6 +2276,7 @@
         direct: payload.state?.direct || [],
         indirect: payload.state?.indirect || [],
         commercial: payload.state?.commercial || [],
+        certifications: payload.state?.certifications || [],
         equipLibrary: payload.state?.equipLibrary || [],
         equipUse: payload.state?.equipUse || [],
         outputs: payload.state?.outputs || [],
@@ -2450,6 +2474,7 @@
     function addDirectRow(r={account:'Materia prima',description:'',unit:'Unidad',qty:0,unitCost:0,behavior:'Variable'}) { state.direct.push(r); renderDirect(); calcAll(); }
     function addIndirectRow(r={id:uid('ind'),account:'Agua',description:'',area:'Produccion',includeInProduct:'Si',periodValue:0,method:'',baseUnit:'',usage:0,baseTotal:0,behavior:'Fijo',observation:'',responsible:'',support:'',weightedItems:[{name:'',hours:0,factor:1}],kwhUsage:0,kwhTotal:0}) { state.indirect.push(r); renderIndirect(); calcAll(); }
     function addCommercialRow(r={account:'Transporte de venta',description:'',unit:'Unidad',qty:0,unitCost:0,behavior:'Variable'}) { state.commercial.push(r); renderCommercial(); calcAll(); }
+    function addCertificationRow(r={certification:'BPM / GMP',certClass:'Regulatoria',annualCost:0,method:'Por porcentaje del producto',usageBase:0,annualBase:100,behavior:'Fijo',observation:'',responsible:'',support:''}) { state.certifications.push(r); renderCertifications(); calcAll(); }
     function addEquipLibraryRow(r={id:uid('eq'),name:'',area:'Produccion',purchaseValue:0,purchaseDate:'',lifeValue:5,lifeUnit:'años',hoursMonth:1,residualValue:0,method:'linea recta',observation:'',responsible:'',support:''}) { state.equipLibrary.push(r); saveEquipLibraryToStorage(); renderEquipLibrary(); renderEquipUse(); calcAll(); }
     function addEquipUseRow(r={libraryId:'',behavior:'Fijo',hoursUsed:0,observation:''}) { state.equipUse.push(r); renderEquipUse(); calcAll(); }
     function addOutputRow(r={name:'',outputType:'Salida principal',size:1,unit:'Kg',qtyOut:0,costPct:0,currentPrice:0,nrvCost:0,note:''}) {
@@ -2459,6 +2484,38 @@
       calcAll();
     }
     function addMarketRow(r={brand:'',product:'',presentationQty:0,presentationUnit:'Kg',price:0,note:'',result:''}) { state.market.push(r); renderMarket(); calcAll(); }
+
+    function getVisibleParticipation(values = []) {
+      const total = values.reduce((sum, value) => sum + Math.max(0, num(value)), 0);
+      if (total <= 0) return values.map(() => 0);
+      const scaled = values.map((value, index) => {
+        const safe = Math.max(0, num(value));
+        const exact = (safe / total) * 100;
+        const base = Math.floor(exact * 100) / 100;
+        return { index, base, remainder: exact - base };
+      });
+      let assigned = scaled.reduce((sum, item) => sum + item.base, 0);
+      let centsLeft = Math.round((100 - assigned) * 100);
+      scaled
+        .slice()
+        .sort((a, b) => b.remainder - a.remainder || a.index - b.index)
+        .forEach((item) => {
+          if (centsLeft <= 0) return;
+          item.base += 0.01;
+          centsLeft -= 1;
+        });
+      const result = Array(values.length).fill(0);
+      scaled.forEach((item) => {
+        result[item.index] = Number(item.base.toFixed(2));
+      });
+      return result;
+    }
+    function pctText(value) {
+      return `${num(value).toFixed(2)}%`;
+    }
+    function sortSectionDesc(list, valueFn) {
+      list.sort((left, right) => num(valueFn(right)) - num(valueFn(left)));
+    }
 
     function syncOutputParticipation(forceEven = false) {
       if (allocationMethod.value !== 'sales' || !state.outputs.length) return;
@@ -2503,6 +2560,7 @@
         b.onchange = e => { r.behavior = e.target.value; calcAll(); };
         tr.append(td(account), td(d), td(u), td(q), td(c), td(b));
         const t = document.createElement('td'); t.className='row-total'; t.textContent = money(num(r.qty)*num(r.unitCost)); tr.appendChild(t);
+        const share = document.createElement('td'); share.className='row-share'; share.textContent = pctText(0); tr.appendChild(share);
         tr.appendChild(delBtn(() => { state.direct.splice(i,1); renderDirect(); calcAll(); }));
         tb.appendChild(tr);
       });
@@ -2665,7 +2723,7 @@
 
         const formulaBox = document.createElement('div');
         formulaBox.className = 'formula-box';
-        formulaBox.innerHTML = `<div class="amount" data-key="assigned">${money(calc.assigned)}</div><div class="formula" data-key="formula">${calc.baseTotal > 0 ? `${money(num(r.periodValue))} x (${calc.usage} / ${calc.baseTotal})` : 'Completa los datos para calcular.'}</div><div class="formula" data-key="basecost" style="margin-top:6px">Costo por unidad base: ${calc.baseTotal > 0 ? money(calc.baseCost) : 'Pendiente'}</div>`;
+        formulaBox.innerHTML = `<div class="amount" data-key="assigned">${money(calc.assigned)}</div><div class="formula" data-key="formula">${calc.baseTotal > 0 ? `${money(num(r.periodValue))} x (${calc.usage} / ${calc.baseTotal})` : 'Completa los datos para calcular.'}</div><div class="formula" data-key="basecost" style="margin-top:6px">Costo por unidad base: ${calc.baseTotal > 0 ? money(calc.baseCost) : 'Pendiente'}</div><div class="formula" data-key="share" style="margin-top:6px">Participación en indirectos: ${pctText(0)}</div>`;
 
         const controlBox = document.createElement('div');
         controlBox.className = 'field-card';
@@ -2720,7 +2778,89 @@
         b.onchange = e => { r.behavior = e.target.value; calcAll(); };
         tr.append(td(account), td(d), td(u), td(q), td(c), td(b));
         const t = document.createElement('td'); t.className='row-total'; t.textContent = money(num(r.qty)*num(r.unitCost)); tr.appendChild(t);
+        const share = document.createElement('td'); share.className='row-share'; share.textContent = pctText(0); tr.appendChild(share);
         tr.appendChild(delBtn(() => { state.commercial.splice(i,1); renderCommercial(); calcAll(); }));
+        tb.appendChild(tr);
+      });
+    }
+
+    function getCertificationComputed(r) {
+      const annualCost = num(r.annualCost);
+      const method = r.method || 'Por porcentaje del producto';
+      const usageBase = Math.max(0, num(r.usageBase));
+      let annualBase = Math.max(0, num(r.annualBase));
+      if (method === 'Por porcentaje del producto') annualBase = 100;
+      const safeUsage = method === 'Por porcentaje del producto' ? Math.min(usageBase, 100) : usageBase;
+      const baseCost = annualBase > 0 ? annualCost / annualBase : 0;
+      const assigned = annualBase > 0 ? annualCost * (safeUsage / annualBase) : 0;
+      const warnings = [];
+      if (!annualCost) warnings.push('Falta costo anual.');
+      if (!safeUsage) warnings.push('Falta base de este costeo.');
+      if (!annualBase) warnings.push('Falta base anual total.');
+      if (method === 'Por porcentaje del producto' && usageBase > 100) warnings.push('El porcentaje no puede superar 100%.');
+      if (!String(r.support || '').trim()) warnings.push('Adjunta soporte o evidencia.');
+      return { annualCost, safeUsage, annualBase, baseCost, assigned, warnings };
+    }
+
+    function renderCertifications() {
+      const tb = document.querySelector('#tblCertification tbody');
+      tb.innerHTML = '';
+      state.certifications.forEach((r, i) => {
+        const tr = document.createElement('tr');
+        const certification = createSelect(certificationCatalog, r.certification);
+        const certClass = createSelect(certificationClasses, r.certClass || 'Regulatoria');
+        const annualCost = createNumInput(r.annualCost);
+        const method = createSelect(certificationMethods, r.method || 'Por porcentaje del producto');
+        const usageBase = createNumInput(r.usageBase);
+        const annualBase = createNumInput(r.annualBase);
+        const behavior = createSelect(behaviorOpts, r.behavior || 'Fijo');
+        const observation = createTextInput(r.observation, 'Justifica el criterio aplicado');
+        const responsible = createTextInput(r.responsible, 'Responsable');
+        const support = createTextInput(r.support, 'Certificado, factura o soporte');
+        const calc = getCertificationComputed(r);
+        if ((r.method || 'Por porcentaje del producto') === 'Por porcentaje del producto') {
+          annualBase.value = 100;
+          annualBase.disabled = true;
+        } else {
+          annualBase.disabled = false;
+        }
+        certification.onchange = e => { r.certification = e.target.value; calcAll(); };
+        certClass.onchange = e => { r.certClass = e.target.value; calcAll(); };
+        annualCost.oninput = e => { r.annualCost = num(e.target.value); calcAll(); };
+        method.onchange = e => {
+          r.method = e.target.value;
+          if (r.method === 'Por porcentaje del producto') r.annualBase = 100;
+          calcAll();
+          renderCertifications();
+        };
+        usageBase.oninput = e => { r.usageBase = num(e.target.value); calcAll(); };
+        annualBase.oninput = e => { r.annualBase = num(e.target.value); calcAll(); };
+        behavior.onchange = e => { r.behavior = e.target.value; calcAll(); };
+        observation.oninput = e => { r.observation = e.target.value; };
+        observation.onblur = calcAll;
+        responsible.oninput = e => { r.responsible = e.target.value; };
+        responsible.onblur = calcAll;
+        support.oninput = e => { r.support = e.target.value; };
+        support.onblur = calcAll;
+        tr.append(
+          td(certification),
+          td(certClass),
+          td(annualCost),
+          td(method),
+          td(usageBase),
+          td(annualBase),
+          td(behavior)
+        );
+        const assignedEl = document.createElement('td');
+        assignedEl.className = 'row-total';
+        assignedEl.textContent = money(calc.assigned);
+        tr.appendChild(assignedEl);
+        const shareEl = document.createElement('td');
+        shareEl.className = 'row-share';
+        shareEl.textContent = pctText(0);
+        tr.appendChild(shareEl);
+        tr.append(td(observation), td(responsible), td(support));
+        tr.appendChild(delBtn(() => { state.certifications.splice(i, 1); renderCertifications(); calcAll(); }));
         tb.appendChild(tr);
       });
     }
@@ -2770,7 +2910,8 @@
         support.onblur = () => { saveEquipLibraryToStorage(); calcAll(); };
         const monthly = document.createElement('div'); monthly.className='readonly-box'; monthly.textContent = money(calc.monthly);
         const costPerHour = document.createElement('div'); costPerHour.className='readonly-box'; costPerHour.textContent = money(calc.costPerHour);
-        tr.append(td(name), td(area), td(purchaseValue), td(purchaseDate), td(lifeValue), td(lifeUnit), td(hoursMonth), td(residualValue), td(method), td(monthly), td(costPerHour), td(observation), td(responsible), td(support));
+        const share = document.createElement('span'); share.className='share-pill'; share.textContent = pctText(0);
+        tr.append(td(name), td(area), td(purchaseValue), td(purchaseDate), td(lifeValue), td(lifeUnit), td(hoursMonth), td(residualValue), td(method), td(monthly), td(costPerHour), td(share), td(observation), td(responsible), td(support));
         tr.appendChild(delBtn(() => {
           const removedId = r.id;
           state.equipLibrary.splice(i,1);
@@ -2797,13 +2938,14 @@
         const hoursUsed = createNumInput(r.hoursUsed || 0, '0.01', '0');
         const behavior = createSelect(behaviorOpts, r.behavior || 'Fijo');
         const assigned = document.createElement('div'); assigned.className='row-total'; assigned.textContent = money(computed.costPerHour * num(r.hoursUsed));
+        const share = document.createElement('span'); share.className='share-pill'; share.textContent = pctText(0);
         const observation = createTextInput(r.observation, 'Ejemplo: uso en batido o sellado');
         equipment.onchange = e => { r.libraryId = e.target.value; calcAll(); };
         hoursUsed.oninput = e => { r.hoursUsed = num(e.target.value); calcAll(); };
         behavior.onchange = e => { r.behavior = e.target.value; calcAll(); };
         observation.oninput = e => { r.observation = e.target.value; };
         observation.onblur = calcAll;
-        tr.append(td(equipment), td(costHour), td(hoursUsed), td(behavior), td(assigned), td(observation));
+        tr.append(td(equipment), td(costHour), td(hoursUsed), td(behavior), td(assigned), td(share), td(observation));
         tr.appendChild(delBtn(() => { state.equipUse.splice(i,1); if(!state.equipUse.length) addEquipUseRow(); else { renderEquipUse(); calcAll(); } }));
         tb.appendChild(tr);
       });
@@ -2983,6 +3125,7 @@
         { label:'Directos', value:v.directTotal, color:'#d94a1f' },
         { label:'Indirectos', value:v.indirectTotal, color:'#6f9915' },
         { label:'Comercialización', value:v.commercialTotal, color:'#2d6cdf' },
+        { label:'Certificaciones', value:v.certificationTotal, color:'#0f766e' },
         { label:'Equipos', value:v.equipTotal, color:'#7c3aed' }
       ].sort((a,b)=>b.value-a.value);
       const top = parts[0];
@@ -2992,6 +3135,8 @@
         ? 'Revisa primero los gastos de apoyo y la forma en que se están repartiendo.'
         : top.label === 'Comercialización'
         ? 'La oportunidad de mejora está en distribución, promoción o canal comercial.'
+        : top.label === 'Certificaciones'
+        ? 'Revisa vigencias, alcance y costo anual de certificaciones.'
         : 'El uso de equipos merece revisión antes de ajustar precio.';
       costBars.innerHTML = `<div class="exec-summary" style="margin-top:0"><div class="eyebrow">Mensaje clave</div><div class="text">La mayor presión del costo está en ${top.label}. ${actionText}</div></div><div class="composition-stack">${
         parts.map(item => {
@@ -3116,6 +3261,7 @@
       if (value.includes('direct')) return 'costos directos';
       if (value.includes('indirect')) return 'costos indirectos';
       if (value.includes('comercial')) return 'comercialización';
+      if (value.includes('certific')) return 'certificaciones';
       if (value.includes('equipo')) return 'equipos';
       return label || 'costos directos';
     }
@@ -3132,6 +3278,7 @@
         { label:'Directos', value:v.directTotal, color:'#d94a1f' },
         { label:'Indirectos', value:v.indirectTotal, color:'#6f9915' },
         { label:'Comercialización', value:v.commercialTotal, color:'#2d6cdf' },
+        { label:'Certificaciones', value:v.certificationTotal, color:'#0f766e' },
         { label:'Equipos', value:v.equipTotal, color:'#7c3aed' }
       ].sort((a,b) => b.value - a.value);
       const compHtml = components.map(item => {
@@ -3159,26 +3306,45 @@ const html = `<div class="report"><div class="report-section"><div class="report
       const directTotal = state.direct.reduce((a,r) => a + num(r.qty)*num(r.unitCost), 0);
       const indirectTotal = state.indirect.reduce((a,r) => a + getIndirectComputed(r).assigned, 0);
       const commercialTotal = state.commercial.reduce((a,r) => a + num(r.qty)*num(r.unitCost), 0);
+      const certificationTotal = state.certifications.reduce((a,r) => a + getCertificationComputed(r).assigned, 0);
       const equipTotal = state.equipUse.reduce((a,r) => {
         const equip = state.equipLibrary.find(item => item.id === r.libraryId);
         return a + (equip ? getEquipLibraryComputed(equip).costPerHour * num(r.hoursUsed) : 0);
       }, 0);
-      const totalCost = directTotal + indirectTotal + commercialTotal + equipTotal;
+      const totalCost = directTotal + indirectTotal + commercialTotal + certificationTotal + equipTotal;
       const directRows = document.querySelectorAll('#tblDirect tbody tr');
+      const directShares = getVisibleParticipation(state.direct.map((r) => num(r.qty) * num(r.unitCost)));
       state.direct.forEach((r, i) => {
         const row = directRows[i];
         if (!row) return;
         const totalEl = row.querySelector('.row-total');
         if (totalEl) totalEl.textContent = money(num(r.qty) * num(r.unitCost));
+        const shareEl = row.querySelector('.row-share');
+        if (shareEl) shareEl.textContent = pctText(directShares[i] || 0);
       });
       const commercialRows = document.querySelectorAll('#tblCommercial tbody tr');
+      const commercialShares = getVisibleParticipation(state.commercial.map((r) => num(r.qty) * num(r.unitCost)));
       state.commercial.forEach((r, i) => {
         const row = commercialRows[i];
         if (!row) return;
         const totalEl = row.querySelector('.row-total');
         if (totalEl) totalEl.textContent = money(num(r.qty) * num(r.unitCost));
+        const shareEl = row.querySelector('.row-share');
+        if (shareEl) shareEl.textContent = pctText(commercialShares[i] || 0);
+      });
+      const certificationRows = document.querySelectorAll('#tblCertification tbody tr');
+      const certificationShares = getVisibleParticipation(state.certifications.map((r) => getCertificationComputed(r).assigned));
+      state.certifications.forEach((r, i) => {
+        const row = certificationRows[i];
+        if (!row) return;
+        const calc = getCertificationComputed(r);
+        const totalEl = row.querySelector('.row-total');
+        if (totalEl) totalEl.textContent = money(calc.assigned);
+        const shareEl = row.querySelector('.row-share');
+        if (shareEl) shareEl.textContent = pctText(certificationShares[i] || 0);
       });
       const equipLibraryRows = document.querySelectorAll('#tblEquipLibrary tbody tr');
+      const equipLibraryShares = getVisibleParticipation(state.equipLibrary.map((r) => getEquipLibraryComputed(r).monthly));
       state.equipLibrary.forEach((r, i) => {
         const row = equipLibraryRows[i];
         if (!row) return;
@@ -3186,8 +3352,14 @@ const html = `<div class="report"><div class="report-section"><div class="report
         const readonly = row.querySelectorAll('.readonly-box');
         if (readonly[0]) readonly[0].textContent = money(calc.monthly);
         if (readonly[1]) readonly[1].textContent = money(calc.costPerHour);
+        const shareEl = row.querySelector('.share-pill');
+        if (shareEl) shareEl.textContent = pctText(equipLibraryShares[i] || 0);
       });
       const equipUseRows = document.querySelectorAll('#tblEquipUse tbody tr');
+      const equipUseShares = getVisibleParticipation(state.equipUse.map((r) => {
+        const equip = state.equipLibrary.find(item => item.id === r.libraryId);
+        return (equip ? getEquipLibraryComputed(equip).costPerHour : 0) * num(r.hoursUsed);
+      }));
       state.equipUse.forEach((r, i) => {
         const row = equipUseRows[i];
         if (!row) return;
@@ -3197,6 +3369,16 @@ const html = `<div class="report"><div class="report-section"><div class="report
         if (readonly[0]) readonly[0].textContent = money(costPerHour);
         const assignedEl = row.querySelector('.row-total');
         if (assignedEl) assignedEl.textContent = money(costPerHour * num(r.hoursUsed));
+        const shareEl = row.querySelector('.share-pill');
+        if (shareEl) shareEl.textContent = pctText(equipUseShares[i] || 0);
+      });
+      const indirectRows = document.querySelectorAll('#indirectList .indirect-row-wrap');
+      const indirectShares = getVisibleParticipation(state.indirect.map((r) => getIndirectComputed(r).assigned));
+      state.indirect.forEach((r, i) => {
+        const row = indirectRows[i];
+        if (!row) return;
+        const shareEl = row.querySelector('[data-key="share"]');
+        if (shareEl) shareEl.textContent = `Participación en indirectos: ${pctText(indirectShares[i] || 0)}`;
       });
       const baseFamily = unitFamily(transformBaseUnit.value || inputUnit.value || g.baseUnit);
       const inputFamily = unitFamily(g.inputUnit);
@@ -3215,11 +3397,12 @@ const html = `<div class="report"><div class="report-section"><div class="report
       const fixedDirect = state.direct.filter(r=>r.behavior==='Fijo').reduce((a,r)=>a+num(r.qty)*num(r.unitCost),0);
       const fixedIndirect = state.indirect.filter(r=>r.behavior==='Fijo').reduce((a,r)=>a+getIndirectComputed(r).assigned,0);
       const fixedCommercial = state.commercial.filter(r=>r.behavior==='Fijo').reduce((a,r)=>a+num(r.qty)*num(r.unitCost),0);
+      const fixedCertification = state.certifications.filter(r=>r.behavior==='Fijo').reduce((a,r)=>a+getCertificationComputed(r).assigned,0);
       const fixedEquip = state.equipUse.filter(r=>r.behavior==='Fijo').reduce((a,r)=>{
         const equip = state.equipLibrary.find(item => item.id === r.libraryId);
         return a + (equip ? getEquipLibraryComputed(equip).costPerHour * num(r.hoursUsed) : 0);
       },0);
-      const fixedCosts = fixedDirect + fixedIndirect + fixedCommercial + fixedEquip;
+      const fixedCosts = fixedDirect + fixedIndirect + fixedCommercial + fixedCertification + fixedEquip;
       const variableCosts = Math.max(0, totalCost - fixedCosts);
       const directShare = totalCost>0 ? (directTotal/totalCost)*100 : 0;
       const vatMult = g.vatApplies==='si' ? (1 + g.vatPct/100) : 1;
@@ -3362,6 +3545,10 @@ const html = `<div class="report"><div class="report-section"><div class="report
         const calc = getIndirectComputed(r);
         return !(num(r.periodValue) > 0 && calc.usage > 0 && calc.baseTotal > 0);
       }).length;
+      const certificationMissing = state.certifications.filter(r => {
+        const calc = getCertificationComputed(r);
+        return !(num(r.annualCost) > 0 && calc.safeUsage > 0 && calc.annualBase > 0);
+      }).length;
       const homeAuditBanner = document.getElementById('homeAuditBanner');
       const homeAuditValue = document.getElementById('homeAuditValue');
       const homeAuditHint = document.getElementById('homeAuditHint');
@@ -3396,6 +3583,7 @@ const html = `<div class="report"><div class="report-section"><div class="report
         if (directMissing) issues.push(`${directMissing} directo(s) incompletos`);
         if (indirectMissing) issues.push(`${indirectMissing} indirecto(s) sin base suficiente`);
         if (commercialMissing) issues.push(`${commercialMissing} costo(s) comerciales incompletos`);
+        if (certificationMissing) issues.push(`${certificationMissing} certificación(es) incompletas`);
         if (equipMissing) issues.push(`${equipMissing} uso(s) de equipo sin horas`);
         if (issues.length) {
           costAuditBanner.className = 'audit-banner warn';
@@ -3456,6 +3644,7 @@ const html = `<div class="report"><div class="report-section"><div class="report
         { label:'directos', value:directTotal },
         { label:'indirectos', value:indirectTotal },
         { label:'comercialización', value:commercialTotal },
+        { label:'certificaciones', value:certificationTotal },
         { label:'equipos', value:equipTotal }
       ].sort((a,b)=>b.value-a.value);
       const mainPressure = pressures[0]?.label || 'directos';
@@ -3470,9 +3659,9 @@ const html = `<div class="report"><div class="report-section"><div class="report
       renderExecutiveSummary({ unitCostTotal, pvp:num(p._suggestNoVat), wholesalePrice, breakEvenUnits, marketAvg, marketState });
       renderDecisionCards({ unitCostTotal, variablePerUnit, contrib, wholesalePrice, wholesaleMinQty:g.wholesaleMinQty, breakEvenSales, wholesaleState, wholesaleHint });
       renderDecisionSummary({ wholesaleState, wholesalePrice, wholesaleMinQty:g.wholesaleMinQty, contrib, breakEvenUnits });
-      renderBars({ directTotal, indirectTotal, commercialTotal, equipTotal, totalCost, inputQty:g.inputQty, useful:totalOutputUseful, waste, g, marketState, marketAvg, gapMoney, gapPct, pvp:num(p._suggestNoVat) });
+      renderBars({ directTotal, indirectTotal, commercialTotal, certificationTotal, equipTotal, totalCost, inputQty:g.inputQty, useful:totalOutputUseful, waste, g, marketState, marketAvg, gapMoney, gapPct, pvp:num(p._suggestNoVat) });
       renderFindings({ directShare, yieldPct, marketCount:state.market.length, marketState, gapPct, breakEvenUnits, breakEvenSales, wholesalePrice, wholesaleState });
-      renderReport({ g, directTotal, indirectTotal, commercialTotal, equipTotal, totalCost, totalOutputUseful, waste, yieldPct, directShare, fixedCosts, variableCosts, primary:p, breakEvenUnits, breakEvenSales, fixedWeak, marketState, marketAvg, gapMoney, gapPct, variablePerUnit, usedPriceNoVat, contrib, indirectMissing, mainPressure, marketComparableCount: comparablePrices.length });
+      renderReport({ g, directTotal, indirectTotal, commercialTotal, certificationTotal, equipTotal, totalCost, totalOutputUseful, waste, yieldPct, directShare, fixedCosts, variableCosts, primary:p, breakEvenUnits, breakEvenSales, fixedWeak, marketState, marketAvg, gapMoney, gapPct, variablePerUnit, usedPriceNoVat, contrib, indirectMissing, certificationMissing, mainPressure, marketComparableCount: comparablePrices.length });
     }
 
     document.querySelectorAll('.tab-btn').forEach(btn => btn.onclick = () => {
@@ -3492,10 +3681,45 @@ const html = `<div class="report"><div class="report-section"><div class="report
     addDirect.onclick = () => addDirectRow();
     addIndirect.onclick = () => addIndirectRow();
     addCommercial.onclick = () => addCommercialRow();
+    addCertification.onclick = () => addCertificationRow();
     addEquipLibrary.onclick = () => addEquipLibraryRow();
     addEquipUse.onclick = () => addEquipUseRow();
     addOutput.onclick = () => addOutputRow();
     addMarket.onclick = () => addMarketRow();
+    sortDirect.onclick = () => {
+      sortSectionDesc(state.direct, row => num(row.qty) * num(row.unitCost));
+      renderDirect();
+      calcAll();
+    };
+    sortIndirect.onclick = () => {
+      sortSectionDesc(state.indirect, row => getIndirectComputed(row).assigned);
+      renderIndirect();
+      calcAll();
+    };
+    sortCommercial.onclick = () => {
+      sortSectionDesc(state.commercial, row => num(row.qty) * num(row.unitCost));
+      renderCommercial();
+      calcAll();
+    };
+    sortCertification.onclick = () => {
+      sortSectionDesc(state.certifications, row => getCertificationComputed(row).assigned);
+      renderCertifications();
+      calcAll();
+    };
+    sortEquipLibrary.onclick = () => {
+      sortSectionDesc(state.equipLibrary, row => getEquipLibraryComputed(row).monthly);
+      renderEquipLibrary();
+      calcAll();
+    };
+    sortEquipUse.onclick = () => {
+      sortSectionDesc(state.equipUse, row => {
+        const equip = state.equipLibrary.find(item => item.id === row.libraryId);
+        const costPerHour = equip ? getEquipLibraryComputed(equip).costPerHour : 0;
+        return costPerHour * num(row.hoursUsed);
+      });
+      renderEquipUse();
+      calcAll();
+    };
 
     btnSave.onclick = () => {
       const suggestedName = buildCosteoSuggestedName();
@@ -3666,7 +3890,7 @@ const html = `<div class="report"><div class="report-section"><div class="report
         document.querySelectorAll('input[type=number]').forEach(el => el.value = (el.id==='profitPct'?30:(el.id==='wholesaleMarginPct'?18:(el.id==='wholesaleMinQty'?12:(el.id==='vatPct'?15:0)))));
       activityType.value='Producto'; period.value='por lote'; baseUnit.value='Kg'; vatApplies.value='no'; inputUnit.value='Kg'; transformBaseUnit.value='Kg'; processType.value='primario'; allocationMethod.value='physical';
       const persistedEquipLibrary = state.equipLibrary.length ? [...state.equipLibrary] : loadEquipLibraryFromStorage();
-      Object.assign(state, { direct:[], indirect:[], commercial:[], equipLibrary:persistedEquipLibrary, equipUse:[], outputs:[], market:[] });
+      Object.assign(state, { direct:[], indirect:[], commercial:[], certifications:[], equipLibrary:persistedEquipLibrary, equipUse:[], outputs:[], market:[] });
       initRows(); syncTransformMode();
     };
     function showReportPreview() {
@@ -3710,6 +3934,7 @@ const html = `<div class="report"><div class="report-section"><div class="report
         renderDirect();
         renderIndirect();
         renderCommercial();
+        renderCertifications();
         renderEquipLibrary();
         renderEquipUse();
         renderOutputs();
@@ -3719,6 +3944,7 @@ const html = `<div class="report"><div class="report-section"><div class="report
       if (state.direct.length===0) state.direct.push({account:'Materia prima',description:'',unit:'Kg',qty:0,unitCost:0,behavior:'Variable'});
       if (state.indirect.length===0) state.indirect.push({id:uid('ind'),account:'Agua',description:'',area:'Produccion',includeInProduct:'Si',periodValue:0,method:'',baseUnit:'',usage:0,baseTotal:0,behavior:'Fijo',observation:'',responsible:'',support:'',weightedItems:[{name:'',hours:0,factor:1}],kwhUsage:0,kwhTotal:0});
       if (state.commercial.length===0) state.commercial.push({account:'Transporte de venta',description:'',unit:'Unidad',qty:0,unitCost:0,behavior:'Variable'});
+      if (state.certifications.length===0) state.certifications.push({certification:'BPM / GMP',certClass:'Regulatoria',annualCost:0,method:'Por porcentaje del producto',usageBase:0,annualBase:100,behavior:'Fijo',observation:'',responsible:'',support:''});
       if (state.equipLibrary.length===0) state.equipLibrary.push({id:uid('eq'),name:'',area:'Produccion',purchaseValue:0,purchaseDate:'',lifeValue:5,lifeUnit:'años',hoursMonth:1,residualValue:0,method:'linea recta',observation:'',responsible:'',support:''});
       if (state.equipUse.length===0) state.equipUse.push({libraryId:state.equipLibrary[0]?.id || '',behavior:'Fijo',hoursUsed:0,observation:''});
       if (state.outputs.length===0) state.outputs.push({name:'',outputType:'Presentación comercial',size:1,unit:'Kg',qtyOut:0,costPct:0,currentPrice:0,nrvCost:0,note:''});

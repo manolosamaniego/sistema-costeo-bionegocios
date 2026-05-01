@@ -56,7 +56,7 @@ npm run tauri build
 Ejemplo para Aliados:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\preparar-entrega-cliente.ps1 -ClientId aliados -BrandingFile .\clientes\aliados\branding.1.0.12.json -Version 1.0.12
+powershell -ExecutionPolicy Bypass -File .\scripts\preparar-entrega-cliente.ps1 -ClientId aliados -BrandingFile .\clientes\aliados\branding.1.1.0.json -Version 1.1.0
 ```
 
 ## Publicar actualización
@@ -64,13 +64,13 @@ powershell -ExecutionPolicy Bypass -File .\scripts\preparar-entrega-cliente.ps1 
 ### Canal matriz
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\publicar-manifiesto-actualizacion.ps1 -Mode matriz -Version 1.0.12 -SupportUntil 2099-12-31 -InstallerUrl "https://..."
+powershell -ExecutionPolicy Bypass -File .\scripts\publicar-manifiesto-actualizacion.ps1 -Mode matriz -Version 1.1.0 -SupportUntil 2099-12-31 -InstallerUrl "https://..."
 ```
 
 ### Canal cliente
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\publicar-manifiesto-actualizacion.ps1 -Mode cliente -ClientId aliados -ClientName "Fundacion Aliados" -Version 1.0.12 -SupportUntil 2027-04-19 -InstallerUrl "https://..." -ReleaseNotesUrl "https://..."
+powershell -ExecutionPolicy Bypass -File .\scripts\publicar-manifiesto-actualizacion.ps1 -Mode cliente -ClientId aliados -ClientName "Fundacion Aliados" -Version 1.1.0 -SupportUntil 2027-04-19 -InstallerUrl "https://..." -ReleaseNotesUrl "https://..."
 ```
 
 ## Qué revisar antes de entregar
