@@ -1,0 +1,921 @@
+{
+  "schemaVersion": "2026-05-01",
+  "metadata": {
+    "moduleCode": "MOD-PROCESOS-CAPACIDAD-PLANEACION",
+    "moduleName": "Modulo de Procesos, Capacidad y Planeacion ? Demo cafe",
+    "vendor": "Jungle Lab S.A.S.",
+    "createdAt": "2026-05-01T21:31:44.580Z",
+    "updatedAt": "2026-05-01T21:31:44.582Z",
+    "generatedFor": "Cafe tostado molido 250 g"
+  },
+  "catalogs": {
+    "unitDefinitions": [
+      {
+        "id": "unit_78lulmkg",
+        "code": "kg",
+        "name": "Kilogramo",
+        "symbol": "kg",
+        "dimension": "mass",
+        "baseUnitCode": "kg",
+        "toBaseFactor": 1,
+        "decimals": 3,
+        "isReference": true
+      },
+      {
+        "id": "unit_30rdfa5q",
+        "code": "g",
+        "name": "Gramo",
+        "symbol": "g",
+        "dimension": "mass",
+        "baseUnitCode": "kg",
+        "toBaseFactor": 0.001,
+        "decimals": 2,
+        "isReference": false
+      },
+      {
+        "id": "unit_juudn35m",
+        "code": "lb",
+        "name": "Libra",
+        "symbol": "lb",
+        "dimension": "mass",
+        "baseUnitCode": "kg",
+        "toBaseFactor": 0.453592,
+        "decimals": 3,
+        "isReference": false
+      },
+      {
+        "id": "unit_vjrnofeg",
+        "code": "l",
+        "name": "Litro",
+        "symbol": "L",
+        "dimension": "volume",
+        "baseUnitCode": "l",
+        "toBaseFactor": 1,
+        "decimals": 3,
+        "isReference": true
+      },
+      {
+        "id": "unit_vn95e186",
+        "code": "ml",
+        "name": "Mililitro",
+        "symbol": "mL",
+        "dimension": "volume",
+        "baseUnitCode": "l",
+        "toBaseFactor": 0.001,
+        "decimals": 2,
+        "isReference": false
+      },
+      {
+        "id": "unit_a3q6xc45",
+        "code": "unit",
+        "name": "Unidad",
+        "symbol": "und",
+        "dimension": "count",
+        "baseUnitCode": "unit",
+        "toBaseFactor": 1,
+        "decimals": 0,
+        "isReference": true
+      },
+      {
+        "id": "unit_ojd31lbl",
+        "code": "box",
+        "name": "Caja",
+        "symbol": "cj",
+        "dimension": "count",
+        "baseUnitCode": "unit",
+        "toBaseFactor": 1,
+        "decimals": 0,
+        "isReference": false
+      },
+      {
+        "id": "unit_kiry6myq",
+        "code": "jar",
+        "name": "Frasco",
+        "symbol": "frasco",
+        "dimension": "count",
+        "baseUnitCode": "unit",
+        "toBaseFactor": 1,
+        "decimals": 0,
+        "isReference": false
+      },
+      {
+        "id": "unit_xdoew3qm",
+        "code": "bag",
+        "name": "Bolsa",
+        "symbol": "bolsa",
+        "dimension": "count",
+        "baseUnitCode": "unit",
+        "toBaseFactor": 1,
+        "decimals": 0,
+        "isReference": false
+      },
+      {
+        "id": "unit_aop7kjex",
+        "code": "bottle",
+        "name": "Botella",
+        "symbol": "bot",
+        "dimension": "count",
+        "baseUnitCode": "unit",
+        "toBaseFactor": 1,
+        "decimals": 0,
+        "isReference": false
+      },
+      {
+        "id": "unit_twukcliy",
+        "code": "tray",
+        "name": "Bandeja",
+        "symbol": "tray",
+        "dimension": "count",
+        "baseUnitCode": "unit",
+        "toBaseFactor": 1,
+        "decimals": 0,
+        "isReference": false
+      },
+      {
+        "id": "unit_3j9bq18k",
+        "code": "qq",
+        "name": "Quintal",
+        "symbol": "qq",
+        "dimension": "mass",
+        "baseUnitCode": "kg",
+        "toBaseFactor": 45.3592,
+        "decimals": 3,
+        "isReference": false
+      },
+      {
+        "id": "unit_b0ru2slk",
+        "code": "hour",
+        "name": "Hora",
+        "symbol": "h",
+        "dimension": "time",
+        "baseUnitCode": "hour",
+        "toBaseFactor": 1,
+        "decimals": 2,
+        "isReference": true
+      },
+      {
+        "id": "unit_lpb27w7t",
+        "code": "day",
+        "name": "Dia",
+        "symbol": "d",
+        "dimension": "time",
+        "baseUnitCode": "hour",
+        "toBaseFactor": 24,
+        "decimals": 2,
+        "isReference": false
+      },
+      {
+        "id": "unit_dd6rh320",
+        "code": "m2",
+        "name": "Metro cuadrado",
+        "symbol": "m2",
+        "dimension": "area",
+        "baseUnitCode": "m2",
+        "toBaseFactor": 1,
+        "decimals": 2,
+        "isReference": true
+      }
+    ],
+    "unitConversions": [
+      {
+        "id": "conv_f5l88ni7",
+        "fromUnitCode": "g",
+        "toUnitCode": "kg",
+        "factor": 0.001,
+        "roundingDecimals": 4
+      },
+      {
+        "id": "conv_uykte4sl",
+        "fromUnitCode": "kg",
+        "toUnitCode": "g",
+        "factor": 1000,
+        "roundingDecimals": 4
+      },
+      {
+        "id": "conv_zdmicqqr",
+        "fromUnitCode": "lb",
+        "toUnitCode": "kg",
+        "factor": 0.453592,
+        "roundingDecimals": 4
+      },
+      {
+        "id": "conv_omwwj84d",
+        "fromUnitCode": "kg",
+        "toUnitCode": "lb",
+        "factor": 2.20462,
+        "roundingDecimals": 4
+      },
+      {
+        "id": "conv_krcfkkqv",
+        "fromUnitCode": "qq",
+        "toUnitCode": "kg",
+        "factor": 45.3592,
+        "roundingDecimals": 4
+      },
+      {
+        "id": "conv_suwcdjez",
+        "fromUnitCode": "kg",
+        "toUnitCode": "qq",
+        "factor": 0.022046244201837775,
+        "roundingDecimals": 4
+      },
+      {
+        "id": "conv_o0kgcru3",
+        "fromUnitCode": "ml",
+        "toUnitCode": "l",
+        "factor": 0.001,
+        "roundingDecimals": 4
+      },
+      {
+        "id": "conv_2p4sh1n0",
+        "fromUnitCode": "l",
+        "toUnitCode": "ml",
+        "factor": 1000,
+        "roundingDecimals": 4
+      },
+      {
+        "id": "conv_m49yropt",
+        "fromUnitCode": "day",
+        "toUnitCode": "hour",
+        "factor": 24,
+        "roundingDecimals": 4
+      },
+      {
+        "id": "conv_gzsno7g1",
+        "fromUnitCode": "hour",
+        "toUnitCode": "day",
+        "factor": 0.041666666666666664,
+        "roundingDecimals": 4
+      }
+    ],
+    "stageTypes": [
+      "preparation",
+      "transformation",
+      "inspection",
+      "packaging",
+      "storage",
+      "dispatch"
+    ],
+    "materialTypes": [
+      "raw_material",
+      "packaging",
+      "intermediate",
+      "finished_good"
+    ],
+    "resourceModes": [
+      "manual",
+      "semi_automatic",
+      "automatic"
+    ],
+    "batchStatuses": [
+      "planned",
+      "in_progress",
+      "completed",
+      "cancelled"
+    ]
+  },
+  "entities": {
+    "products": [
+      {
+        "id": "prd_el0i9c2d",
+        "code": "PRD-CAFE-TOSTADO",
+        "name": "Café tostado molido 250 g",
+        "description": "Ejemplo con recepción, tueste, estabilización y empaque fino.",
+        "baseUnitCode": "bag",
+        "shelfLifeDays": 180,
+        "lotPolicy": "manual",
+        "storageProfileId": "bodega-cafe",
+        "active": true
+      }
+    ],
+    "productionLines": [
+      {
+        "id": "line_6ogoydxv",
+        "code": "LINEA-THERMAL",
+        "name": "Línea térmica y secado",
+        "description": "Tueste, deshidratado y estabilización.",
+        "areaIds": [
+          "area_g2ou0kl4"
+        ],
+        "resourceIds": [
+          "res_gtjji97x"
+        ],
+        "equipmentIds": [
+          "eq_wtx817zh",
+          "eq_l7vvi8t6"
+        ],
+        "active": true
+      },
+      {
+        "id": "line_qvr9b0zm",
+        "code": "LINEA-PACK",
+        "name": "Línea compartida de empaque",
+        "description": "Empaque final compartido para varias familias.",
+        "areaIds": [
+          "area_hyfifwig",
+          "area_waxszsax"
+        ],
+        "resourceIds": [
+          "res_ig56di1i"
+        ],
+        "equipmentIds": [
+          "eq_m1eqpm3u"
+        ],
+        "active": true
+      }
+    ],
+    "areas": [
+      {
+        "id": "area_g2ou0kl4",
+        "code": "AREA-TH-01",
+        "name": "Secado y tratamiento térmico",
+        "lineId": "line_6ogoydxv",
+        "areaType": "production",
+        "capacityAreaM2": 48,
+        "capacityVolumeM3": 140,
+        "notes": "",
+        "active": true
+      },
+      {
+        "id": "area_hyfifwig",
+        "code": "AREA-PACK-01",
+        "name": "Acondicionamiento y empaque final",
+        "lineId": "line_qvr9b0zm",
+        "areaType": "production",
+        "capacityAreaM2": 30,
+        "capacityVolumeM3": 75,
+        "notes": "",
+        "active": true
+      },
+      {
+        "id": "area_waxszsax",
+        "code": "AREA-BOD-01",
+        "name": "Bodega terminados",
+        "lineId": "line_qvr9b0zm",
+        "areaType": "storage",
+        "capacityAreaM2": 60,
+        "capacityVolumeM3": 180,
+        "notes": "",
+        "active": true
+      }
+    ],
+    "flowVersions": [
+      {
+        "id": "flow_tb4qp8wd",
+        "productId": "prd_el0i9c2d",
+        "lineId": "line_6ogoydxv",
+        "code": "FLUJO-CAFE",
+        "versionLabel": "v2",
+        "name": "Café · Flujo operativo",
+        "status": "active",
+        "durationMode": "same_day",
+        "formulaId": "formula_qsckrqpa",
+        "stageIds": [
+          "stage_tzkr2g0e",
+          "stage_sqe5lucs",
+          "stage_rgb90jh9",
+          "stage_5lt60uh0"
+        ],
+        "sourceReferenceLabel": "Referencia funcional café",
+        "notes": ""
+      }
+    ],
+    "processStages": [
+      {
+        "id": "stage_tzkr2g0e",
+        "flowVersionId": "flow_tb4qp8wd",
+        "lineId": "line_6ogoydxv",
+        "sequence": 1,
+        "code": "CAF-10",
+        "name": "Selección de lote",
+        "stageType": "preparation",
+        "inputUnitCode": "qq",
+        "outputUnitCode": "qq",
+        "wasteUnitCode": "kg",
+        "durationHours": 1,
+        "durationDays": 1,
+        "capacityByRun": 12,
+        "capacityUnitCode": "qq",
+        "maxCapacityValue": 12,
+        "maxCapacityUnitCode": "qq",
+        "maxCapacityPeriod": "day",
+        "operatorCount": 1,
+        "responsibleRoleNames": [
+          "Jefe de Planta"
+        ],
+        "controlItems": [
+          "Edad",
+          "Humedad"
+        ],
+        "requiredRecordNames": [
+          "Registro de salida de bodega"
+        ],
+        "machineMaterialRefs": [
+          "Balanza",
+          "Medidor de humedad"
+        ],
+        "toolingNotes": "",
+        "requiredAreaM2": 14,
+        "requiredAreaHeightM": 0,
+        "storageConditionNotes": "",
+        "changeoverMinutes": 0,
+        "defaultResourceIds": [
+          "res_gtjji97x"
+        ],
+        "defaultEquipmentIds": [
+          "eq_l7vvi8t6"
+        ],
+        "requiresLotTraceability": true,
+        "notes": ""
+      },
+      {
+        "id": "stage_sqe5lucs",
+        "flowVersionId": "flow_tb4qp8wd",
+        "lineId": "line_6ogoydxv",
+        "sequence": 2,
+        "code": "CAF-20",
+        "name": "Tueste",
+        "stageType": "transformation",
+        "inputUnitCode": "kg",
+        "outputUnitCode": "kg",
+        "wasteUnitCode": "kg",
+        "durationHours": 6,
+        "durationDays": 1,
+        "capacityByRun": 240,
+        "capacityUnitCode": "kg",
+        "maxCapacityValue": 288,
+        "maxCapacityUnitCode": "kg",
+        "maxCapacityPeriod": "day",
+        "operatorCount": 1,
+        "responsibleRoleNames": [
+          "Tostador"
+        ],
+        "controlItems": [
+          "Curva de tueste",
+          "Color"
+        ],
+        "requiredRecordNames": [
+          "Registro de tueste"
+        ],
+        "machineMaterialRefs": [
+          "Tostadora"
+        ],
+        "toolingNotes": "",
+        "requiredAreaM2": 12,
+        "requiredAreaHeightM": 0,
+        "storageConditionNotes": "",
+        "changeoverMinutes": 0,
+        "defaultResourceIds": [
+          "res_gtjji97x"
+        ],
+        "defaultEquipmentIds": [
+          "eq_l7vvi8t6"
+        ],
+        "requiresLotTraceability": true,
+        "notes": ""
+      },
+      {
+        "id": "stage_rgb90jh9",
+        "flowVersionId": "flow_tb4qp8wd",
+        "lineId": "line_6ogoydxv",
+        "sequence": 3,
+        "code": "CAF-30",
+        "name": "Reposo y estabilización",
+        "stageType": "inspection",
+        "inputUnitCode": "kg",
+        "outputUnitCode": "kg",
+        "wasteUnitCode": "kg",
+        "durationHours": 12,
+        "durationDays": 1,
+        "capacityByRun": 220,
+        "capacityUnitCode": "kg",
+        "maxCapacityValue": 220,
+        "maxCapacityUnitCode": "kg",
+        "maxCapacityPeriod": "day",
+        "operatorCount": 1,
+        "responsibleRoleNames": [
+          "Jefe de Calidad"
+        ],
+        "controlItems": [
+          "Degasificación",
+          "Aroma"
+        ],
+        "requiredRecordNames": [
+          "Registro de reposo"
+        ],
+        "machineMaterialRefs": [
+          "Tolvas de reposo"
+        ],
+        "toolingNotes": "",
+        "requiredAreaM2": 10,
+        "requiredAreaHeightM": 0,
+        "storageConditionNotes": "",
+        "changeoverMinutes": 0,
+        "defaultResourceIds": [
+          "res_gtjji97x"
+        ],
+        "defaultEquipmentIds": [
+          "eq_l7vvi8t6"
+        ],
+        "requiresLotTraceability": true,
+        "notes": ""
+      },
+      {
+        "id": "stage_5lt60uh0",
+        "flowVersionId": "flow_tb4qp8wd",
+        "lineId": "line_6ogoydxv",
+        "sequence": 4,
+        "code": "CAF-40",
+        "name": "Empaque 250 g",
+        "stageType": "packaging",
+        "inputUnitCode": "kg",
+        "outputUnitCode": "bag",
+        "wasteUnitCode": "kg",
+        "durationHours": 4,
+        "durationDays": 1,
+        "capacityByRun": 640,
+        "capacityUnitCode": "bag",
+        "maxCapacityValue": 1280,
+        "maxCapacityUnitCode": "bag",
+        "maxCapacityPeriod": "day",
+        "operatorCount": 2,
+        "responsibleRoleNames": [
+          "Equipo de empaque compartido"
+        ],
+        "controlItems": [
+          "Peso",
+          "Sellado",
+          "Lote"
+        ],
+        "requiredRecordNames": [
+          "Registro de empaque"
+        ],
+        "machineMaterialRefs": [
+          "Llenadora",
+          "Bolsas 250 g"
+        ],
+        "toolingNotes": "",
+        "requiredAreaM2": 10,
+        "requiredAreaHeightM": 0,
+        "storageConditionNotes": "",
+        "changeoverMinutes": 0,
+        "defaultResourceIds": [
+          "res_ig56di1i"
+        ],
+        "defaultEquipmentIds": [
+          "eq_m1eqpm3u"
+        ],
+        "requiresLotTraceability": true,
+        "notes": ""
+      }
+    ],
+    "resources": [
+      {
+        "id": "res_gtjji97x",
+        "code": "RES-THERMAL",
+        "name": "Operarios térmicos",
+        "mode": "semi_automatic",
+        "lineId": "line_6ogoydxv",
+        "areaId": "area_g2ou0kl4",
+        "capacityUnitCode": "hour",
+        "nominalCapacityPerDay": 16,
+        "nominalCapacityPerWeek": 96,
+        "nominalCapacityPerMonth": 384,
+        "active": true
+      },
+      {
+        "id": "res_ig56di1i",
+        "code": "RES-PACK",
+        "name": "Equipo de empaque compartido",
+        "mode": "manual",
+        "lineId": "line_qvr9b0zm",
+        "areaId": "area_hyfifwig",
+        "capacityUnitCode": "hour",
+        "nominalCapacityPerDay": 16,
+        "nominalCapacityPerWeek": 96,
+        "nominalCapacityPerMonth": 384,
+        "active": true
+      }
+    ],
+    "equipments": [
+      {
+        "id": "eq_l7vvi8t6",
+        "code": "EQ-ROAST",
+        "name": "Tostadora por lotes",
+        "lineId": "line_6ogoydxv",
+        "areaId": "area_g2ou0kl4",
+        "supportedUnitCodes": [
+          "kg",
+          "qq"
+        ],
+        "capacityUnitCode": "kg",
+        "nominalCapacityPerHour": 48,
+        "nominalCapacityPerDay": 384,
+        "nominalCapacityPerWeek": 2304,
+        "nominalCapacityPerMonth": 9216,
+        "setupMinutes": 0,
+        "active": true
+      },
+      {
+        "id": "eq_m1eqpm3u",
+        "code": "EQ-FILL",
+        "name": "Llenadora y loteadora",
+        "lineId": "line_qvr9b0zm",
+        "areaId": "area_hyfifwig",
+        "supportedUnitCodes": [
+          "unit",
+          "jar",
+          "bag",
+          "bottle",
+          "tray"
+        ],
+        "capacityUnitCode": "unit",
+        "nominalCapacityPerHour": 320,
+        "nominalCapacityPerDay": 2560,
+        "nominalCapacityPerWeek": 15360,
+        "nominalCapacityPerMonth": 61440,
+        "setupMinutes": 0,
+        "active": true
+      }
+    ],
+    "materials": [
+      {
+        "id": "mat_qpf2mhk3",
+        "code": "MAT-CAFE-PERG",
+        "name": "Café pergamino",
+        "materialType": "raw_material",
+        "baseUnitCode": "qq",
+        "active": true
+      },
+      {
+        "id": "mat_4je5g4s3",
+        "code": "ENV-BOLSA-250",
+        "name": "Bolsa 250 g",
+        "materialType": "packaging",
+        "baseUnitCode": "bag",
+        "active": true
+      }
+    ],
+    "masterFormulas": [
+      {
+        "id": "formula_qsckrqpa",
+        "productId": "prd_el0i9c2d",
+        "flowVersionId": "flow_tb4qp8wd",
+        "code": "FMO-CAFE",
+        "versionLabel": "v2",
+        "outputQuantity": 640,
+        "outputUnitCode": "bag",
+        "items": [
+          {
+            "id": "fitem_mvl8bhzx",
+            "materialId": "mat_qpf2mhk3",
+            "materialCode": "MAT-CAFE-PERG",
+            "materialName": "Café pergamino",
+            "materialType": "raw_material",
+            "quantity": 4.2,
+            "unitCode": "qq",
+            "stageId": "stage_tzkr2g0e",
+            "scrapFactorPct": 6,
+            "notes": "Pérdida por selección y tueste."
+          },
+          {
+            "id": "fitem_udjsjncv",
+            "materialId": "mat_4je5g4s3",
+            "materialCode": "ENV-BOLSA-250",
+            "materialName": "Bolsa 250 g",
+            "materialType": "packaging",
+            "quantity": 640,
+            "unitCode": "bag",
+            "stageId": "stage_5lt60uh0",
+            "scrapFactorPct": 1,
+            "notes": "Una bolsa por empaque final."
+          }
+        ],
+        "notes": ""
+      }
+    ],
+    "batches": [
+      {
+        "id": "batch_4ecmzxdv",
+        "batchCode": "LOT-CAFE-001",
+        "productId": "prd_el0i9c2d",
+        "flowVersionId": "flow_tb4qp8wd",
+        "lineId": "line_6ogoydxv",
+        "plannedQuantity": 640,
+        "plannedUnitCode": "bag",
+        "plannedStartDate": "2026-06-04",
+        "plannedEndDate": "2026-06-04",
+        "actualStartDate": "",
+        "actualEndDate": "",
+        "status": "planned",
+        "priority": "normal",
+        "targetWarehouseZone": "bodega-cafe",
+        "upstreamSupplierName": "Acopio pergamino",
+        "upstreamSourceCode": "SRC-CAFE-001",
+        "notes": "Lote ejemplo para Café."
+      }
+    ],
+    "stageExecutions": [
+      {
+        "id": "exec_za1s6u0e",
+        "batchId": "batch_4ecmzxdv",
+        "stageId": "stage_tzkr2g0e",
+        "sequence": 1,
+        "startedAt": "2026-06-04T08:00:00.000Z",
+        "endedAt": "2026-06-04T09:00:00.000Z",
+        "inputLotCode": "CAF-PERG-001",
+        "outputLotCode": "CAF-SEL-001",
+        "inputQuantity": 4.2,
+        "inputUnitCode": "qq",
+        "outputQuantity": 4.1,
+        "outputUnitCode": "qq",
+        "wasteQuantity": 2,
+        "wasteUnitCode": "kg",
+        "yieldPct": 97.62,
+        "durationHours": 1,
+        "resourceIds": [
+          "res_gtjji97x"
+        ],
+        "equipmentIds": [
+          "eq_l7vvi8t6"
+        ],
+        "traceLinks": [
+          {
+            "id": "trace_cafe_1",
+            "inputLotCode": "CAF-PERG-001",
+            "outputLotCode": "CAF-SEL-001",
+            "quantity": 4.2,
+            "unitCode": "qq"
+          }
+        ],
+        "notes": ""
+      },
+      {
+        "id": "exec_yzaphxfl",
+        "batchId": "batch_4ecmzxdv",
+        "stageId": "stage_sqe5lucs",
+        "sequence": 2,
+        "startedAt": "2026-06-04T09:30:00.000Z",
+        "endedAt": "2026-06-04T15:30:00.000Z",
+        "inputLotCode": "CAF-SEL-001",
+        "outputLotCode": "CAF-ROAST-001",
+        "inputQuantity": 186,
+        "inputUnitCode": "kg",
+        "outputQuantity": 171,
+        "outputUnitCode": "kg",
+        "wasteQuantity": 15,
+        "wasteUnitCode": "kg",
+        "yieldPct": 91.94,
+        "durationHours": 6,
+        "resourceIds": [
+          "res_gtjji97x"
+        ],
+        "equipmentIds": [
+          "eq_l7vvi8t6"
+        ],
+        "traceLinks": [
+          {
+            "id": "trace_cafe_2",
+            "inputLotCode": "CAF-SEL-001",
+            "outputLotCode": "CAF-ROAST-001",
+            "quantity": 186,
+            "unitCode": "kg"
+          }
+        ],
+        "notes": ""
+      },
+      {
+        "id": "exec_ma92soui",
+        "batchId": "batch_4ecmzxdv",
+        "stageId": "stage_rgb90jh9",
+        "sequence": 3,
+        "startedAt": "2026-06-04T16:00:00.000Z",
+        "endedAt": "2026-06-05T04:00:00.000Z",
+        "inputLotCode": "CAF-ROAST-001",
+        "outputLotCode": "CAF-REST-001",
+        "inputQuantity": 171,
+        "inputUnitCode": "kg",
+        "outputQuantity": 168,
+        "outputUnitCode": "kg",
+        "wasteQuantity": 3,
+        "wasteUnitCode": "kg",
+        "yieldPct": 98.25,
+        "durationHours": 12,
+        "resourceIds": [
+          "res_gtjji97x"
+        ],
+        "equipmentIds": [
+          "eq_l7vvi8t6"
+        ],
+        "traceLinks": [
+          {
+            "id": "trace_cafe_3",
+            "inputLotCode": "CAF-ROAST-001",
+            "outputLotCode": "CAF-REST-001",
+            "quantity": 171,
+            "unitCode": "kg"
+          }
+        ],
+        "notes": ""
+      },
+      {
+        "id": "exec_6g0plx00",
+        "batchId": "batch_4ecmzxdv",
+        "stageId": "stage_5lt60uh0",
+        "sequence": 4,
+        "startedAt": "2026-06-05T08:00:00.000Z",
+        "endedAt": "2026-06-05T12:00:00.000Z",
+        "inputLotCode": "CAF-REST-001",
+        "outputLotCode": "CAF-FIN-001",
+        "inputQuantity": 168,
+        "inputUnitCode": "kg",
+        "outputQuantity": 640,
+        "outputUnitCode": "bag",
+        "wasteQuantity": 1.5,
+        "wasteUnitCode": "kg",
+        "yieldPct": 380.95,
+        "durationHours": 4,
+        "resourceIds": [
+          "res_ig56di1i"
+        ],
+        "equipmentIds": [
+          "eq_m1eqpm3u"
+        ],
+        "traceLinks": [
+          {
+            "id": "trace_cafe_4",
+            "inputLotCode": "CAF-REST-001",
+            "outputLotCode": "CAF-FIN-001",
+            "quantity": 168,
+            "unitCode": "kg"
+          }
+        ],
+        "notes": ""
+      }
+    ],
+    "calendarEntries": [
+      {
+        "id": "cal_38zyy6ta",
+        "lineId": "line_6ogoydxv",
+        "date": "2026-06-04",
+        "shiftLabel": "tostado",
+        "availableHours": 8,
+        "availableAreaM2": 20,
+        "plannedBatchIds": [
+          "batch_4ecmzxdv"
+        ],
+        "plannedStageExecutionIds": [],
+        "notes": "Calendario demo del módulo."
+      },
+      {
+        "id": "cal_mal9hx9d",
+        "lineId": "line_6ogoydxv",
+        "date": "2026-06-05",
+        "shiftLabel": "tostado",
+        "availableHours": 8,
+        "availableAreaM2": 20,
+        "plannedBatchIds": [
+          "batch_4ecmzxdv"
+        ],
+        "plannedStageExecutionIds": [],
+        "notes": "Calendario demo del módulo."
+      },
+      {
+        "id": "cal_71l27vrg",
+        "lineId": "line_qvr9b0zm",
+        "date": "2026-06-05",
+        "shiftLabel": "empaque-compartido",
+        "availableHours": 8,
+        "availableAreaM2": 18,
+        "plannedBatchIds": [
+          "batch_4ecmzxdv"
+        ],
+        "plannedStageExecutionIds": [],
+        "notes": "Calendario demo del módulo."
+      }
+    ],
+    "warehouseRequirements": [
+      {
+        "id": "wh_3avfpghr",
+        "batchId": "batch_4ecmzxdv",
+        "productId": "prd_el0i9c2d",
+        "stageId": "",
+        "materialId": "",
+        "lotCode": "",
+        "warehouseZone": "bodega-cafe",
+        "requiredAreaM2": 8,
+        "requiredVolumeM3": 4.8,
+        "requiredPositions": 10,
+        "coverageDays": 15,
+        "notes": "Producto listo para despacho minorista."
+      }
+    ]
+  },
+  "integration": {
+    "costs": {
+      "enabled": false,
+      "mode": "export_only",
+      "lastPublishedAt": ""
+    }
+  }
+}
