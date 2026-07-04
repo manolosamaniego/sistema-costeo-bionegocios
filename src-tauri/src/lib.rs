@@ -35,16 +35,6 @@ fn diagnostics_file_path(app: &AppHandle) -> Result<PathBuf, String> {
     Ok(app_data_dir.join("diagnostics.log"))
 }
 
-fn process_planning_file_path(app: &AppHandle) -> Result<PathBuf, String> {
-    let app_data_dir = app
-        .path()
-        .app_data_dir()
-        .map_err(|e| format!("No se pudo resolver la carpeta de datos: {e}"))?;
-    fs::create_dir_all(&app_data_dir)
-        .map_err(|e| format!("No se pudo crear la carpeta de datos: {e}"))?;
-    Ok(app_data_dir.join("process_planning_module.json"))
-}
-
 fn file_path_to_pathbuf(file_path: Option<FilePath>, empty_message: &str) -> Result<PathBuf, String> {
     let path = file_path.ok_or_else(|| empty_message.to_string())?;
     path.into_path()
@@ -392,84 +382,6 @@ fn export_costeo_file(app: AppHandle, contents: String, suggested_name: String) 
 }
 
 #[tauri::command]
-fn load_process_planning_store(app: AppHandle) -> Result<String, String> {
-    let path = process_planning_file_path(&app)?;
-    if !path.exists() {
-        return Ok(String::new());
-    }
-    fs::read_to_string(&path).map_err(|e| format!("No se pudo leer el modulo de procesos local: {e}"))
-}
-
-#[tauri::command]
-fn save_process_planning_store(app: AppHandle, contents: String) -> Result<String, String> {
-    let path = process_planning_file_path(&app)?;
-    fs::write(&path, contents).map_err(|e| format!("No se pudo guardar el modulo de procesos local: {e}"))?;
-    Ok(path.display().to_string())
-}
-
-#[tauri::command]
-fn export_process_planning_file(app: AppHandle, contents: String, suggested_name: String) -> Result<String, String> {
-    let safe_name = if suggested_name.trim().is_empty() {
-        "procesos_capacidad_planeacion".to_string()
-    } else {
-        suggested_name
-            .chars()
-            .map(|c| if c.is_ascii_alphanumeric() || c == '_' || c == '-' { c } else { '_' })
-            .collect::<String>()
-    };
-
-    let file_path = app
-        .dialog()
-        .file()
-        .add_filter("JSON", &["json"])
-        .set_file_name(format!("{safe_name}.json"))
-        .blocking_save_file();
-
-    let path = file_path_to_pathbuf(file_path, "No se seleccionó una ruta para exportar el modulo de procesos.")?;
-    fs::write(&path, contents).map_err(|e| format!("No se pudo exportar el modulo de procesos: {e}"))?;
-    Ok(path.display().to_string())
-}
-
-#[tauri::command]
-fn import_process_planning_file(app: AppHandle) -> Result<String, String> {
-    let file_path = app
-        .dialog()
-        .file()
-        .add_filter("JSON", &["json"])
-        .blocking_pick_file();
-
-    let path = file_path_to_pathbuf(file_path, "No se seleccionó un archivo del modulo de procesos.")?;
-    fs::read_to_string(&path).map_err(|e| format!("No se pudo leer el archivo del modulo de procesos: {e}"))
-}
-
-#[tauri::command]
-fn export_process_planning_cost_integration_file(
-    app: AppHandle,
-    contents: String,
-    suggested_name: String,
-) -> Result<String, String> {
-    let safe_name = if suggested_name.trim().is_empty() {
-        "procesos_a_costos".to_string()
-    } else {
-        suggested_name
-            .chars()
-            .map(|c| if c.is_ascii_alphanumeric() || c == '_' || c == '-' { c } else { '_' })
-            .collect::<String>()
-    };
-
-    let file_path = app
-        .dialog()
-        .file()
-        .add_filter("JSON", &["json"])
-        .set_file_name(format!("{safe_name}.json"))
-        .blocking_save_file();
-
-    let path = file_path_to_pathbuf(file_path, "No se seleccionó una ruta para exportar la integración con costos.")?;
-    fs::write(&path, contents).map_err(|e| format!("No se pudo exportar la integración con costos: {e}"))?;
-    Ok(path.display().to_string())
-}
-
-#[tauri::command]
 fn import_costeo_file(app: AppHandle) -> Result<String, String> {
     let file_path = app
         .dialog()
@@ -659,11 +571,6 @@ pub fn run() {
             export_branding_file,
             export_costeo_file,
             import_costeo_file,
-            load_process_planning_store,
-            save_process_planning_store,
-            export_process_planning_file,
-            import_process_planning_file,
-            export_process_planning_cost_integration_file,
             export_report_pdf_a4,
             import_logo_file,
             append_diagnostic_log,

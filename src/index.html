@@ -1379,7 +1379,7 @@
         <div class="section-actions"><button class="secondary hide-print" id="addIndirect" type="button">Agregar costo indirecto</button><button class="secondary hide-print" id="sortIndirect" type="button">Ordenar de mayor a menor</button></div>
       </div>
       <div class="card"><div class="section-title"><h2>Comercialización</h2></div><div class="section-intro">Incluye aquí empaque comercial, distribución, promoción, comisiones y costos del canal.</div><div class="table-wrap"><table id="tblCommercial"><thead><tr><th>Cuenta contable</th><th>Descripción del costo</th><th>Unidad de medida</th><th>Cantidad</th><th>Valor por unidad</th><th>Tipo</th><th>Total</th><th>% participación</th><th></th></tr></thead><tbody></tbody></table></div><div class="section-actions"><button class="secondary hide-print" id="addCommercial" type="button">Agregar fila</button><button class="secondary hide-print" id="sortCommercial" type="button">Ordenar de mayor a menor</button></div></div>
-      <div class="card"><div class="section-title"><h2>Certificación asignada al producto</h2></div><div class="section-intro">Registra aquí el costo total de la certificación, el volumen certificado esperado del periodo y los kilos certificados de este producto o lote. La app calcula el costo por kg certificado, el valor base y el valor final asignado según el porcentaje que decidas cargar. Si marcas que no aplica al producto, no se incorpora al costeo final.</div><div class="table-wrap"><table id="tblCertification"><thead><tr><th>Tipo de certificación</th><th>Periodo cubierto</th><th>¿Aplica al producto?</th><th>Costo total de certificación</th><th>Volumen certificado esperado del periodo</th><th>Costo por kg certificado</th><th>Kg certificados del producto o lote</th><th>Porcentaje a asignar</th><th>Valor base</th><th>Valor asignado al producto</th><th>% participación</th><th>Soporte o evidencia</th><th>Observación</th><th></th></tr></thead><tbody></tbody></table></div><div class="section-actions"><button class="secondary hide-print" id="addCertification" type="button">Agregar certificación</button><button class="secondary hide-print" id="sortCertification" type="button">Ordenar de mayor a menor</button></div></div>
+      <div class="card"><div class="section-title"><h2>Certificaciones</h2></div><div class="section-intro">Registra aquí certificaciones de planta o acceso a mercado como BPM, HACCP, orgánico, Kosher o similares. La app anualiza el costo y lo reparte según la base elegida para este costeo.</div><div class="table-wrap"><table id="tblCertification"><thead><tr><th>Certificación</th><th>Clase</th><th>Costo anual</th><th>Forma de reparto</th><th>Base de este costeo</th><th>Base anual total</th><th>Tipo</th><th>Costo asignado</th><th>% participación</th><th>Observación</th><th>Responsable</th><th>Soporte</th><th></th></tr></thead><tbody></tbody></table></div><div class="section-actions"><button class="secondary hide-print" id="addCertification" type="button">Agregar certificación</button><button class="secondary hide-print" id="sortCertification" type="button">Ordenar de mayor a menor</button></div></div>
       <div class="card">
         <div class="section-title"><h2>Biblioteca de equipos y depreciación</h2></div>
         <div class="small">Registra aquí tus equipos para reutilizarlos en futuros costeos. La app calcula depreciación mensual y costo por hora en línea recta.</div>
@@ -1597,8 +1597,8 @@
     const yesNoOpts = ["Si","No"];
     const indirectMethods = ["Horas","Dias","Horas de mano de obra","Horas maquina","Horas ponderadas","Kg procesados","Litros procesados","Unidades producidas","Lotes producidos","m2 usados","kWh reales","Porcentaje justificado"];
     const certificationCatalog = ["BPM / GMP","HACCP","ISO 22000","FSSC 22000","Orgánico","Kosher","Halal","Comercio justo","Rainforest Alliance","Certificación de exportación","Otra"];
-    const certificationPeriods = ["mensual","anual","campaña"];
-    const appliesOpts = ["Si","No"];
+    const certificationClasses = ["Regulatoria","Inocuidad","Mercado","Exportación"];
+    const certificationMethods = ["Por porcentaje del producto","Por unidades del periodo","Por lotes del periodo","Por Kg del periodo","Por litros del periodo"];
     const lifeUnits = ["años","meses"];
     const depreciationMethods = ["linea recta"];
     const state = { direct: [], indirect: [], commercial: [], certifications: [], equipLibrary: [], equipUse: [], outputs: [], market: [] };
@@ -2276,7 +2276,7 @@
         direct: payload.state?.direct || [],
         indirect: payload.state?.indirect || [],
         commercial: payload.state?.commercial || [],
-        certifications: (payload.state?.certifications || []).map(normalizeCertificationRow),
+        certifications: payload.state?.certifications || [],
         equipLibrary: payload.state?.equipLibrary || [],
         equipUse: payload.state?.equipUse || [],
         outputs: payload.state?.outputs || [],
@@ -2474,24 +2474,7 @@
     function addDirectRow(r={account:'Materia prima',description:'',unit:'Unidad',qty:0,unitCost:0,behavior:'Variable'}) { state.direct.push(r); renderDirect(); calcAll(); }
     function addIndirectRow(r={id:uid('ind'),account:'Agua',description:'',area:'Produccion',includeInProduct:'Si',periodValue:0,method:'',baseUnit:'',usage:0,baseTotal:0,behavior:'Fijo',observation:'',responsible:'',support:'',weightedItems:[{name:'',hours:0,factor:1}],kwhUsage:0,kwhTotal:0}) { state.indirect.push(r); renderIndirect(); calcAll(); }
     function addCommercialRow(r={account:'Transporte de venta',description:'',unit:'Unidad',qty:0,unitCost:0,behavior:'Variable'}) { state.commercial.push(r); renderCommercial(); calcAll(); }
-    function normalizeCertificationRow(r={}) {
-      const assignPctRaw = r.assignPct ?? r.assignmentPct ?? 100;
-      const appliesRaw = String(r.appliesToProduct ?? r.includeInProduct ?? 'Si');
-      return {
-        certification: r.certification || 'BPM / GMP',
-        coveredPeriod: r.coveredPeriod || r.periodCovered || 'anual',
-        appliesToProduct: appliesRaw === 'No' ? 'No' : 'Si',
-        totalCost: num(r.totalCost ?? r.annualCost),
-        expectedCertifiedVolume: num(r.expectedCertifiedVolume ?? r.annualBase),
-        productCertifiedKg: num(r.productCertifiedKg ?? r.usageBase),
-        assignPct: Math.min(100, Math.max(0, num(assignPctRaw))),
-        behavior: 'Fijo',
-        observation: String(r.observation || ''),
-        responsible: String(r.responsible || ''),
-        support: String(r.support || '')
-      };
-    }
-    function addCertificationRow(r={certification:'BPM / GMP',coveredPeriod:'anual',appliesToProduct:'Si',totalCost:0,expectedCertifiedVolume:0,productCertifiedKg:0,assignPct:100,observation:'',responsible:'',support:''}) { state.certifications.push(normalizeCertificationRow(r)); renderCertifications(); calcAll(); }
+    function addCertificationRow(r={certification:'BPM / GMP',certClass:'Regulatoria',annualCost:0,method:'Por porcentaje del producto',usageBase:0,annualBase:100,behavior:'Fijo',observation:'',responsible:'',support:''}) { state.certifications.push(r); renderCertifications(); calcAll(); }
     function addEquipLibraryRow(r={id:uid('eq'),name:'',area:'Produccion',purchaseValue:0,purchaseDate:'',lifeValue:5,lifeUnit:'años',hoursMonth:1,residualValue:0,method:'linea recta',observation:'',responsible:'',support:''}) { state.equipLibrary.push(r); saveEquipLibraryToStorage(); renderEquipLibrary(); renderEquipUse(); calcAll(); }
     function addEquipUseRow(r={libraryId:'',behavior:'Fijo',hoursUsed:0,observation:''}) { state.equipUse.push(r); renderEquipUse(); calcAll(); }
     function addOutputRow(r={name:'',outputType:'Salida principal',size:1,unit:'Kg',qtyOut:0,costPct:0,currentPrice:0,nrvCost:0,note:''}) {
@@ -2802,76 +2785,72 @@
     }
 
     function getCertificationComputed(r) {
-      const row = normalizeCertificationRow(r);
-      const totalCost = Math.max(0, num(row.totalCost));
-      const expectedVolume = Math.max(0, num(row.expectedCertifiedVolume));
-      const productKg = Math.max(0, num(row.productCertifiedKg));
-      const assignPct = Math.min(100, Math.max(0, num(row.assignPct)));
-      const applies = row.appliesToProduct !== 'No';
-      const costPerKg = expectedVolume > 0 ? totalCost / expectedVolume : 0;
-      const baseValue = costPerKg * productKg;
-      const assigned = applies ? baseValue * (assignPct / 100) : 0;
+      const annualCost = num(r.annualCost);
+      const method = r.method || 'Por porcentaje del producto';
+      const usageBase = Math.max(0, num(r.usageBase));
+      let annualBase = Math.max(0, num(r.annualBase));
+      if (method === 'Por porcentaje del producto') annualBase = 100;
+      const safeUsage = method === 'Por porcentaje del producto' ? Math.min(usageBase, 100) : usageBase;
+      const baseCost = annualBase > 0 ? annualCost / annualBase : 0;
+      const assigned = annualBase > 0 ? annualCost * (safeUsage / annualBase) : 0;
       const warnings = [];
-      if (!totalCost) warnings.push('Falta costo total de certificación.');
-      if (expectedVolume <= 0) warnings.push('Falta volumen certificado esperado del periodo o no puede ser 0.');
-      if (applies && !productKg) warnings.push('Faltan los kg certificados del producto o lote.');
-      if (num(row.assignPct) < 0 || num(row.assignPct) > 100) warnings.push('El porcentaje a asignar debe estar entre 0% y 100%.');
-      return { totalCost, expectedVolume, productKg, assignPct, costPerKg, baseValue, assigned, applies, warnings };
+      if (!annualCost) warnings.push('Falta costo anual.');
+      if (!safeUsage) warnings.push('Falta base de este costeo.');
+      if (!annualBase) warnings.push('Falta base anual total.');
+      if (method === 'Por porcentaje del producto' && usageBase > 100) warnings.push('El porcentaje no puede superar 100%.');
+      if (!String(r.support || '').trim()) warnings.push('Adjunta soporte o evidencia.');
+      return { annualCost, safeUsage, annualBase, baseCost, assigned, warnings };
     }
 
     function renderCertifications() {
       const tb = document.querySelector('#tblCertification tbody');
       tb.innerHTML = '';
-      state.certifications.forEach((item, i) => {
-        const r = state.certifications[i] = normalizeCertificationRow(item);
+      state.certifications.forEach((r, i) => {
         const tr = document.createElement('tr');
         const certification = createSelect(certificationCatalog, r.certification);
-        const coveredPeriod = createSelect(certificationPeriods, r.coveredPeriod || 'anual');
-        const appliesToProduct = createSelect(appliesOpts, r.appliesToProduct || 'Si');
-        const totalCost = createNumInput(r.totalCost);
-        totalCost.title = 'Costo total de certificación: aquí coloca el valor total de la certificación en el periodo.';
-        const expectedCertifiedVolume = createNumInput(r.expectedCertifiedVolume);
-        expectedCertifiedVolume.title = 'Volumen certificado esperado del periodo: aquí coloca cuántos kilos esperas certificar en ese periodo.';
-        const productCertifiedKg = createNumInput(r.productCertifiedKg);
-        productCertifiedKg.title = 'Kg certificados del producto o lote: aquí coloca los kilos de este producto que efectivamente usan esa certificación.';
-        const assignPct = createNumInput(r.assignPct, '0.01', '0');
-        assignPct.max = '100';
-        assignPct.title = 'Porcentaje a asignar: aquí puedes cargar el 100% o un porcentaje menor, según corresponda.';
+        const certClass = createSelect(certificationClasses, r.certClass || 'Regulatoria');
+        const annualCost = createNumInput(r.annualCost);
+        const method = createSelect(certificationMethods, r.method || 'Por porcentaje del producto');
+        const usageBase = createNumInput(r.usageBase);
+        const annualBase = createNumInput(r.annualBase);
+        const behavior = createSelect(behaviorOpts, r.behavior || 'Fijo');
         const observation = createTextInput(r.observation, 'Justifica el criterio aplicado');
-        const support = createTextInput(r.support, 'Factura, certificado o evidencia');
+        const responsible = createTextInput(r.responsible, 'Responsable');
+        const support = createTextInput(r.support, 'Certificado, factura o soporte');
         const calc = getCertificationComputed(r);
+        if ((r.method || 'Por porcentaje del producto') === 'Por porcentaje del producto') {
+          annualBase.value = 100;
+          annualBase.disabled = true;
+        } else {
+          annualBase.disabled = false;
+        }
         certification.onchange = e => { r.certification = e.target.value; calcAll(); };
-        coveredPeriod.onchange = e => { r.coveredPeriod = e.target.value; calcAll(); };
-        appliesToProduct.onchange = e => { r.appliesToProduct = e.target.value; calcAll(); };
-        totalCost.oninput = e => { r.totalCost = num(e.target.value); calcAll(); };
-        expectedCertifiedVolume.oninput = e => { r.expectedCertifiedVolume = num(e.target.value); calcAll(); };
-        productCertifiedKg.oninput = e => { r.productCertifiedKg = num(e.target.value); calcAll(); };
-        assignPct.oninput = e => {
-          const raw = num(e.target.value);
-          const bounded = Math.min(100, Math.max(0, raw));
-          r.assignPct = bounded;
-          if (String(raw) !== String(bounded)) e.target.value = bounded;
+        certClass.onchange = e => { r.certClass = e.target.value; calcAll(); };
+        annualCost.oninput = e => { r.annualCost = num(e.target.value); calcAll(); };
+        method.onchange = e => {
+          r.method = e.target.value;
+          if (r.method === 'Por porcentaje del producto') r.annualBase = 100;
           calcAll();
+          renderCertifications();
         };
+        usageBase.oninput = e => { r.usageBase = num(e.target.value); calcAll(); };
+        annualBase.oninput = e => { r.annualBase = num(e.target.value); calcAll(); };
+        behavior.onchange = e => { r.behavior = e.target.value; calcAll(); };
         observation.oninput = e => { r.observation = e.target.value; };
         observation.onblur = calcAll;
+        responsible.oninput = e => { r.responsible = e.target.value; };
+        responsible.onblur = calcAll;
         support.oninput = e => { r.support = e.target.value; };
         support.onblur = calcAll;
         tr.append(
           td(certification),
-          td(coveredPeriod),
-          td(appliesToProduct),
-          td(totalCost),
-          td(expectedCertifiedVolume)
+          td(certClass),
+          td(annualCost),
+          td(method),
+          td(usageBase),
+          td(annualBase),
+          td(behavior)
         );
-        const costPerKgEl = document.createElement('td');
-        costPerKgEl.textContent = money(calc.costPerKg);
-        tr.appendChild(costPerKgEl);
-        tr.appendChild(td(productCertifiedKg));
-        tr.appendChild(td(assignPct));
-        const baseValueEl = document.createElement('td');
-        baseValueEl.textContent = money(calc.baseValue);
-        tr.appendChild(baseValueEl);
         const assignedEl = document.createElement('td');
         assignedEl.className = 'row-total';
         assignedEl.textContent = money(calc.assigned);
@@ -2880,7 +2859,7 @@
         shareEl.className = 'row-share';
         shareEl.textContent = pctText(0);
         tr.appendChild(shareEl);
-        tr.append(td(support), td(observation));
+        tr.append(td(observation), td(responsible), td(support));
         tr.appendChild(delBtn(() => { state.certifications.splice(i, 1); renderCertifications(); calcAll(); }));
         tb.appendChild(tr);
       });
@@ -3418,7 +3397,7 @@ const html = `<div class="report"><div class="report-section"><div class="report
       const fixedDirect = state.direct.filter(r=>r.behavior==='Fijo').reduce((a,r)=>a+num(r.qty)*num(r.unitCost),0);
       const fixedIndirect = state.indirect.filter(r=>r.behavior==='Fijo').reduce((a,r)=>a+getIndirectComputed(r).assigned,0);
       const fixedCommercial = state.commercial.filter(r=>r.behavior==='Fijo').reduce((a,r)=>a+num(r.qty)*num(r.unitCost),0);
-      const fixedCertification = state.certifications.reduce((a,r)=>a+getCertificationComputed(r).assigned,0);
+      const fixedCertification = state.certifications.filter(r=>r.behavior==='Fijo').reduce((a,r)=>a+getCertificationComputed(r).assigned,0);
       const fixedEquip = state.equipUse.filter(r=>r.behavior==='Fijo').reduce((a,r)=>{
         const equip = state.equipLibrary.find(item => item.id === r.libraryId);
         return a + (equip ? getEquipLibraryComputed(equip).costPerHour * num(r.hoursUsed) : 0);
@@ -3568,9 +3547,7 @@ const html = `<div class="report"><div class="report-section"><div class="report
       }).length;
       const certificationMissing = state.certifications.filter(r => {
         const calc = getCertificationComputed(r);
-        const row = normalizeCertificationRow(r);
-        if (row.appliesToProduct === 'No') return false;
-        return !(num(row.totalCost) > 0 && calc.expectedVolume > 0 && calc.productKg > 0 && num(row.assignPct) >= 0 && num(row.assignPct) <= 100);
+        return !(num(r.annualCost) > 0 && calc.safeUsage > 0 && calc.annualBase > 0);
       }).length;
       const homeAuditBanner = document.getElementById('homeAuditBanner');
       const homeAuditValue = document.getElementById('homeAuditValue');
@@ -3967,7 +3944,7 @@ const html = `<div class="report"><div class="report-section"><div class="report
       if (state.direct.length===0) state.direct.push({account:'Materia prima',description:'',unit:'Kg',qty:0,unitCost:0,behavior:'Variable'});
       if (state.indirect.length===0) state.indirect.push({id:uid('ind'),account:'Agua',description:'',area:'Produccion',includeInProduct:'Si',periodValue:0,method:'',baseUnit:'',usage:0,baseTotal:0,behavior:'Fijo',observation:'',responsible:'',support:'',weightedItems:[{name:'',hours:0,factor:1}],kwhUsage:0,kwhTotal:0});
       if (state.commercial.length===0) state.commercial.push({account:'Transporte de venta',description:'',unit:'Unidad',qty:0,unitCost:0,behavior:'Variable'});
-      if (state.certifications.length===0) state.certifications.push(normalizeCertificationRow({certification:'BPM / GMP',coveredPeriod:'anual',appliesToProduct:'Si',totalCost:0,expectedCertifiedVolume:0,productCertifiedKg:0,assignPct:100,observation:'',responsible:'',support:''}));
+      if (state.certifications.length===0) state.certifications.push({certification:'BPM / GMP',certClass:'Regulatoria',annualCost:0,method:'Por porcentaje del producto',usageBase:0,annualBase:100,behavior:'Fijo',observation:'',responsible:'',support:''});
       if (state.equipLibrary.length===0) state.equipLibrary.push({id:uid('eq'),name:'',area:'Produccion',purchaseValue:0,purchaseDate:'',lifeValue:5,lifeUnit:'años',hoursMonth:1,residualValue:0,method:'linea recta',observation:'',responsible:'',support:''});
       if (state.equipUse.length===0) state.equipUse.push({libraryId:state.equipLibrary[0]?.id || '',behavior:'Fijo',hoursUsed:0,observation:''});
       if (state.outputs.length===0) state.outputs.push({name:'',outputType:'Presentación comercial',size:1,unit:'Kg',qtyOut:0,costPct:0,currentPrice:0,nrvCost:0,note:''});
