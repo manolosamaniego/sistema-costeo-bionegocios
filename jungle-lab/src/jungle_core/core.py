@@ -46,3 +46,39 @@ def can_execute(action: str, *, approved=False, independent_review=False, review
     if not independent_review or review != ReviewStatus.PASS:
         return False
     return not approval_required(action) or approved
+
+# Conservative policy for production-bound integration. Unknown classifications deny.
+def classify_context_strict(text: str, *, project=None, approved_public=False):
+    """Conservative prototype: explicit public approval is required for ALLOW."""
+    if not isinstance(text, str) or not text.strip():
+        return ContextClass.RESTRICTED
+    if re.search(r"(?i)(-----BEGIN [^-]*PRIVATE KEY-----|\\.env(?:\\.|\\b)|(?:api[_-]?key|access[_-]?token|refresh[_-]?token|password|secret|client[_-]?secret)\\s*[:=]|(?:postgres|mysql|mongodb)://|authorization\\s*:\\s*bearer)", text):
+        return ContextClass.NEVER_CONTEXT
+    if not approved_public:
+        return ContextClass.RESTRICTED
+    return ContextClass.ALLOW
+
+class ApprovalDecision:
+    """An approval must be externally verified; plain booleans are not trusted."""
+    def __init__(self, actor_id, task_id, action, approved, verifier):
+        self.actor_id = actor_id
+        self.task_id = task_id
+        self.action = action
+        self.approved = approved
+        self.verifier = verifier
+
+def can_execute_verified(action, task_id, *, reviewer_id, builder_id, review, approval=None):
+    if not reviewer_id or not builder_id or reviewer_id == builder_id:
+        return False
+    if review != ReviewStatus.PASS:
+        return False
+    if approval_required(action):
+        if not isinstance(approval, ApprovalDecision):
+            return False
+        if not (approval.actor_id and approval.task_id == task_id and approval.action == action and approval.approved):
+            return False
+        if approval.actor_id in (reviewer_id, builder_id):
+            return False
+        if not callable(approval.verifier) or not approval.verifier(approval):
+            return False
+    return True
