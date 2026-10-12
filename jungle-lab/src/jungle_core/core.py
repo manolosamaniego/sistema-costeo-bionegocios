@@ -49,10 +49,17 @@ def can_execute(action: str, *, approved=False, independent_review=False, review
 
 # Conservative policy for production-bound integration. Unknown classifications deny.
 def classify_context_strict(text: str, *, project=None, approved_public=False):
-    """Conservative prototype: explicit public approval is required for ALLOW."""
+    """Fail closed for unapproved text; illustrative regex, not a secret scanner."""
     if not isinstance(text, str) or not text.strip():
         return ContextClass.RESTRICTED
-    if re.search(r"(?i)(-----BEGIN [^-]*PRIVATE KEY-----|\\.env(?:\\.|\\b)|(?:api[_-]?key|access[_-]?token|refresh[_-]?token|password|secret|client[_-]?secret)\\s*[:=]|(?:postgres|mysql|mongodb)://|authorization\\s*:\\s*bearer)", text):
+    patterns = (
+        r"-----BEGIN [^-]*PRIVATE KEY-----",
+        r"\.env(?:\.|\b)",
+        r"(?:api[_-]?key|access[_-]?token|refresh[_-]?token|password|secret|client[_-]?secret)\s*[:=]",
+        r"(?:postgres|mysql|mongodb)://",
+        r"authorization\s*:\s*bearer",
+    )
+    if any(re.search(pattern, text, flags=re.IGNORECASE) for pattern in patterns):
         return ContextClass.NEVER_CONTEXT
     if not approved_public:
         return ContextClass.RESTRICTED
