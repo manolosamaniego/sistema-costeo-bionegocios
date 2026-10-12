@@ -1,0 +1,24 @@
+name: Jungle Lab prototype tests
+on:
+  pull_request:
+    paths:
+      - 'jungle-lab/**'
+      - '.github/workflows/jungle-lab-tests.yml'
+  push:
+    branches:
+      - 'feature/jungle-lab-3-1-core'
+    paths:
+      - 'jungle-lab/**'
+      - '.github/workflows/jungle-lab-tests.yml'
+permissions:
+  contents: read
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run isolated prototype tests
+        run: PYTHONPATH=jungle-lab/src python -m unittest discover -s jungle-lab/tests -v

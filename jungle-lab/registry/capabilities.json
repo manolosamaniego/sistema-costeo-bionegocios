@@ -1,0 +1,62 @@
+[
+  {
+    "name": "skill_router",
+    "when": "task classification",
+    "inputs": [
+      "task"
+    ],
+    "outputs": [
+      "skill"
+    ],
+    "risk": "low",
+    "approval": false,
+    "source": "Jungle Lab 3.1",
+    "status": "adopt"
+  },
+  {
+    "name": "context_guard",
+    "when": "before context exposure",
+    "inputs": [
+      "content",
+      "classification"
+    ],
+    "outputs": [
+      "allow/deny"
+    ],
+    "risk": "high",
+    "approval": "restricted",
+    "source": "Context Policy",
+    "status": "test"
+  },
+  {
+    "name": "approval_gate",
+    "when": "critical external action",
+    "inputs": [
+      "action",
+      "review",
+      "human decision"
+    ],
+    "outputs": [
+      "allow/deny"
+    ],
+    "risk": "high",
+    "approval": true,
+    "source": "Human Approval Gate",
+    "status": "test"
+  },
+  {
+    "name": "golden_evaluator",
+    "when": "regression evaluation",
+    "inputs": [
+      "case",
+      "output"
+    ],
+    "outputs": [
+      "PASS/FAIL"
+    ],
+    "risk": "low",
+    "approval": false,
+    "source": "Loop Evaluador Belén",
+    "status": "adopt"
+  }
+]

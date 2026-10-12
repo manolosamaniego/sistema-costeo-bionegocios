@@ -1,0 +1,14 @@
+[
+  {
+    "input": "Prepara ayuda memoria Aliados",
+    "expected": "informe-aliados"
+  },
+  {
+    "input": "Calcula costos",
+    "expected": "costos-rentabilidad"
+  },
+  {
+    "input": "Hola",
+    "expected": null
+  }
+]

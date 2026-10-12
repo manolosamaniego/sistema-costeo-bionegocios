@@ -1,0 +1,2 @@
+# Context Policy
+ALLOW: low-risk approved context. RESTRICTED: personal data, contracts, internal costs, financial information, producer databases, private coordinates; sanitize and obtain authorization. NEVER_CONTEXT: .env, credentials, tokens, secrets, private keys, database dumps. Deny uncertain content by default in production. Prototype classifier is incomplete and must not be used as the only security enforcement.
